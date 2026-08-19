@@ -1,0 +1,654 @@
+<meta charset="utf-8">
+<title>Schön, dass Sie bei uns sind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap">
+
+<style>
+  /* Nachbau der mobilen Fassung aus dem File (148:30752).
+     Rahmen 390 × 844, Inhalt 358, Auftakt 34 Bold, Kapitel 24 Bold,
+     Fließtext 16–18, Spitzmarke 14, Fußnote 12.
+     Farbfelder wie im Entwurf: #E7DCCB · #D6E0E3 · #EFE0CB ·
+     #D3DEE1 · #DCE4E6 · #FFE18A · #F0DFC6                              */
+  :root{
+    --paper:#FFFDF9; --ink:#252525; --mut:#767676; --line:#E2DED6; --red:#B91109;
+    --ff:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+    --bg:#FFFDF9;
+  }
+  *,*::before,*::after{ box-sizing:border-box }
+  html,body{ height:100% }
+  body{
+    margin:0; font-family:var(--ff); font-size:16px; line-height:1.5; color:var(--ink);
+    background:#E8E3DA; -webkit-font-smoothing:antialiased;
+    display:grid; place-items:center; padding:24px;
+  }
+  @media (max-width:460px){ body{ padding:0; background:var(--bg) } }
+
+  /* ── Gerätevorschau ─────────────────────────────────────────────── */
+  .stageWrap{ display:grid; gap:14px; justify-items:center }
+  .caption{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#8A8377 }
+  .device{
+    position:relative; width:390px; height:min(844px, calc(100svh - 96px));
+    background:var(--bg); border-radius:36px; overflow:hidden;
+    box-shadow:0 0 0 10px #1C1A17, 0 0 0 11px #37332C, 0 40px 80px -40px rgba(28,26,23,.6);
+  }
+  @media (max-width:460px){
+    .device{ width:100vw; height:100svh; border-radius:0; box-shadow:none }
+    .caption,.hintDesk{ display:none }
+  }
+  .statusbar{
+    position:absolute; inset:0 0 auto 0; height:44px; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 22px 0; font-size:13px; font-weight:600; letter-spacing:.02em;
+    pointer-events:none; color:var(--ink);
+  }
+  .statusbar .right{ display:flex; align-items:center; gap:5px }
+  .bars{ display:flex; align-items:flex-end; gap:2px }
+  .bars i{ width:3px; background:var(--ink); border-radius:1px }
+  .batt{ width:22px; height:11px; border:1px solid var(--ink); border-radius:3px; position:relative; opacity:.9 }
+  .batt::after{ content:''; position:absolute; inset:1.5px; width:70%; background:var(--ink); border-radius:1px }
+
+  /* ── Scrollfläche ───────────────────────────────────────────────── */
+  .screen{
+    position:absolute; inset:0; overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch; scroll-behavior:smooth;
+  }
+  @media (prefers-reduced-motion:reduce){ .screen{ scroll-behavior:auto } }
+  .screen::-webkit-scrollbar{ width:0 }
+  .bgLayer{ position:sticky; top:0; height:0; z-index:0 }
+  .bgLayer .paint{
+    position:absolute; top:0; left:0; width:390px; height:min(844px, calc(100svh - 96px));
+    background:var(--bg); transition:background .45s linear; overflow:hidden;
+  }
+  @media (max-width:460px){ .bgLayer .paint{ width:100vw; height:100svh } }
+  .bgLayer i{ position:absolute; display:block; border-radius:50%; filter:blur(56px); will-change:transform,opacity }
+
+  .head{
+    position:sticky; top:0; z-index:30; height:52px; margin-top:44px;
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center; padding:0 16px;
+    background:color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter:blur(12px);
+    border-bottom:1px solid color-mix(in srgb,var(--ink) 8%,transparent);
+  }
+  .head .logo{ font-weight:700; font-size:17px; letter-spacing:.14em; text-align:center; white-space:nowrap }
+  .head button{ font:inherit; font-size:17px; background:none; border:0; padding:6px; cursor:pointer; color:var(--ink); justify-self:start; line-height:1 }
+  .head button.usr{ justify-self:end }
+  .prog{ position:absolute; top:44px; left:0; height:2px; width:0; background:var(--red); z-index:31 }
+
+  main{ position:relative; z-index:2 }
+  section{ padding:52px 16px }
+  section.tight{ padding-top:36px }
+  .col{ max-width:358px; margin-inline:auto }
+  .mid{ text-align:center }
+
+  .zplus{ display:inline-flex; align-items:center; background:var(--red); color:#fff; font-weight:700; font-size:11px; padding:2px 5px; border-radius:2px; margin-right:7px; vertical-align:2px }
+  .kick{ font-size:14px; color:var(--mut); margin:0 0 8px }
+  h1{ font-weight:700; font-size:34px; line-height:1.16; letter-spacing:-.012em; margin:0 0 16px; text-wrap:balance }
+  h2{ font-weight:700; font-size:24px; line-height:1.25; letter-spacing:-.006em; margin:0 0 18px; text-wrap:balance }
+  h3{ font-weight:700; font-size:16px; line-height:1.3; margin:0 }
+  p{ margin:0 0 12px }
+  .body{ font-size:16px; line-height:1.55 }
+  .body.lg{ font-size:18px; line-height:1.55 }
+  .foot{ font-size:12px; line-height:1.5; color:var(--mut); margin:0 }
+  .num{ color:var(--red); font-variant-numeric:tabular-nums }
+  .tnum{ font-variant-numeric:tabular-nums }
+  .cue{ margin-top:26px; font-size:14px; color:var(--mut) }
+  .cue i{ display:block; margin-top:4px; font-style:normal }
+  @media (prefers-reduced-motion:no-preference){ .cue i{ animation:bob 2.4s ease-in-out infinite } }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); opacity:.55 } 50%{ transform:translateY(5px); opacity:1 } }
+
+  .reveal>*{ opacity:0; transform:translateY(14px); transition:opacity .85s cubic-bezier(.2,.7,.3,1), transform .85s cubic-bezier(.2,.7,.3,1) }
+  .in .reveal>*{ opacity:1; transform:none }
+  .in .reveal>*:nth-child(2){ transition-delay:.08s } .in .reveal>*:nth-child(3){ transition-delay:.16s }
+  .in .reveal>*:nth-child(4){ transition-delay:.24s } .in .reveal>*:nth-child(5){ transition-delay:.32s }
+  .in .reveal>*:nth-child(6){ transition-delay:.4s }
+
+  /* Punktraster */
+  .dots{ display:grid; grid-template-columns:repeat(21,1fr); gap:4px; margin:2px 0 18px }
+  .dots i{ display:block; aspect-ratio:1; border-radius:50%; background:#D8D2C6; transform:scale(.35); opacity:0; transition:background .45s ease }
+  .dots i.own{ background:var(--red) }
+  /* Verteilung */
+  .hist{ position:relative; height:112px; display:flex; align-items:flex-end; gap:2px; margin:4px 0 0 }
+  .hist b{ flex:1; background:#CFC8BA; height:var(--h); transform:scaleY(0); transform-origin:bottom; border-radius:1px }
+  .hist b.you{ background:var(--red) }
+  .youTag{ position:absolute; transform:translateX(-50%); font-size:12px; font-weight:700; color:var(--red); opacity:0 }
+  .rule{ height:1px; background:#CFC8BA; margin:0 0 6px }
+  .axis{ display:flex; justify-content:space-between; font-size:12px; color:var(--mut); margin-bottom:14px }
+  /* Ressort-Ringe */
+  .rings{ position:relative; width:290px; height:290px; margin:0 auto 18px }
+  .rings i{ position:absolute; left:50%; top:50%; border-radius:50%; transform:translate(-50%,-50%) scale(.3); opacity:0 }
+  .rings span{ position:absolute; left:50%; transform:translateX(-50%); font-size:12px; font-weight:700; white-space:nowrap; opacity:0 }
+  /* Stundenring */
+  .clock{ position:relative; width:280px; height:280px; margin:0 auto 18px }
+  .clock .glow{ position:absolute; inset:8%; border-radius:50%; background:var(--glow,#FFE7A6); filter:blur(18px); opacity:0; transition:opacity 1.2s ease, background .6s linear }
+  .in .clock .glow{ opacity:.9 }
+  .clock .hole{ position:absolute; inset:24%; border-radius:50%; background:color-mix(in srgb, var(--bg) 92%, #fff) }
+  .clock i{ position:absolute; border-radius:50%; background:#D8D2C6; transform:scale(.3); opacity:0 }
+  .clock i.own{ background:var(--red) }
+  .clock .cap{ position:absolute; inset:0; display:grid; place-content:center; opacity:0 }
+  .clock .cap b{ font-weight:700; font-size:24px }
+
+  /* Empfehlungen */
+  .rec{ margin-top:22px; text-align:left }
+  .rec .lab{ font-size:14px; color:var(--mut); margin:0 0 10px }
+  .tz{ display:flex; gap:12px; padding:12px 0; border-top:1px solid var(--line); align-items:center }
+  .tz:last-of-type{ border-bottom:1px solid var(--line) }
+  .tz .txt{ flex:1 }
+  .tz .txt .sp{ font-size:14px; color:var(--mut); display:block; margin-bottom:2px }
+  .tz .img{ width:92px; aspect-ratio:4/3; border-radius:2px; background:linear-gradient(140deg,#DED5C6,#C3B9A6) }
+
+  .app{ margin-top:26px; padding:18px; background:#fff; border:1px solid var(--line); text-align:left }
+  .app .kick{ color:var(--red); font-weight:600; letter-spacing:.05em; text-transform:uppercase; font-size:12px; margin-bottom:4px }
+  .app h3{ font-size:20px; margin:0 0 8px }
+  .btn{ font:inherit; font-weight:600; font-size:15px; padding:13px 20px; width:100%; border:1px solid var(--ink); background:var(--ink); color:#fff; cursor:pointer; border-radius:2px }
+  .btn.ghost{ background:none; color:var(--ink) }
+  .btn-row{ display:flex; gap:10px; margin-top:14px }
+  .btn-row .btn{ width:auto; flex:1 }
+  :where(button,a,select):focus-visible{ outline:2px solid var(--red); outline-offset:2px }
+
+  /* Karussell */
+  .white{ background:var(--paper) }
+  .rail{ display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding-bottom:2px }
+  .rail::-webkit-scrollbar{ display:none }
+  .card{ flex:0 0 168px; scroll-snap-align:start; position:relative; border-radius:2px; overflow:hidden; aspect-ratio:3/4 }
+  .card .ph{ position:absolute; inset:0 }
+  .card:nth-child(1) .ph{ background:linear-gradient(155deg,#B7C6E8,#D9A7C7 55%,#EBC9A0) }
+  .card:nth-child(2) .ph{ background:linear-gradient(155deg,#CBD7DB,#8FA6AE) }
+  .card:nth-child(3) .ph{ background:linear-gradient(155deg,#E0D3C2,#B9A186) }
+  .card::after{ content:''; position:absolute; inset:auto 0 0 0; height:62%; background:linear-gradient(180deg,transparent,rgba(24,22,20,.8)) }
+  .card .meta{ position:absolute; inset:auto 10px 10px 10px; z-index:2; color:#fff }
+  .card .sp{ font-size:12px; display:flex; align-items:center; margin-bottom:4px }
+  .card h3{ font-size:15px; line-height:1.25 }
+  .card .save{ position:absolute; top:8px; right:8px; z-index:3; width:30px; height:30px; border-radius:50%; border:0; background:rgba(255,255,255,.9); cursor:pointer; font-size:14px; line-height:1 }
+  .card .save[aria-pressed="true"]{ background:var(--ink); color:#fff }
+  .railNav{ display:flex; align-items:center; justify-content:space-between; margin-top:12px }
+  .pips{ display:flex; gap:6px }
+  .pips i{ width:6px; height:6px; border-radius:50%; background:#D8D2C6 }
+  .pips i.on{ background:var(--ink) }
+  .arrows{ display:flex; gap:8px }
+  .arrows button{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:#fff; cursor:pointer; font:inherit }
+
+  .colophon{ background:#fff; border-top:1px solid var(--line); padding:34px 16px 60px }
+  .colophon h4{ font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--red); margin:0 0 10px }
+  .colophon p{ font-size:14px; line-height:1.6; color:var(--mut) }
+  .colophon strong{ color:var(--ink) }
+
+  .tools{ position:fixed; right:18px; bottom:18px; z-index:70; display:flex; flex-direction:column; gap:8px; align-items:flex-end }
+  .tools button{ font:inherit; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; background:#1C1A17; color:#fff; border:0; border-radius:2px; padding:9px 12px; cursor:pointer }
+  .panel{ position:fixed; right:18px; bottom:96px; z-index:70; width:min(19rem,calc(100vw - 36px)); background:#fff; border:1px solid #1C1A17; padding:16px; display:none }
+  .panel.open{ display:block }
+  .panel h5{ margin:0 0 10px; font-size:14px; color:var(--red) }
+  .panel label{ display:flex; justify-content:space-between; gap:10px; font-size:14px; padding:4px 0 }
+  .panel select{ font:inherit; font-size:14px; padding:3px 5px; border:1px solid var(--line); border-radius:2px; background:#fff }
+  @media (prefers-reduced-motion:reduce){ .reveal>*{ opacity:1; transform:none; transition:none } }
+</style>
+
+<div class="stageWrap">
+  <p class="caption">Vorschau im 390er Rahmen · scrollen im Gerät</p>
+
+  <div class="device">
+    <div class="statusbar">
+      <span>9:41</span>
+      <span class="right">
+        <span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span>
+        <span style="font-size:12px">✳</span>
+        <span class="batt"></span>
+      </span>
+    </div>
+    <div class="prog" id="prog"></div>
+
+    <div class="screen" id="screen">
+      <div class="bgLayer"><div class="paint" id="paint"></div></div>
+
+      <header class="head">
+        <button type="button" aria-label="Menü">☰</button>
+        <div class="logo">DIE ZEIT</div>
+        <button class="usr" type="button" aria-label="Konto">◍</button>
+      </header>
+
+      <main>
+        <!-- Auftakt -->
+        <section data-ch="Auftakt" data-pal="0">
+          <div class="col mid reveal">
+            <p class="kick"><span class="zplus">Z+</span>Ihr persönlicher Rückblick</p>
+            <h1>Schön, dass Sie bei uns sind</h1>
+            <p class="body lg">Seit einigen Tagen sind Sie nun Abonnentin. Bevor Sie weiterlesen, werfen wir gemeinsam einen Blick zurück — auf das, was Sie schon entdeckt haben, und das, was noch auf Sie wartet.</p>
+            <p class="cue">Scrollen Sie nach unten<i>↓</i></p>
+          </div>
+        </section>
+
+        <!-- Lesemenge -->
+        <section data-ch="Lesemenge" data-anim="dots" data-pal="1">
+          <div class="col mid reveal">
+            <p class="kick">Ihre Lesemenge</p>
+            <h2>Sie haben <span class="num" id="cnt">0</span> von <span class="tnum">1.240</span> Texten gelesen.</h2>
+            <div class="dots" id="dots" aria-hidden="true"></div>
+            <p class="body" id="dotsBody">So viele Texte sind in diesen fünf Wochen erschienen. Ein Punkt steht für zehn — die roten sind Ihre.</p>
+            <p class="foot">Grundlage sind Artikelaufrufe im Zeitraum.</p>
+          </div>
+        </section>
+
+        <!-- Vergleich -->
+        <section data-ch="Vergleich" data-anim="hist" data-pal="2">
+          <div class="col mid reveal">
+            <p class="kick">Ihr Platz im Vergleich</p>
+            <h2>Sie lesen mehr als <span class="num" id="rangTxt">vier von fünf</span> Abonnentinnen und Abonnenten.</h2>
+            <div class="hist" id="hist"><span class="youTag" id="youTag">SIE</span></div>
+            <div class="rule"></div>
+            <div class="axis"><span>weniger</span><span>Durchschnitt</span><span>mehr</span></div>
+            <p class="foot">Schematische Verteilung von 12.400 Abonnentinnen und Abonnenten mit Probeabo im selben Zeitraum.</p>
+          </div>
+        </section>
+
+        <!-- Ressort -->
+        <section data-ch="Ressort" data-anim="rings" data-pal="3">
+          <div class="col mid reveal">
+            <p class="kick">Ihr aktuelles Lieblingsressort</p>
+            <h2>Das sind Ihre vier meistgelesenen Ressorts:</h2>
+            <div class="rings" id="rings" aria-hidden="true"></div>
+            <p class="body" id="ressBody">8 Texte aus Wissen, 6 aus Politik. Auch insgesamt war Wissen in diesen Wochen eines der stärksten Ressorts.</p>
+            <div class="rec">
+              <p class="lab">Dazu empfehlen wir Ihnen folgenden Podcast</p>
+              <div class="tz"><div class="txt"><span class="sp">Titel</span><h3>Das ist ein Lorem ipsum dolor sit amet Teasertext</h3></div><div class="img"></div></div>
+              <div class="tz"><div class="txt"><span class="sp">Titel</span><h3>Das ist ein Lorem ipsum dolor sit amet Teasertext</h3></div><div class="img"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesezeit -->
+        <section data-ch="Lesezeit" data-anim="clock" data-pal="4">
+          <div class="col mid reveal">
+            <p class="kick">Ihre Lesezeit</p>
+            <h2 id="zeitHead">Der Morgenkaffee mit der ZEIT</h2>
+            <div class="clock" id="clock">
+              <span class="glow"></span><span class="hole"></span>
+              <div class="cap"><b id="clockCap">6 – 9 Uhr</b></div>
+            </div>
+            <p class="body" id="zeitBody">Sie gehen am liebsten informiert in den Tag: Ihre Texte lesen Sie meist zwischen sechs und neun Uhr.</p>
+            <div class="rec">
+              <p class="lab">Daher empfehlen wir Ihnen folgenden Newsletter:</p>
+              <div class="tz"><div class="txt"><span class="sp">Titel</span><h3>Das ist ein Lorem ipsum dolor sit amet Teasertext</h3></div><div class="img"></div></div>
+            </div>
+            <div class="app">
+              <p class="kick">Nur in der App</p>
+              <h3 id="pushHead">Push um 7 Uhr</h3>
+              <p class="body" id="pushBody">Einmal täglich, zu Ihrer Lesezeit. Sonst hören Sie nichts von uns.</p>
+              <button class="btn" type="button" id="push">Push einrichten</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Beliebte Artikel -->
+        <section class="white" data-ch="Beliebte Artikel" data-pal="5">
+          <div class="col reveal">
+            <h2>Speichern Sie diese besonders beliebten Artikel</h2>
+            <p class="body" style="color:var(--mut)">Mit dem Speichern-Icon merken Sie sich Artikel, die Sie interessieren</p>
+            <div class="rail" id="rail">
+              <article class="card"><span class="ph"></span><button class="save" type="button" aria-pressed="false" aria-label="Merken">＋</button>
+                <div class="meta"><div class="sp"><span class="zplus">Z+</span>»Nihilist Penguin«</div><h3>Ich fühl dich, kleiner Pinguin!</h3></div></article>
+              <article class="card"><span class="ph"></span><button class="save" type="button" aria-pressed="false" aria-label="Merken">＋</button>
+                <div class="meta"><div class="sp">Schwachsinn der Woche</div><h3>Wem schlechte Forschung nützt</h3></div></article>
+              <article class="card"><span class="ph"></span><button class="save" type="button" aria-pressed="false" aria-label="Merken">＋</button>
+                <div class="meta"><div class="sp">Wissen</div><h3>Was das Gehirn im Schlaf mit dem Tag macht</h3></div></article>
+            </div>
+            <div class="railNav">
+              <div class="pips" id="pips" aria-hidden="true"></div>
+              <div class="arrows"><button type="button" id="rPrev" aria-label="Zurück">←</button><button type="button" id="rNext" aria-label="Weiter">→</button></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Platzhalter -->
+        <section class="white tight" data-ch="Angebote" data-pal="5">
+          <div class="col reveal">
+            <h2>Platzhalter für Hinweise zu anderen Angeboten</h2>
+            <p class="body" style="color:var(--mut)">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+          </div>
+        </section>
+
+        <!-- Danke -->
+        <section data-ch="Danke" data-anim="thanks" data-pal="6">
+          <div class="col reveal">
+            <h2>Danke, dass Sie dabei sind!</h2>
+            <p class="body">Mit Ihrem Abonnement unterstützen Sie den unabhängigen Journalismus der ZEIT. Sie haben sich <span class="num" id="merkCount">0</span> Artikel gemerkt — sie warten in Ihrer Merkliste.</p>
+            <div class="btn-row">
+              <button class="btn ghost" type="button" id="toMerk">Zur Merkliste</button>
+              <button class="btn" type="button" id="toStart">Zur Startseite</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="colophon">
+          <div class="col">
+            <h4>Zum Prototyp</h4>
+            <p><strong>Vorlage:</strong> Ihre mobile Fassung aus dem File — Aufbau, Reihenfolge, Wortlaut, Maße. Rahmen 390 × 844, Inhalt 358, Auftakt 34 Bold, Kapitel 24 Bold, Fließtext 16 bis 18, Spitzmarke 14, Fußnote 12. Überschriften im Sans, weil Ihr Entwurf es so setzt.</p>
+            <p><strong>Diagramme:</strong> Jedes baut sich beim Eintreten langsam auf — Punktraster 2,4 s, Verteilung 2,6 s von der Mitte nach außen, Ressort-Ringe 2,4 s von außen nach innen, Stundenring 2,8 s im Uhrzeigersinn. Wer weiterscrollt und zurückkommt, sieht den Aufbau erneut.</p>
+            <p><strong>Fließender Grund:</strong> Ihre Farbfelder liegen als weiche Kreise auf einer festen Ebene im Gerät und wandern beim Scrollen; der Grundton wird zwischen den Kapiteln interpoliert.</p>
+            <p><strong>Testdaten</strong> unten rechts. Voreingestellt sind Ihre Werte: 24 von 1.240, Wissen vor Politik, sechs bis neun Uhr. Bei wenig gelesenen Texten stellt das Raster automatisch auf einen Punkt pro Text um, damit die roten Punkte sichtbar bleiben.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+<div class="tools">
+  <button id="replay" type="button">Animation neu</button>
+  <button id="panelBtn" type="button" aria-expanded="false" aria-controls="panel">Testdaten</button>
+</div>
+<div class="panel" id="panel" role="dialog" aria-label="Testdaten">
+  <h5>Testdaten</h5>
+  <label>Ressort <select id="sRes"><option>Wissen</option><option>Politik</option><option>Wirtschaft</option><option>Kultur</option></select></label>
+  <label>Tageszeit <select id="sZeit"><option value="morgens">morgens</option><option value="tags">tagsüber</option><option value="abends">abends</option></select></label>
+  <label>Intensität <select id="sInt"><option value="wenig">wenig · 24</option><option value="mittel">mittel · 78</option><option value="viel">viel · 160</option></select></label>
+  <button class="btn" style="margin-top:10px;padding:9px" id="panelClose" type="button">Schließen</button>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const de=n=>n.toLocaleString('de-DE');
+  const cl=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+  const easeOut=t=>1-Math.pow(1-t,3);
+  const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+
+  const screenEl=$('#screen'), paint=$('#paint');
+
+  /* Voreinstellung wie im Entwurf */
+  const st={ res:'Wissen', zeit:'morgens', int:'wenig' };
+  const INT={ wenig:{t:24,rank:'weniger als die Hälfte',pos:.34}, mittel:{t:78,rank:'etwa so viel wie die Hälfte',pos:.52}, viel:{t:160,rank:'vier von fünf',pos:.8} };
+  const RES={ Wissen:{sh:.34,o:['Politik','Kultur','Wirtschaft']}, Politik:{sh:.36,o:['Wissen','Kultur','Wirtschaft']},
+              Wirtschaft:{sh:.32,o:['Politik','Wissen','Kultur']}, Kultur:{sh:.33,o:['Politik','Wissen','Wirtschaft']} };
+  const ZT={ morgens:{v:6,b:9,head:'Der Morgenkaffee mit der ZEIT',cap:'6 – 9 Uhr',txt:'zwischen sechs und neun Uhr',push:'Push um 7 Uhr',pb:'Einmal täglich, zu Ihrer Lesezeit. Sonst hören Sie nichts von uns.',uhr:'7'},
+             tags:{v:11,b:17,head:'Die Pause mit der ZEIT',cap:'11 – 17 Uhr',txt:'zwischen elf und siebzehn Uhr',push:'Push um 12 Uhr',pb:'Einmal am Mittag, wenn bei uns am meisten erscheint.',uhr:'12'},
+             abends:{v:19,b:23,head:'Der Abend mit der ZEIT',cap:'19 – 23 Uhr',txt:'zwischen neunzehn und dreiundzwanzig Uhr',push:'Vorlesen um 20 Uhr',pb:'Abends starten wir die langen Stücke zum Hören.',uhr:'20'} };
+
+  const PAL=[
+    {bg:'#FFFDF9', f:['#E7DCCB','#D6E0E3','#EFE0CB']},
+    {bg:'#FFFCF6', f:['#EFE0CB','#E7DCCB','#F3E7D6']},
+    {bg:'#FFFDF9', f:['#E7DCCB','#DCE4E6','#EFE0CB']},
+    {bg:'#F7FAFA', f:['#D3DEE1','#DCE4E6','#E7DCCB']},
+    {bg:'#FFFCF2', f:['#FFE18A','#F0DFC6','#FFEDAF']},
+    {bg:'#FFFDF9', f:['#F0DFC6','#DCE4E6','#E7DCCB']},
+    {bg:'#FDF9F0', f:['#E7DCCB','#F0DFC6','#D6E0E3']}
+  ];
+  /* Die Lesezeit-Sektion färbt sich nach der Tageszeit —
+     Morgenlicht, Tageslicht, Dämmerung. Alles hell, keine dunklen Flächen. */
+  const ZPAL={
+    morgens:{ bg:'#FFFCF2', f:['#FFE18A','#F0DFC6','#FFEDAF'], glow:'#FFE7A6' },
+    tags:   { bg:'#FBFDFA', f:['#FFF6C9','#E4EFE8','#F1F5EC'], glow:'#FBF3C4' },
+    abends: { bg:'#FCF7F4', f:['#F0C9A8','#E2CBD6','#EEDCC8'], glow:'#F5D2B6' }
+  };
+  const pal=i=> i===4 ? ZPAL[st.zeit] : PAL[i];
+  const rgb=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
+  const mix=(a,b,t)=>{const A=rgb(a),B=rgb(b);return 'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')+')';};
+
+  const FSPEC=[{s:112,x:-32,y:-8,k:.07},{s:92,x:44,y:24,k:.12},{s:124,x:-16,y:58,k:.05}];
+  const fields=FSPEC.map(o=>{ const i=document.createElement('i');
+    i.style.width=o.s+'%'; i.style.height=o.s+'%'; i.style.left=o.x+'%'; i.style.top=o.y+'%';
+    paint.append(i); return i; });
+
+  const secs=$$('main > section[data-ch]');
+
+  /* Bausteine */
+  const dotsEl=$('#dots');
+  for(let i=0;i<126;i++) dotsEl.append(document.createElement('i'));
+  const dotEls=$$('#dots i');
+
+  const histEl=$('#hist'), NH=41, HH=[];
+  for(let i=0;i<NH;i++){
+    const x=(i-(NH-1)/2)/((NH-1)/2), h=Math.round(100*Math.exp(-3.0*x*x))+3;
+    HH.push(h);
+    const b=document.createElement('b'); b.style.setProperty('--h',h+'%'); histEl.append(b);
+  }
+  const histBars=$$('#hist b');
+
+  const clockEl=$('#clock');
+  for(let i=0;i<24;i++) clockEl.append(document.createElement('i'));
+  const clockDots=$$('#clock i');
+  function placeClock(){
+    const w=clockEl.clientWidth||280, c=w/2, R=w*.385;
+    clockDots.forEach((el,i)=>{
+      const a=(i/24)*Math.PI*2-Math.PI/2, own=el.classList.contains('own'), s=own?14:6;
+      el.style.width=s+'px'; el.style.height=s+'px';
+      el.style.left=(c+Math.cos(a)*R-s/2)+'px'; el.style.top=(c+Math.sin(a)*R-s/2)+'px';
+    });
+  }
+
+  const derived=()=>{
+    const i=INT[st.int], r=RES[st.res], z=ZT[st.zeit];
+    const top=Math.max(2,Math.round(i.t*r.sh));
+    const rest=[.75,.55,.4].map((f,n)=>({name:r.o[n],value:Math.max(1,Math.round(top*f))}));
+    const perDot = i.t/10 < 5 ? 1 : 10;   /* bei kleinen Werten ein Punkt je Text */
+    return {i,r,z,top,rest,perDot};
+  };
+
+  function buildRings(){
+    const wrap=$('#rings'); wrap.textContent='';
+    const d=derived();
+    const items=[{n:st.res},{n:d.rest[0].name},{n:d.rest[1].name},{n:d.rest[2].name}];
+    const sizes=[100,76,54,32], tone=['#CFDCE0','#DCE6E9','#E8EEF0','#FFFFFF'];
+    items.forEach((it,i)=>{ const r=document.createElement('i');
+      r.style.width=sizes[i]+'%'; r.style.height=sizes[i]+'%'; r.style.background=tone[i]; wrap.append(r); });
+    items.forEach((it,i)=>{ const l=document.createElement('span');
+      l.textContent=(i+1)+'. '+it.n;
+      l.style.top='calc(50% - '+(sizes[i]/2)+'% + '+(i===3?14:10)+'px)'; wrap.append(l); });
+  }
+
+  function render(){
+    const d=derived();
+    $('#rangTxt').textContent=d.i.rank;
+    $('#dotsBody').textContent = d.perDot===10
+      ? 'So viele Texte sind in diesen fünf Wochen erschienen. Ein Punkt steht für zehn — die roten sind Ihre.'
+      : 'So viele Texte sind in diesen fünf Wochen erschienen. Ein Punkt steht für einen Text — die roten sind Ihre.';
+    $('#ressBody').textContent=d.top+' Texte aus '+st.res+', '+d.rest[0].value+' aus '+d.rest[0].name+'. Auch insgesamt war '+st.res+' in diesen Wochen eines der stärksten Ressorts.';
+    $('#zeitHead').textContent=d.z.head;
+    $('#zeitBody').textContent='Sie gehen am liebsten informiert in den Tag: Ihre Texte lesen Sie meist '+d.z.txt+'.';
+    $('#clockCap').textContent=d.z.cap;
+    $('#pushHead').textContent=d.z.push;
+    $('#pushBody').textContent=d.z.pb;
+    clockDots.forEach((el,i)=>el.classList.toggle('own', i>=d.z.v && i<d.z.b));
+    document.documentElement.style.setProperty('--glow', ZPAL[st.zeit].glow);
+    buildRings(); placeClock();
+  }
+
+  /* ── Zeitgesteuerte Aufbauten ───────────────────────────────────── */
+  const timers=new Map();
+  function play(key, dur, step){
+    if(rm){ step(1); return; }
+    cancelAnimationFrame(timers.get(key));
+    const t0=performance.now();
+    const frame=now=>{
+      const p=cl((now-t0)/dur);
+      step(p);
+      if(p<1) timers.set(key, requestAnimationFrame(frame));
+    };
+    timers.set(key, requestAnimationFrame(frame));
+  }
+  const stagger=(p,i,n,share)=>cl((p-(i/n)*(1-share))/share);
+
+  const ANIM={
+    dots:{
+      /* Zwei Phasen: erst baut sich das graue Raster langsam auf,
+         danach werden die eigenen Punkte einer nach dem anderen rot
+         und die Zahl blendet mit ihnen ein.                          */
+      dur:3600,
+      reset(){
+        const c=$('#cnt'); c.textContent='0'; c.style.opacity='0';
+        dotEls.forEach(d=>{ d.style.opacity='0'; d.style.transform='scale(.35)'; d.classList.remove('own'); });
+      },
+      step(p){
+        const d=derived();
+        const own=Math.max(1,Math.round(d.i.t/d.perDot));
+        // Phase 1 (0 – 48 %): Raster erscheint zeilenweise
+        const g=cl(p/.48);
+        dotEls.forEach((dot,i)=>{
+          const t=easeOut(stagger(g,i,dotEls.length,.5));
+          dot.style.opacity=(0.85*t).toFixed(2);
+          dot.style.transform='scale('+(0.35+0.65*t).toFixed(3)+')';
+        });
+        // Phase 2 (42 – 100 %): die eigenen Punkte werden rot, Zahl zählt mit
+        const r=easeOut(cl((p-.42)/.58));
+        const redCount=Math.round(own*r);
+        dotEls.forEach((dot,i)=>{
+          const on=i<redCount;
+          dot.classList.toggle('own', on);
+          if(on) dot.style.opacity='1';
+        });
+        const c=$('#cnt');
+        c.textContent=de(Math.round(d.i.t*r));
+        c.style.opacity=cl(r*4).toFixed(2);
+      }
+    },
+    hist:{
+      dur:3200,
+      reset(){ histBars.forEach(b=>{ b.style.transform='scaleY(0)'; b.classList.remove('you'); }); $('#youTag').style.opacity=0; },
+      step(p){
+        const d=derived(), e=easeIO(p);
+        const idx=Math.round((NH-1)*d.i.pos);
+        histBars.forEach((b,i)=>{
+          const fromCenter=Math.abs(i-(NH-1)/2)/((NH-1)/2);
+          const t=easeOut(cl((e-fromCenter*.55)/.45));
+          b.style.transform='scaleY('+t.toFixed(3)+')';
+          b.classList.toggle('you', i===idx);
+        });
+        const tag=$('#youTag');
+        tag.style.left=((idx+.5)/NH*100)+'%';
+        tag.style.bottom=(HH[idx]*1.12+6)+'px';
+        tag.style.opacity=cl((e-.6)/.25).toFixed(2);
+      }
+    },
+    rings:{
+      dur:3000,
+      reset(){ $$('#rings i').forEach(r=>{ r.style.opacity=0; r.style.transform='translate(-50%,-50%) scale(.3)'; }); $$('#rings span').forEach(s=>s.style.opacity=0); },
+      step(p){
+        const e=easeIO(p);
+        $$('#rings i').forEach((r,i)=>{
+          const t=easeOut(stagger(e,i,4,.58));
+          r.style.transform='translate(-50%,-50%) scale('+(0.3+0.7*t).toFixed(3)+')';
+          r.style.opacity=t.toFixed(2);
+        });
+        $$('#rings span').forEach((s,i)=>{ s.style.opacity=cl((e-.35-i*.09)/.28).toFixed(2); });
+      }
+    },
+    clock:{
+      dur:3400,
+      reset(){ clockDots.forEach(d=>{ d.style.opacity=0; d.style.transform='scale(.3)'; }); $('.cap',clockEl).style.opacity=0; },
+      step(p){
+        const e=easeOut(p);
+        clockDots.forEach((el,i)=>{
+          const t=easeOut(stagger(e,i,24,.42));
+          el.style.transform='scale('+(0.3+0.7*t).toFixed(3)+')';
+          el.style.opacity=(0.35+0.65*t).toFixed(2);
+        });
+        $('.cap',clockEl).style.opacity=cl((e-.55)/.3).toFixed(2);
+      }
+    },
+    thanks:{
+      dur:1800,
+      reset(){ $('#merkCount').textContent='0'; },
+      step(p){ $('#merkCount').textContent=String(Math.round(saved*easeOut(p))); }
+    }
+  };
+  let saved=3;
+
+  function runSection(sec){
+    const key=sec.dataset.anim;
+    if(!key||!ANIM[key]) return;
+    ANIM[key].reset();
+    play(key, ANIM[key].dur, ANIM[key].step);
+  }
+  function resetSection(sec){
+    const key=sec.dataset.anim;
+    if(!key||!ANIM[key]) return;
+    cancelAnimationFrame(timers.get(key));
+    ANIM[key].reset();
+  }
+
+  /* Texte blenden früh ein … */
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+  },{ root:screenEl, threshold:.18 });
+  secs.forEach(s=>io.observe(s));
+
+  /* … die Diagramme starten, wenn die Sektion die Bildschirmmitte erreicht. */
+  function checkCentre(){
+    const vh=screenEl.clientHeight, top=screenEl.getBoundingClientRect().top;
+    secs.forEach(s=>{
+      if(!s.dataset.anim) return;
+      const r=s.getBoundingClientRect();
+      const centre=r.top + r.height/2 - top;
+      const dist=Math.abs(centre - vh/2)/vh;
+      if(dist<0.42 && !s.dataset.running){ s.dataset.running='1'; runSection(s); }
+      else if(dist>0.95 && s.dataset.running){ delete s.dataset.running; resetSection(s); }
+    });
+  }
+
+  /* ── Grund und Fortschritt am Scroll ────────────────────────────── */
+  let queued=false;
+  function tick(){
+    const vh=screenEl.clientHeight, sc=screenEl.scrollTop, vc=sc+vh/2;
+    const centers=secs.map(s=>s.offsetTop+s.offsetHeight/2);
+    let i=0; while(i<centers.length-1 && vc>centers[i+1]) i++;
+    const span=Math.max(1,(centers[i+1]||centers[i]+1)-centers[i]);
+    const t=cl((vc-centers[i])/span);
+    const A=pal(+secs[i].dataset.pal), B=pal(+(secs[i+1]||secs[i]).dataset.pal);
+    document.documentElement.style.setProperty('--bg', mix(A.bg,B.bg,t));
+    fields.forEach((el,n)=>{
+      el.style.background=mix(A.f[n%3],B.f[n%3],t);
+      el.style.opacity=(0.52+0.2*Math.sin(sc/800+n)).toFixed(2);
+      if(!rm) el.style.transform='translate3d('+(Math.sin(sc/900+n)*3).toFixed(2)+'%,'+(-sc*FSPEC[n].k*.1).toFixed(1)+'px,0)';
+    });
+    const max=screenEl.scrollHeight-vh;
+    $('#prog').style.width=(max>0?sc/max*100:0)+'%';
+    checkCentre();
+    queued=false;
+  }
+  const onScroll=()=>{ if(!queued){ queued=true; requestAnimationFrame(tick); } };
+  screenEl.addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',()=>{ placeClock(); onScroll(); });
+
+  /* Karussell */
+  const rail=$('#rail'), cards=$$('#rail .card');
+  cards.forEach(()=>$('#pips').append(document.createElement('i')));
+  const pips=$$('#pips i');
+  const syncPips=()=>{ const i=Math.round(rail.scrollLeft/(cards[0].offsetWidth+12));
+    pips.forEach((p,n)=>p.classList.toggle('on',n===Math.min(cards.length-1,i))); };
+  rail.addEventListener('scroll',syncPips,{passive:true});
+  $('#rNext').addEventListener('click',()=>rail.scrollBy({left:cards[0].offsetWidth+12,behavior:rm?'auto':'smooth'}));
+  $('#rPrev').addEventListener('click',()=>rail.scrollBy({left:-(cards[0].offsetWidth+12),behavior:rm?'auto':'smooth'}));
+  syncPips();
+  $$('#rail .save').forEach(b=>b.addEventListener('click',()=>{
+    const on=b.getAttribute('aria-pressed')==='true';
+    b.setAttribute('aria-pressed',String(!on)); b.textContent=on?'＋':'✓';
+    saved=Math.max(0,saved+(on?-1:1));
+  }));
+
+  $('#push').addEventListener('click',e=>{
+    const on=e.currentTarget.dataset.on==='1';
+    e.currentTarget.dataset.on=on?'':'1';
+    e.currentTarget.textContent=on?'Push einrichten':'Eingerichtet — täglich '+derived().z.uhr+' Uhr';
+  });
+  $('#toMerk').addEventListener('click',()=>{ $('#toMerk').textContent='Merkliste geöffnet'; });
+  $('#toStart').addEventListener('click',()=>screenEl.scrollTo({top:0,behavior:rm?'auto':'smooth'}));
+
+  const panel=$('#panel'), pb=$('#panelBtn');
+  pb.addEventListener('click',()=>{ const o=!panel.classList.contains('open'); panel.classList.toggle('open',o); pb.setAttribute('aria-expanded',String(o)); });
+  $('#panelClose').addEventListener('click',()=>{ panel.classList.remove('open'); pb.setAttribute('aria-expanded','false'); });
+  [['#sRes','res'],['#sZeit','zeit'],['#sInt','int']].forEach(([sel,key])=>{
+    $(sel).addEventListener('change',e=>{
+      st[key]=e.target.value; render(); tick();
+      secs.forEach(s=>{ if(s.dataset.running) runSection(s); });
+    });
+  });
+  $('#sRes').value=st.res; $('#sZeit').value=st.zeit; $('#sInt').value=st.int;
+  $('#replay').addEventListener('click',()=>{
+    secs.forEach(s=>{ delete s.dataset.running; resetSection(s); });
+    screenEl.scrollTo({top:0,behavior:rm?'auto':'smooth'});
+  });
+
+  render(); tick();
+  addEventListener('load',()=>{ placeClock(); tick(); });
+})();
+</script>
