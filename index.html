@@ -7,19 +7,19 @@
 :root{
   --seite:#ffffff; --flaeche:#eeeeee; --track:#dfdfdf; --bar:#cccccc;
   --ink:#252525; --ink2:#444444; --ink3:#69696c;
-  --marker:#b91109; --linie:#e4e4e4; --karte:#ffffff;
+  --marker:#b91109; --linie:#e4e4e4; --karte:#ffffff; --warn:#8a6400;
   --ff:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif;
   --e:cubic-bezier(.16,1,.3,1);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --seite:#121212; --flaeche:#242424; --track:#363636; --bar:#444444;
   --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
-  --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e;
+  --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e; --warn:#e8c61a;
 }}
 :root[data-theme="dark"]{
   --seite:#121212; --flaeche:#242424; --track:#363636; --bar:#444444;
   --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
-  --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e;
+  --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e; --warn:#e8c61a;
 }
 *{box-sizing:border-box}
 h1,h2,h3,h4,.h1,.h2,.h3,.h4,.gross,.mittel,.karte h3,.artikel .t{text-wrap:balance}
@@ -66,9 +66,9 @@ body{margin:0;background:#e9e6e0;color:var(--ink);font-family:var(--ff);-webkit-
   font-size:13px;font-weight:600;color:var(--ink);z-index:65;position:relative}
 .statusleiste .r{display:flex;gap:5px;align-items:center}
 .statusleiste i{display:block;background:var(--ink);border-radius:1px}
-.rohr{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
+.rohr{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;container-type:size;scrollbar-width:none}
 .rohr::-webkit-scrollbar{width:0}
-.fortschritt{position:absolute;top:0;left:0;height:2px;background:var(--marker);width:0;z-index:60;transition:width .1s linear}
+.fortschritt{position:sticky;top:0;left:0;margin-bottom:-2px;height:2px;background:var(--marker);width:0;z-index:60;transition:width .1s linear}
 
 /* ═══ Grundraster nach dem Entwurf: 16 px Rand ═══ */
 .abschnitt{padding:0 16px}
@@ -81,7 +81,6 @@ body{margin:0;background:#e9e6e0;color:var(--ink);font-family:var(--ff);-webkit-
 .sub-s{font-size:14px;line-height:1.45;color:var(--ink3);margin:4px 0 0}
 .quelle{font-size:11.5px;line-height:1.55;color:var(--ink3);margin:16px 0 0}
 body.ohne-quellen .quelle{display:none}
-body.ohne-quellen .karte p{display:none}
 body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 
 /* ═══ Einstieg ═══ */
@@ -168,24 +167,28 @@ body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 .karte.leer h3{font-size:16px;color:var(--ink2)}
 
 /* ═══ Variante B · Karten, die sich beim Scrollen stapeln ═══ */
-body[data-variante=karten] .daten{padding:16px 14px 56px;perspective:1400px}
+body[data-variante=karten] .daten{padding:16px 14px 56px}
 body[data-variante=karten] .szene{
   position:sticky;background:var(--karte);border:1px solid var(--linie);border-radius:4px;
-  padding:44px 22px 48px;min-height:auto;margin-bottom:18px;border-bottom:1px solid var(--linie);
+  padding:64px 22px 48px;margin-bottom:18px;border-bottom:1px solid var(--linie);justify-content:flex-start;
+  /* alle Karten gleich hoch (höchster Inhalt = Thema, ~714px), nie höher als der Schirm */
+  min-height:min(720px, calc(100cqh - 140px));
   transform-origin:50% 0%;will-change:transform;
   box-shadow:0 1px 1px rgba(20,18,16,.04), 0 2px 6px rgba(20,18,16,.05), 0 18px 40px -18px rgba(20,18,16,.28)}
 body[data-variante=karten] .szene:nth-child(1){top:14px;z-index:1}
 body[data-variante=karten] .szene:nth-child(2){top:22px;z-index:2}
 body[data-variante=karten] .szene:nth-child(3){top:30px;z-index:3}
 body[data-variante=karten] .szene:nth-child(4){top:38px;z-index:4}
-body[data-variante=karten] .szene:last-child{margin-bottom:0}
+body[data-variante=karten] .szene:last-child{margin-bottom:0;position:relative;top:0}
 /* der Schleier legt sich über die Karte, sobald die nächste sie überdeckt */
 body[data-variante=karten] .szene::after{
   content:"";position:absolute;inset:0;border-radius:4px;pointer-events:none;
   background:var(--seite);opacity:var(--schleier,0)}
-body[data-variante=karten] .szene::before{
-  content:attr(data-nr);position:absolute;top:18px;right:22px;font-size:11px;font-weight:700;
-  letter-spacing:.1em;color:var(--ink3);z-index:1}
+.kartenkopf{display:none}
+body[data-variante=karten] .kartenkopf{display:flex;justify-content:space-between;align-items:baseline;width:auto;
+  position:absolute;top:18px;left:22px;right:22px;z-index:1;
+  font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+body[data-variante=karten] .kartenkopf b{color:var(--marker);font-weight:700}
 body[data-variante=karten] .wolke{height:240px}
 body[data-variante=karten] .band{height:100px}
 body[data-variante=karten] .gross{font-size:clamp(34px,11vw,48px)}
@@ -194,8 +197,7 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 
 /* ═══ Was bleibt ═══ */
 .bleibt{padding:48px 16px;text-align:center;border-top:1px solid var(--linie)}
-.bleibt .bedingung{font-size:11px;font-weight:600;color:#8a6400;margin:14px 0 0}
-:root[data-theme="dark"] .bleibt .bedingung{color:#e8c61a}
+.bleibt .bedingung{font-size:11px;font-weight:600;color:var(--warn);margin:14px 0 0}
 
 /* ═══ Karussell ═══ */
 .parkett{padding:0 16px 8px}
@@ -227,6 +229,174 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
   font-family:var(--ff);font-size:16px;font-weight:700}
 .knopf--sek{background:var(--flaeche);color:var(--ink)}
 .knopf--prim{background:var(--ink);color:var(--seite)}
+
+/* ═══ Desktopbreite · das Raster von zeit.de ═══════════════════════════════
+   Aus web.core/content: .article__item 41.25rem = 660 px (Text),
+   --wide 55.75rem = 892 px (Inhalt), --large 62.5rem = 1000 px (Seite),
+   zentriert ab 48em. Fließtext dort 20 px, Zeilenhöhe 1.5.            */
+body[data-breite^=desktop]{--w-text:660px; --w-inhalt:892px; --w-seite:1000px; --rand:54px}
+body[data-breite^=desktop] .stand{max-width:1440px;grid-template-columns:330px 1fr}
+body[data-breite^=desktop] .telefon{
+  width:var(--w-seite);max-width:100%;height:min(860px,90vh);
+  border-radius:8px;border:0;box-shadow:0 0 0 1px var(--linie),0 30px 70px -26px rgba(20,18,16,.45)}
+body[data-breite^=desktop] .insel,
+body[data-breite^=desktop] .statusleiste{display:none}
+
+/* Seitenrand: 1000 minus 892, hälftig */
+body[data-breite^=desktop] .abschnitt,
+body[data-breite^=desktop] .einstieg,
+body[data-breite^=desktop] .bleibt,
+body[data-breite^=desktop] .parkett,
+body[data-breite^=desktop] .ende{padding-left:var(--rand);padding-right:var(--rand)}
+body[data-breite^=desktop] .daten{padding:24px var(--rand) 40px}
+body[data-breite^=desktop] .einstieg{min-height:560px;padding-top:96px;padding-bottom:80px}
+body[data-breite^=desktop] .bleibt{padding-top:64px;padding-bottom:64px}
+body[data-breite^=desktop] .ende{padding-top:48px;padding-bottom:56px}
+
+/* Textspalte 660, Grafikspalte 892 */
+body[data-breite^=desktop] .einstieg > *,
+body[data-breite^=desktop] .bleibt > *,
+body[data-breite^=desktop] .ende > *,
+body[data-breite^=desktop] .parkett-kopf > *,
+body[data-breite^=desktop] .szene .augen,
+body[data-breite^=desktop] .szene .zahl,
+body[data-breite^=desktop] .szene .mittel,
+body[data-breite^=desktop] .szene .h2,
+body[data-breite^=desktop] .szene .lead,
+body[data-breite^=desktop] .szene .quelle,
+body[data-breite^=desktop] .szene .thema-satz{max-width:var(--w-text);margin-left:auto;margin-right:auto}
+body[data-breite^=desktop] .ende .knoepfe{justify-content:center}
+
+/* Typo nach zeit.de: 20 px Fließtext, größere Überschriften */
+body[data-breite^=desktop] .h1{font-size:46px}
+body[data-breite^=desktop] .h2{font-size:32px}
+body[data-breite^=desktop] .h3{font-size:26px}
+body[data-breite^=desktop] .h4{font-size:20px}
+body[data-breite^=desktop] .sub{font-size:20px;line-height:1.5}
+body[data-breite^=desktop] .sub-s{font-size:16px}
+body[data-breite^=desktop] .lead{font-size:20px;line-height:1.5;max-width:36ch}
+body[data-breite^=desktop] .quelle{font-size:12px}
+body[data-breite^=desktop] .szene .quelle{max-width:52ch}
+body[data-breite^=desktop] .gross{font-size:80px}
+body[data-breite^=desktop] .mittel{font-size:42px}
+body[data-breite^=desktop] .zahl .e{font-size:24px}
+
+/* Datengrafiken atmen auf 892 aus */
+body[data-breite^=desktop] .band{height:170px;gap:7px}
+body[data-breite^=desktop] .wolke{height:340px}
+body[data-breite^=desktop] .tag{gap:6px}
+body[data-breite^=desktop] .szene.sichtbar .tag .a i{height:28px}
+body[data-breite^=desktop] .szene.sichtbar .tag .a.aktiv i{height:72px}
+body[data-breite^=desktop] .tag .a span{font-size:12px}
+body[data-breite^=desktop] .spur{height:12px;border-radius:6px}
+body[data-breite^=desktop] .achse,
+body[data-breite^=desktop] .spur-meta,
+body[data-breite^=desktop] .wolke-fuss,
+body[data-breite^=desktop] .anteil .m{font-size:12px}
+body[data-breite^=desktop] .szene{min-height:620px;padding:64px 0}
+
+/* Empfehlungen nebeneinander, solange Platz ist */
+body[data-breite^=desktop] .karten{display:grid;gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:32px}
+body[data-breite^=desktop] .karte{padding:20px}
+body[data-breite^=desktop] .karte h3{font-size:20px}
+body[data-breite^=desktop] .karte p{font-size:14px}
+
+/* Karussell und Ausspielfläche */
+body[data-breite^=desktop] .karussell{margin:0 calc(var(--rand)*-1);padding:0 var(--rand) 4px;gap:16px}
+body[data-breite^=desktop] .artikel{flex:0 0 212px;aspect-ratio:212/300}
+body[data-breite^=desktop] .artikel .t{font-size:20px}
+body[data-breite^=desktop] .liste{grid-template-columns:1fr 1fr;gap:28px 32px}
+body[data-breite^=desktop] .eintrag{grid-template-columns:88px 1fr}
+body[data-breite^=desktop] .eintrag .bild{width:88px;height:88px}
+body[data-breite^=desktop] .parkett-kopf{padding-top:40px;margin-bottom:32px}
+
+/* Stapelkarten füllen die Inhaltsspalte */
+body[data-breite^=desktop][data-variante=karten] .daten{padding:24px var(--rand) 72px}
+body[data-breite^=desktop][data-variante=karten] .szene{
+  padding:52px 54px 56px;min-height:min(660px, calc(100dvh - 200px));margin-bottom:24px}
+body[data-breite^=desktop][data-variante=karten] .wolke{height:230px}
+body[data-breite^=desktop][data-variante=karten] .band{height:130px}
+body[data-breite^=desktop][data-variante=karten] .gross{font-size:64px}
+
+/* Karte = 892 breit, Inhalt aber in der Textspalte — sonst werden die Balken zu Bandwürmer */
+body[data-breite^=desktop][data-variante=karten] .szene > *:not(.kartenkopf){
+  max-width:var(--w-text);margin-left:auto;margin-right:auto}
+body[data-breite^=desktop][data-variante=karten] .kartenkopf{top:22px;left:54px;right:54px;font-size:11px}
+body[data-breite^=desktop][data-variante=karten] .karten{grid-template-columns:1fr 1fr}
+
+
+/* ═══ Desktop · zweite Runde: kleiner, zweispaltig, nach zeit.de-Maß ═══
+   zeit.de Desktop: Titel 42 px (Tiemann 46–54), Vorspann 20, Fließtext 20/1.5,
+   Kicker 14 in Akzentrot, Autorenzeile 16 — alles in der 660er Spalte.        */
+body[data-breite^=desktop] .h1{font-size:42px;line-height:1.15}
+body[data-breite^=desktop] .h2{font-size:28px}
+body[data-breite^=desktop] .h3{font-size:24px}
+body[data-breite^=desktop] .gross{font-size:56px}
+body[data-breite^=desktop] .mittel{font-size:34px}
+body[data-breite^=desktop] .zahl .e{font-size:20px}
+body[data-breite^=desktop] .lead{font-size:18px;max-width:none}
+body[data-breite^=desktop] .szene .quelle{max-width:none}
+body[data-breite^=desktop] .einstieg{min-height:0;padding-top:72px;padding-bottom:56px}
+body[data-breite^=desktop] .einstieg .augen{font-size:14px;color:var(--marker)}
+body[data-breite^=desktop] .szene{min-height:0;padding:56px 0}
+body[data-breite^=desktop] .band{height:140px;gap:6px}
+body[data-breite^=desktop] .wolke{height:300px}
+body[data-breite^=desktop] .szene.sichtbar .tag .a i{height:24px}
+body[data-breite^=desktop] .szene.sichtbar .tag .a.aktiv i{height:60px}
+body[data-breite^=desktop] .artikel{flex:0 0 200px;aspect-ratio:200/282}
+body[data-breite^=desktop] .artikel .t{font-size:18px}
+body[data-breite^=desktop] .liste{gap:24px 32px}
+body[data-breite^=desktop] .karte h3{font-size:18px}
+
+/* Zweispaltig: Text links (5), Grafik rechts (7), zusammen 892 */
+.textspalte,.grafikspalte{display:contents}
+body[data-breite^=desktop] .szene{display:grid;grid-template-columns:5fr 7fr;gap:0 56px;
+  align-items:center;text-align:left}
+body[data-breite^=desktop] .textspalte,
+body[data-breite^=desktop] .grafikspalte{display:block;min-width:0}
+body[data-breite^=desktop] .szene .augen,
+body[data-breite^=desktop] .szene .zahl,
+body[data-breite^=desktop] .szene .mittel,
+body[data-breite^=desktop] .szene .h2,
+body[data-breite^=desktop] .szene .lead,
+body[data-breite^=desktop] .szene .quelle,
+body[data-breite^=desktop] .szene .thema-satz{max-width:none;margin-left:0;margin-right:0}
+body[data-breite^=desktop] .zahl{justify-content:flex-start}
+body[data-breite^=desktop] .szene .augen{margin-bottom:18px;font-size:12px}
+body[data-breite^=desktop] .szene .lead{margin-top:16px}
+body[data-breite^=desktop] .szene .quelle{margin-top:20px}
+body[data-breite^=desktop] .thema-satz .lead{margin-top:0}
+body[data-breite^=desktop] .grafikspalte > :first-child{margin-top:0}
+body[data-breite^=desktop] .band-huelle,body[data-breite^=desktop] .spur-huelle,
+body[data-breite^=desktop] .tag,body[data-breite^=desktop] .wolke-huelle{margin-top:0}
+body[data-breite^=desktop] .karten{margin-top:24px;grid-template-columns:1fr 1fr;gap:12px}
+body[data-breite^=desktop] .karte{padding:16px}
+body[data-breite^=desktop] .karte h3{font-size:16px}
+body[data-breite^=desktop] .karte h3 + h3,body[data-breite^=desktop] .karte.leer h3{font-size:14px}
+body[data-breite^=desktop] .karte p{font-size:13px}
+/* Nur eine Karte? Dann volle Grafikbreite */
+body[data-breite^=desktop] .karten:has(> :only-child){grid-template-columns:1fr}
+
+/* Stapelkarten auf Desktop: gleiche zwei Spalten, Karte 892 */
+body[data-breite^=desktop][data-variante=karten] .szene{
+  padding:64px 54px 56px;min-height:min(560px, calc(100cqh - 200px));grid-template-columns:5fr 7fr}
+body[data-breite^=desktop][data-variante=karten] .szene > *:not(.kartenkopf){max-width:none;margin-left:0;margin-right:0}
+body[data-breite^=desktop][data-variante=karten] .wolke{height:260px}
+body[data-breite^=desktop][data-variante=karten] .band{height:130px}
+body[data-breite^=desktop][data-variante=karten] .gross{font-size:56px}
+
+@media (max-width:1400px){body[data-breite^=desktop] .stand{grid-template-columns:1fr}body[data-breite^=desktop] .panel{position:static}}
+
+/* Rasterlineale, nur zum Prüfen */
+body[data-breite=desktop-raster] .telefon::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:55;
+  background:
+    linear-gradient(to right, rgba(185,17,9,.16) 0 1px, transparent 1px) 0 0/var(--w-seite) 100% no-repeat,
+    linear-gradient(to left,  rgba(185,17,9,.16) 0 1px, transparent 1px) 100% 0/var(--w-seite) 100% no-repeat,
+    linear-gradient(to right, rgba(185,17,9,.10) 0 100%) 54px 0/892px 100% no-repeat,
+    linear-gradient(to right, rgba(30,90,190,.10) 0 100%) 170px 0/660px 100% no-repeat}
+
 @media (max-width:700px){
   body{background:var(--seite)}
   .stand{padding:0;gap:0;grid-template-columns:1fr;max-width:none}
@@ -249,6 +419,15 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 <aside class="panel">
   <h2>Prüfstand</h2>
   <p>Alle Werte aus <span style="color:#1a1817">export_abowrapped_28082026</span>, 1.756 Abonnentinnen und Abonnenten, die in diesem Zeitraum ein Abo abgeschlossen haben. Aufbau und Texte aus <span style="color:#1a1817">550:28224</span>.</p>
+
+  <div class="feld">
+    <label>Breite</label>
+    <div class="chips" id="breite">
+      <button type="button" data-w="handy" aria-pressed="true">Handy 390</button>
+      <button type="button" data-w="desktop" aria-pressed="false">Desktop 1000</button>
+      <button type="button" data-w="desktop-raster" aria-pressed="false">+ Raster</button>
+    </div>
+  </div>
 
   <div class="feld">
     <label>Darstellung der Daten</label>
@@ -530,6 +709,7 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
     });
     $("wolkeN").textContent=wolke.children.length+" von 40 im Bild";
     zielSetzen(); wolke.classList.remove("ein","fokus");
+    if($("s-thema").classList.contains("sichtbar")) wolkeFokus();
   }
   function zielSetzen(){
     var ziel=null;
@@ -661,7 +841,7 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
       : 'Ein seltenes Themenfeld — nur '+t[1]+' der 1.756 lesen vor allem darüber. Sie gehören zu einer kleinen Gruppe.';
 
     zeigeBloecke();
-    baueEmpfehlung(); baueEntdecken(); baueWolke();
+    baueEmpfehlung(); baueEntdecken(); baueWolke(); setTimeout(stapel,0);
   }
 
   // ── Auslösezone im oberen Sichtbereich
@@ -711,6 +891,19 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 
   // ── Stapeltiefe: je stärker die nächste Karte überdeckt, desto weiter sinkt diese zurück
   var stapelKarten=[].slice.call(document.querySelectorAll('.szene'));
+  stapelKarten.forEach(function(k){
+    var kopf=document.createElement('div'); kopf.className='kartenkopf';
+    kopf.innerHTML='<span><b>Z+</b> Ihre erste Woche</span><span>'+k.dataset.nr+'</span>';
+    kopf.setAttribute('aria-hidden','true'); k.setAttribute('aria-label',k.dataset.nr);
+    k.insertBefore(kopf, k.firstChild); });
+  stapelKarten.forEach(function(k){
+    var t=document.createElement('div'), g=document.createElement('div');
+    t.className='textspalte'; g.className='grafikspalte';
+    [].slice.call(k.children).forEach(function(c){
+      if(c.classList.contains('kartenkopf')) return;
+      var text=/(^| )(augen|zahl|gross|mittel|lead|quelle|thema-satz)( |$)/.test(c.className);
+      (text?t:g).appendChild(c); });
+    k.appendChild(t); k.appendChild(g); });
   function stapel(){
     if(document.body.getAttribute('data-variante')!=='karten'){
       stapelKarten.forEach(function(k){ k.style.transform=''; k.style.setProperty('--schleier',0); });
@@ -721,10 +914,10 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
       if(!naechste){ k.style.transform=''; k.style.setProperty('--schleier',0); return; }
       var kr=k.getBoundingClientRect(), nr=naechste.getBoundingClientRect();
       var weg=Math.max(0, kr.bottom - nr.top);
-      var p=Math.min(1, weg / Math.max(1, kr.height*0.85));
+      var p=Math.min(1, weg / Math.max(1, k.offsetHeight*0.85));
       var e=p*p*(3-2*p);
       k.style.transform='scale('+(1-e*0.055).toFixed(4)+') translateY('+(-e*14).toFixed(1)+'px)';
-      k.style.setProperty('--schleier',(e*0.42).toFixed(3));
+      k.style.setProperty('--schleier',(e*0.58).toFixed(3));
     });
   }
   rohr.addEventListener('scroll',stapel,{passive:true});
@@ -732,6 +925,12 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
     var p=rohr.scrollTop/Math.max(1,rohr.scrollHeight-rohr.clientHeight);
     $('fortschritt').style.width=(p*100).toFixed(1)+'%';
   },{passive:true});
+
+  $('breite').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    [].forEach.call(this.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',String(x===b));});
+    if(b.dataset.w==='handy') document.body.removeAttribute('data-breite');
+    else document.body.setAttribute('data-breite', b.dataset.w);
+    setTimeout(function(){ stapel(); rechne(); },40); });
 
   $('minuten').addEventListener('input',function(){ Z.min=+this.value; rechne();
     gezaehlt=false; if($('s-zeit').classList.contains('sichtbar')) zaehle(); });
