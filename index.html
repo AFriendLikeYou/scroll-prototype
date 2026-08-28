@@ -124,6 +124,8 @@ body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 .spur i{display:block;height:100%;border-radius:5px;background:var(--ink);width:0;transition:width 1.4s var(--e) .3s}
 .szene.sichtbar .spur i{width:var(--w)}
 .kerbe{position:absolute;top:-5px;left:50%;width:2px;height:20px;background:var(--ink3);opacity:0;transition:opacity .6s var(--e) .9s}
+.kerbe::after{content:"Mitte Ihrer Gruppe";position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:var(--ink3);font-weight:400}
+.spur-meta{margin-top:28px!important}
 .szene.sichtbar .kerbe{opacity:.5}
 .spur-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:12px 0 0}
 .spur-meta em{font-style:normal;color:var(--marker);font-weight:700}
@@ -699,6 +701,9 @@ body[data-breite=desktop-raster] .telefon::after{
     // das eigene Thema zuerst — es bekommt die Mitte und wird nie verworfen
     var reihe=THEMEN.slice().sort(function(x,y){
       if(x[0]===Z.thema) return -1; if(y[0]===Z.thema) return 1; return y[1]-x[1]; });
+    var desktop=/^desktop/.test(document.body.getAttribute("data-breite")||"");
+    if(desktop) reihe=reihe.slice(0,15);
+    var wolkeFuss=document.querySelector(".wolke-fuss span"); if(wolkeFuss) wolkeFuss.textContent=desktop?"Die 15 häufigsten Themenfelder, Größe nach Häufigkeit":"Vierzig Themenfelder, Größe nach Häufigkeit";
     reihe.forEach(function(t,i){
       var meins = t[0]===Z.thema;
       var sp=document.createElement("span");
@@ -727,7 +732,7 @@ body[data-breite=desktop-raster] .telefon::after{
       }
       if(!ok) sp.remove();
     });
-    $("wolkeN").textContent=wolke.children.length+" von 40 im Bild";
+    $("wolkeN").textContent=wolke.children.length+" von "+reihe.length+" im Bild";
     zielSetzen(); wolke.classList.remove("ein","fokus");
     if($("s-thema").classList.contains("sichtbar")) wolkeFokus();
   }
@@ -913,7 +918,7 @@ body[data-breite=desktop-raster] .telefon::after{
   var stapelKarten=[].slice.call(document.querySelectorAll('.szene'));
   stapelKarten.forEach(function(k){
     var kopf=document.createElement('div'); kopf.className='kartenkopf';
-    kopf.innerHTML='<span><b>Z+</b> Ihre erste Woche</span><span>'+k.dataset.nr+'</span>';
+    kopf.innerHTML='<span></span><span>'+k.dataset.nr+'</span>';
     kopf.setAttribute('aria-hidden','true'); k.setAttribute('aria-label',k.dataset.nr);
     k.insertBefore(kopf, k.firstChild); });
   stapelKarten.forEach(function(k){
