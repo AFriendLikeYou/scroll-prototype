@@ -90,9 +90,9 @@ body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 @keyframes wink{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(6px);opacity:1}}
 
 /* ═══ Datenbereich · abgesetzte Fläche ═══ */
-.daten{padding:8px 16px 24px}
+.daten{padding:0 16px}
 .szene{min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;
-  text-align:center;padding:44px 0;border-bottom:1px solid var(--linie)}
+  text-align:center;padding:48px 0;border-bottom:1px solid var(--linie)}
 .szene:last-child{border-bottom:0}
 .szene > *,.textspalte > *,.grafikspalte > *{width:100%}
 .szene .augen{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin:0 0 14px}
@@ -167,7 +167,7 @@ body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 .karte.leer h3{font-size:16px;color:var(--ink2)}
 
 /* ═══ Variante B · Karten, die sich beim Scrollen stapeln ═══ */
-body[data-variante=karten] .daten{padding:16px 14px 56px}
+body[data-variante=karten] .daten{padding:24px 14px 48px}
 body[data-variante=karten] .szene{
   position:sticky;background:var(--karte);border:1px solid var(--linie);border-radius:4px;
   padding:64px 22px 48px;margin-bottom:18px;border-bottom:1px solid var(--linie);justify-content:flex-start;
@@ -200,8 +200,8 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 .bleibt .bedingung{font-size:11px;font-weight:600;color:var(--warn);margin:14px 0 0}
 
 /* ═══ Karussell ═══ */
-.parkett{padding:0 16px 8px}
-.parkett-kopf{border-top:1px solid var(--linie);padding-top:24px;margin-bottom:24px}
+.parkett{padding:48px 16px;border-top:1px solid var(--linie)}
+.parkett-kopf{margin-bottom:24px}
 .karussell{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px}
 .karussell::-webkit-scrollbar{height:0}
 .artikel{flex:0 0 179px;scroll-snap-align:start;border-radius:4px;overflow:hidden;position:relative;
@@ -222,7 +222,7 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 .leerhinweis{font-size:14px;line-height:1.5;color:var(--ink3);margin:0}
 
 /* ═══ Abschluss ═══ */
-.ende{padding:32px 16px;display:grid;gap:24px;border-top:1px solid var(--linie)}
+.ende{padding:48px 16px 56px;display:grid;gap:24px;border-top:1px solid var(--linie)}
 .ende .inhalt{display:grid;gap:16px}
 .ende .knoepfe{display:flex;gap:16px;flex-wrap:wrap}
 .knopf{appearance:none;border:0;height:40px;padding:0 16px;border-radius:4px;cursor:pointer;
@@ -248,10 +248,9 @@ body[data-breite^=desktop] .einstieg,
 body[data-breite^=desktop] .bleibt,
 body[data-breite^=desktop] .parkett,
 body[data-breite^=desktop] .ende{padding-left:var(--rand);padding-right:var(--rand)}
-body[data-breite^=desktop] .daten{padding:24px var(--rand) 40px}
-body[data-breite^=desktop] .einstieg{min-height:560px;padding-top:96px;padding-bottom:80px}
+body[data-breite^=desktop] .daten{padding:0 var(--rand)}
 body[data-breite^=desktop] .bleibt{padding-top:64px;padding-bottom:64px}
-body[data-breite^=desktop] .ende{padding-top:48px;padding-bottom:56px}
+body[data-breite^=desktop] .ende{padding-top:64px;padding-bottom:72px}
 
 /* Textspalte 660, Grafikspalte 892 */
 body[data-breite^=desktop] .einstieg > *,
@@ -293,7 +292,6 @@ body[data-breite^=desktop] .achse,
 body[data-breite^=desktop] .spur-meta,
 body[data-breite^=desktop] .wolke-fuss,
 body[data-breite^=desktop] .anteil .m{font-size:12px}
-body[data-breite^=desktop] .szene{min-height:620px;padding:64px 0}
 
 /* Empfehlungen nebeneinander, solange Platz ist */
 body[data-breite^=desktop] .karten{display:grid;gap:16px;
@@ -309,7 +307,8 @@ body[data-breite^=desktop] .artikel .t{font-size:20px}
 body[data-breite^=desktop] .liste{grid-template-columns:1fr 1fr;gap:28px 32px}
 body[data-breite^=desktop] .eintrag{grid-template-columns:88px 1fr}
 body[data-breite^=desktop] .eintrag .bild{width:88px;height:88px}
-body[data-breite^=desktop] .parkett-kopf{padding-top:40px;margin-bottom:32px}
+body[data-breite^=desktop] .parkett{padding-top:64px;padding-bottom:64px}
+body[data-breite^=desktop] .parkett-kopf{margin-bottom:32px}
 
 /* Stapelkarten füllen die Inhaltsspalte */
 body[data-breite^=desktop][data-variante=karten] .daten{padding:24px var(--rand) 72px}
@@ -337,9 +336,9 @@ body[data-breite^=desktop] .mittel{font-size:34px}
 body[data-breite^=desktop] .zahl .e{font-size:20px}
 body[data-breite^=desktop] .lead{font-size:18px;max-width:none}
 body[data-breite^=desktop] .szene .quelle{max-width:none}
-body[data-breite^=desktop] .einstieg{min-height:0;padding-top:72px;padding-bottom:56px}
+body[data-breite^=desktop] .einstieg{min-height:0;padding-top:80px;padding-bottom:64px}
 body[data-breite^=desktop] .einstieg .augen{font-size:14px;color:var(--marker)}
-body[data-breite^=desktop] .szene{min-height:0;padding:56px 0}
+body[data-breite^=desktop] .szene{min-height:0;padding:64px 0}
 body[data-breite^=desktop] .wolke{height:300px}
 body[data-breite^=desktop] .band{height:130px}
 body[data-breite^=desktop] .szene.sichtbar .tag .a i{height:24px}
@@ -590,7 +589,7 @@ body[data-breite=desktop-raster] .telefon::after{
     </section>
 
     <!-- Dynamische Ausspielfläche -->
-    <section class="parkett" id="s-entdecken" style="padding-bottom:24px">
+    <section class="parkett" id="s-entdecken">
       <div class="parkett-kopf">
         <h3 class="h3">Entdecken Sie weitere spannende Inhalte Ihres Abos</h3>
         <p class="sub-s" id="entdeckenSub"></p>
