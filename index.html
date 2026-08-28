@@ -94,7 +94,7 @@ body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 .szene{min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;
   text-align:center;padding:44px 0;border-bottom:1px solid var(--linie)}
 .szene:last-child{border-bottom:0}
-.szene > *{width:100%}
+.szene > *,.textspalte > *,.grafikspalte > *{width:100%}
 .szene .augen{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin:0 0 14px}
 .gross{font-size:clamp(40px,13vw,58px);font-weight:700;line-height:1;margin:0;letter-spacing:-.02em}
 .mittel{font-size:clamp(26px,7.4vw,34px);font-weight:700;line-height:1.1;margin:0}
@@ -340,8 +340,8 @@ body[data-breite^=desktop] .szene .quelle{max-width:none}
 body[data-breite^=desktop] .einstieg{min-height:0;padding-top:72px;padding-bottom:56px}
 body[data-breite^=desktop] .einstieg .augen{font-size:14px;color:var(--marker)}
 body[data-breite^=desktop] .szene{min-height:0;padding:56px 0}
-body[data-breite^=desktop] .band{height:140px;gap:6px}
 body[data-breite^=desktop] .wolke{height:300px}
+body[data-breite^=desktop] .band{height:130px}
 body[data-breite^=desktop] .szene.sichtbar .tag .a i{height:24px}
 body[data-breite^=desktop] .szene.sichtbar .tag .a.aktiv i{height:60px}
 body[data-breite^=desktop] .artikel{flex:0 0 200px;aspect-ratio:200/282}
@@ -349,39 +349,21 @@ body[data-breite^=desktop] .artikel .t{font-size:18px}
 body[data-breite^=desktop] .liste{gap:24px 32px}
 body[data-breite^=desktop] .karte h3{font-size:18px}
 
-/* Zweispaltig: Text links (5), Grafik rechts (7), zusammen 892 */
+/* Eine Spalte: alles in der 660er Textspalte, auch die Grafiken */
 .textspalte,.grafikspalte{display:contents}
-body[data-breite^=desktop] .szene{display:grid;grid-template-columns:5fr 7fr;gap:0 56px;
-  align-items:center;text-align:left}
-body[data-breite^=desktop] .textspalte,
-body[data-breite^=desktop] .grafikspalte{display:block;min-width:0}
-body[data-breite^=desktop] .szene .augen,
-body[data-breite^=desktop] .szene .zahl,
-body[data-breite^=desktop] .szene .mittel,
-body[data-breite^=desktop] .szene .h2,
-body[data-breite^=desktop] .szene .lead,
-body[data-breite^=desktop] .szene .quelle,
-body[data-breite^=desktop] .szene .thema-satz{max-width:none;margin-left:0;margin-right:0}
-body[data-breite^=desktop] .zahl{justify-content:flex-start}
-body[data-breite^=desktop] .szene .augen{margin-bottom:18px;font-size:12px}
-body[data-breite^=desktop] .szene .lead{margin-top:16px}
-body[data-breite^=desktop] .szene .quelle{margin-top:20px}
-body[data-breite^=desktop] .thema-satz .lead{margin-top:0}
-body[data-breite^=desktop] .grafikspalte > :first-child{margin-top:0}
-body[data-breite^=desktop] .band-huelle,body[data-breite^=desktop] .spur-huelle,
-body[data-breite^=desktop] .tag,body[data-breite^=desktop] .wolke-huelle{margin-top:0}
-body[data-breite^=desktop] .karten{margin-top:24px;grid-template-columns:1fr 1fr;gap:12px}
+body[data-breite^=desktop] .szene > *,
+body[data-breite^=desktop] .textspalte > *,
+body[data-breite^=desktop] .grafikspalte > *{max-width:var(--w-text);margin-left:auto;margin-right:auto}
+body[data-breite^=desktop] .szene .augen{font-size:12px}
+body[data-breite^=desktop] .karten{margin-top:24px;grid-template-columns:1fr;gap:12px}
 body[data-breite^=desktop] .karte{padding:16px}
 body[data-breite^=desktop] .karte h3{font-size:16px}
 body[data-breite^=desktop] .karte h3 + h3,body[data-breite^=desktop] .karte.leer h3{font-size:14px}
 body[data-breite^=desktop] .karte p{font-size:13px}
-/* Nur eine Karte? Dann volle Grafikbreite */
-body[data-breite^=desktop] .karten:has(> :only-child){grid-template-columns:1fr}
 
-/* Stapelkarten auf Desktop: gleiche zwei Spalten, Karte 892 */
+/* Stapelkarten auf Desktop: Karte 892, Inhalt 660 */
 body[data-breite^=desktop][data-variante=karten] .szene{
-  padding:64px 54px 56px;min-height:min(560px, calc(100cqh - 200px));grid-template-columns:5fr 7fr}
-body[data-breite^=desktop][data-variante=karten] .szene > *:not(.kartenkopf){max-width:none;margin-left:0;margin-right:0}
+  padding:64px 54px 56px;min-height:min(560px, calc(100cqh - 200px))}
 body[data-breite^=desktop][data-variante=karten] .wolke{height:260px}
 body[data-breite^=desktop][data-variante=karten] .band{height:130px}
 body[data-breite^=desktop][data-variante=karten] .gross{font-size:56px}
