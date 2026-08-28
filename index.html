@@ -42,6 +42,7 @@ body{margin:0;background:#e9e6e0;color:var(--ink);font-family:var(--ff);-webkit-
 .wert{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#6b665f;margin:0 0 2px}
 .wert b{font-size:17px;color:#1a1817;font-variant-numeric:tabular-nums}
 .chips{display:flex;gap:5px;flex-wrap:wrap}
+.chips button[disabled]{opacity:.35;cursor:not-allowed}
 .chips button{appearance:none;border:1px solid #d8d4cd;background:#faf8f4;border-radius:20px;cursor:pointer;
   font-family:var(--ff);font-size:11.5px;padding:6px 11px;color:#4a4640;transition:all .25s var(--e)}
 .chips button[aria-pressed="true"]{background:#b91109;border-color:#b91109;color:#fff;font-weight:600}
@@ -378,9 +379,7 @@ body[data-variante=ruhig] .szene{
   min-height:0;justify-content:flex-start;background:var(--flaeche);border:1px solid var(--linie);
   border-radius:12px;padding:36px 20px 32px;margin-bottom:16px;border-bottom:1px solid var(--linie)}
 body[data-variante=ruhig] .szene:last-child{margin-bottom:0}
-body[data-variante=ruhig] .szene .augen{
-  font-size:22px;font-weight:700;letter-spacing:-.01em;text-transform:none;color:var(--ink);
-  line-height:1.2;margin:0 0 10px;text-wrap:balance}
+body[data-variante=ruhig] .szene .augen{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink3);margin:0 0 16px}
 body[data-variante=ruhig] .gross{font-size:clamp(36px,11vw,48px)}
 body[data-variante=ruhig] .mittel{font-size:clamp(24px,6.6vw,30px)}
 body[data-variante=ruhig] .lead{font-size:16px;margin-top:10px}
@@ -391,8 +390,10 @@ body[data-variante=ruhig] .band{height:110px;
   background-size:100% calc(100% - 1px);background-repeat:no-repeat}
 body[data-variante=ruhig] .band .s{border-radius:2px 2px 0 0;background:var(--track)}
 body[data-variante=ruhig] .band .s.sie{background:var(--marker)}
-body[data-variante=ruhig] .sie-marke::after{content:" · " attr(data-min)}
-body[data-variante=ruhig] .sie-marke{letter-spacing:.04em;text-transform:none;font-size:11px}
+.sie-marke::after{content:" · " attr(data-min)}
+.sie-marke{letter-spacing:.04em;font-size:11px}
+.tag .a b{display:block;font-size:11px;font-weight:700;color:var(--marker);text-align:center;opacity:0;transform:translateY(4px);transition:opacity .5s var(--e) 1.1s,transform .5s var(--e) 1.1s;font-variant-numeric:tabular-nums}
+.szene.sichtbar .tag .a.aktiv b{opacity:1;transform:none}
 body[data-variante=ruhig] .karten{margin-top:20px}
 body[data-variante=ruhig] .karte{background:var(--seite);border-color:var(--linie);border-radius:8px}
 body[data-variante=ruhig] .karte.leer{background:transparent}
@@ -401,7 +402,7 @@ body[data-breite^=desktop][data-variante=ruhig] .daten{padding:0 var(--rand) 64p
 body[data-breite^=desktop][data-variante=ruhig] .szene{max-width:var(--w-text);margin-left:auto;margin-right:auto;
   padding:48px 40px 40px;margin-bottom:24px}
 body[data-breite^=desktop][data-variante=ruhig] .szene:last-child{margin-bottom:0}
-body[data-breite^=desktop][data-variante=ruhig] .szene .augen{font-size:26px}
+body[data-breite^=desktop][data-variante=ruhig] .szene .augen{font-size:12px}
 body[data-breite^=desktop][data-variante=ruhig] .gross{font-size:56px}
 body[data-breite^=desktop][data-variante=ruhig] .lead{font-size:18px}
 body[data-breite^=desktop][data-variante=ruhig] .band{height:130px}
@@ -451,8 +452,7 @@ body[data-breite=desktop-raster] .telefon::after{
   <div class="feld">
     <label>Darstellung der Daten</label>
     <div class="chips" id="variante">
-      <button type="button" data-v="szenen" aria-pressed="true">Szenen</button>
-      <button type="button" data-v="karten" aria-pressed="false">Karten, gestapelt</button>
+      <button type="button" data-v="karten" aria-pressed="true">Karten, gestapelt</button>
       <button type="button" data-v="ruhig" aria-pressed="false">Karten, ruhig</button>
     </div>
   </div>
@@ -753,7 +753,7 @@ body[data-breite=desktop-raster] .telefon::after{
     var el=$('tag'); el.innerHTML='';
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
       d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
-      d.innerHTML='<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
+      d.innerHTML=(n===Z.tageszeit?'<b>'+Math.round(a[2])+' %</b>':'<b>&nbsp;</b>')+'<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
     $('tagTitel').textContent='Meist '+Z.tageszeit;
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
     $('tagQuelle').textContent=TAGE[Z.tageszeit][2].toFixed(1).replace('.',',')+' % der Abonnentinnen und Abonnenten, die im selben Zeitraum ein Abo abgeschlossen haben, lesen '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
@@ -948,8 +948,12 @@ body[data-breite=desktop-raster] .telefon::after{
 
   $('breite').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     [].forEach.call(this.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',String(x===b));});
-    if(b.dataset.w==='handy') document.body.removeAttribute('data-breite');
-    else document.body.setAttribute('data-breite', b.dataset.w);
+    var desktop=b.dataset.w!=='handy';
+    if(desktop) document.body.setAttribute('data-breite', b.dataset.w); else document.body.removeAttribute('data-breite');
+    var wahl=desktop?'ruhig':(mobilWahl||'karten');
+    document.body.setAttribute('data-variante', wahl);
+    $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===wahl)); x.disabled = desktop && x.dataset.v==='karten'; });
+    setTimeout(function(){ baueWolke(); wiederhole(); },80);
     setTimeout(function(){ stapel(); rechne(); },40); });
 
   $('minuten').addEventListener('input',function(){ Z.min=+this.value; rechne();
@@ -972,13 +976,15 @@ body[data-breite=desktop-raster] .telefon::after{
     Z.entdeckt[b.dataset.e]=!Z.entdeckt[b.dataset.e];
     b.setAttribute('aria-pressed',String(Z.entdeckt[b.dataset.e]));
     baueEntdecken(); });
-  $('variante').addEventListener('click',function(e){ var b2=e.target.closest('button'); if(!b2) return;
+  var mobilWahl=null;
+  $('variante').addEventListener('click',function(e){ var b2=e.target.closest('button'); if(!b2||b2.disabled) return;
+    if(!document.body.getAttribute('data-breite')) mobilWahl=b2.dataset.v;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b2)); });
     document.body.setAttribute('data-variante', b2.dataset.v);
     setTimeout(function(){ baueWolke(); wiederhole(); stapel(); }, 80);
     try{ localStorage.setItem('zeit-variante', b2.dataset.v); }catch(err){} });
   try{ var vg=localStorage.getItem('zeit-variante');
-    if(vg==='karten'||vg==='ruhig'){ document.body.setAttribute('data-variante',vg);
+    if(vg==='ruhig'){ document.body.setAttribute('data-variante',vg);
       $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===vg)); }); } }catch(err){}
   $('quellen').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
@@ -991,7 +997,7 @@ body[data-breite=desktop-raster] .telefon::after{
   $('wieder').addEventListener('click',wiederhole);
   $('oben').addEventListener('click',function(){ rohr.scrollTo({top:0,behavior:'smooth'}); });
 
-  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','szenen'); baueTag(); rechne(); }
+  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','karten'); baueTag(); rechne(); }
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(los); else los();
   var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(baueWolke,250); });
 })();
