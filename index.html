@@ -369,6 +369,44 @@ body[data-breite^=desktop][data-variante=karten] .gross{font-size:56px}
 
 @media (max-width:1400px){body[data-breite^=desktop] .stand{grid-template-columns:1fr}body[data-breite^=desktop] .panel{position:static}}
 
+
+/* ═══ Variante C · Karten, ruhig — nach dem Muster der ZEIT-Datenkarten (Steuerreform 07/2026):
+   leicht abgesetzte Fläche, großer Radius, Titel zentriert, ein Satz, Grafik, Fußnote.
+   Kein Kopf, keine Nummer, kein Schatten. Farbe nur auf dem einen Wert.                    */
+body[data-variante=ruhig] .daten{padding:8px 16px 48px}
+body[data-variante=ruhig] .szene{
+  min-height:0;justify-content:flex-start;background:var(--flaeche);border:1px solid var(--linie);
+  border-radius:12px;padding:36px 20px 32px;margin-bottom:16px;border-bottom:1px solid var(--linie)}
+body[data-variante=ruhig] .szene:last-child{margin-bottom:0}
+body[data-variante=ruhig] .szene .augen{
+  font-size:22px;font-weight:700;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  line-height:1.2;margin:0 0 10px;text-wrap:balance}
+body[data-variante=ruhig] .gross{font-size:clamp(36px,11vw,48px)}
+body[data-variante=ruhig] .mittel{font-size:clamp(24px,6.6vw,30px)}
+body[data-variante=ruhig] .lead{font-size:16px;margin-top:10px}
+body[data-variante=ruhig] .szene .quelle{margin-top:18px;font-size:11px}
+body[data-variante=ruhig] .wolke{height:250px}
+body[data-variante=ruhig] .band{height:110px;
+  background:repeating-linear-gradient(to top,var(--linie) 0 1px,transparent 1px 25%);
+  background-size:100% calc(100% - 1px);background-repeat:no-repeat}
+body[data-variante=ruhig] .band .s{border-radius:2px 2px 0 0;background:var(--track)}
+body[data-variante=ruhig] .band .s.sie{background:var(--marker)}
+body[data-variante=ruhig] .sie-marke::after{content:" · " attr(data-min)}
+body[data-variante=ruhig] .sie-marke{letter-spacing:.04em;text-transform:none;font-size:11px}
+body[data-variante=ruhig] .karten{margin-top:20px}
+body[data-variante=ruhig] .karte{background:var(--seite);border-color:var(--linie);border-radius:8px}
+body[data-variante=ruhig] .karte.leer{background:transparent}
+/* Desktop: 660 breit, luftiger */
+body[data-breite^=desktop][data-variante=ruhig] .daten{padding:0 var(--rand) 64px}
+body[data-breite^=desktop][data-variante=ruhig] .szene{max-width:var(--w-text);margin-left:auto;margin-right:auto;
+  padding:48px 40px 40px;margin-bottom:24px}
+body[data-breite^=desktop][data-variante=ruhig] .szene:last-child{margin-bottom:0}
+body[data-breite^=desktop][data-variante=ruhig] .szene .augen{font-size:26px}
+body[data-breite^=desktop][data-variante=ruhig] .gross{font-size:56px}
+body[data-breite^=desktop][data-variante=ruhig] .lead{font-size:18px}
+body[data-breite^=desktop][data-variante=ruhig] .band{height:130px}
+body[data-breite^=desktop][data-variante=ruhig] .wolke{height:280px}
+
 /* Rasterlineale, nur zum Prüfen */
 body[data-breite=desktop-raster] .telefon::after{
   content:"";position:absolute;inset:0;pointer-events:none;z-index:55;
@@ -415,6 +453,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <div class="chips" id="variante">
       <button type="button" data-v="szenen" aria-pressed="true">Szenen</button>
       <button type="button" data-v="karten" aria-pressed="false">Karten, gestapelt</button>
+      <button type="button" data-v="ruhig" aria-pressed="false">Karten, ruhig</button>
     </div>
   </div>
 
@@ -726,7 +765,7 @@ body[data-breite=desktop-raster] .telefon::after{
       if(i===d&&!rot) s.style.background='var(--ink)';
       s.style.setProperty('--h',(12+i*8.5)+'px'); s.style.transitionDelay=(0.045*i)+'s'; el.appendChild(s); }
     var m=$('sieMarke'); m.style.left=((d-0.5)/10*100)+'%';
-    m.textContent=rot?'SIE':'Sie'; m.style.color=rot?'var(--marker)':'var(--ink3)';
+    m.textContent=rot?'SIE':'Sie'; m.style.color=rot?'var(--marker)':'var(--ink3)'; m.setAttribute('data-min', Z.min+' Min');
   }
   function karte(ziel,art,werte,unten,leerTitel,leerText){
     var k=$(ziel); k.innerHTML='';
@@ -939,8 +978,8 @@ body[data-breite=desktop-raster] .telefon::after{
     setTimeout(function(){ baueWolke(); wiederhole(); stapel(); }, 80);
     try{ localStorage.setItem('zeit-variante', b2.dataset.v); }catch(err){} });
   try{ var vg=localStorage.getItem('zeit-variante');
-    if(vg==='karten'){ document.body.setAttribute('data-variante','karten');
-      $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v==='karten')); }); } }catch(err){}
+    if(vg==='karten'||vg==='ruhig'){ document.body.setAttribute('data-variante',vg);
+      $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===vg)); }); } }catch(err){}
   $('quellen').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
     document.body.classList.toggle('ohne-quellen', b.dataset.q==='aus'); });
