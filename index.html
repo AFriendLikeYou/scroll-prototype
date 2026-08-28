@@ -1,654 +1,779 @@
-<meta charset="utf-8">
-<title>Schön, dass Sie bei uns sind</title>
+<title>Ihre erste Woche mit Z+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap">
-
 <style>
-  /* Nachbau der mobilen Fassung aus dem File (148:30752).
-     Rahmen 390 × 844, Inhalt 358, Auftakt 34 Bold, Kapitel 24 Bold,
-     Fließtext 16–18, Spitzmarke 14, Fußnote 12.
-     Farbfelder wie im Entwurf: #E7DCCB · #D6E0E3 · #EFE0CB ·
-     #D3DEE1 · #DCE4E6 · #FFE18A · #F0DFC6                              */
-  :root{
-    --paper:#FFFDF9; --ink:#252525; --mut:#767676; --line:#E2DED6; --red:#B91109;
-    --ff:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
-    --bg:#FFFDF9;
-  }
-  *,*::before,*::after{ box-sizing:border-box }
-  html,body{ height:100% }
-  body{
-    margin:0; font-family:var(--ff); font-size:16px; line-height:1.5; color:var(--ink);
-    background:#E8E3DA; -webkit-font-smoothing:antialiased;
-    display:grid; place-items:center; padding:24px;
-  }
-  @media (max-width:460px){ body{ padding:0; background:var(--bg) } }
+:root{
+  --seite:#ffffff; --flaeche:#eeeeee; --track:#dfdfdf; --bar:#cccccc;
+  --ink:#252525; --ink2:#444444; --ink3:#69696c;
+  --marker:#b91109; --linie:#e4e4e4; --karte:#ffffff;
+  --ff:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --e:cubic-bezier(.16,1,.3,1);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --seite:#121212; --flaeche:#242424; --track:#363636; --bar:#444444;
+  --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
+  --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e;
+}}
+:root[data-theme="dark"]{
+  --seite:#121212; --flaeche:#242424; --track:#363636; --bar:#444444;
+  --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
+  --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e;
+}
+*{box-sizing:border-box}
+h1,h2,h3,h4,.h1,.h2,.h3,.h4,.gross,.mittel,.karte h3,.artikel .t{text-wrap:balance}
+p,.sub,.sub-s,.lead,.quelle,.karte p,.leerhinweis,.bedingung{text-wrap:pretty}
+body{margin:0;background:#e9e6e0;color:var(--ink);font-family:var(--ff);-webkit-font-smoothing:antialiased}
+:root[data-theme="dark"] body,body.dunkel{background:#0e0d0c}
 
-  /* ── Gerätevorschau ─────────────────────────────────────────────── */
-  .stageWrap{ display:grid; gap:14px; justify-items:center }
-  .caption{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#8A8377 }
-  .device{
-    position:relative; width:390px; height:min(844px, calc(100svh - 96px));
-    background:var(--bg); border-radius:36px; overflow:hidden;
-    box-shadow:0 0 0 10px #1C1A17, 0 0 0 11px #37332C, 0 40px 80px -40px rgba(28,26,23,.6);
-  }
-  @media (max-width:460px){
-    .device{ width:100vw; height:100svh; border-radius:0; box-shadow:none }
-    .caption,.hintDesk{ display:none }
-  }
-  .statusbar{
-    position:absolute; inset:0 0 auto 0; height:44px; z-index:40;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 22px 0; font-size:13px; font-weight:600; letter-spacing:.02em;
-    pointer-events:none; color:var(--ink);
-  }
-  .statusbar .right{ display:flex; align-items:center; gap:5px }
-  .bars{ display:flex; align-items:flex-end; gap:2px }
-  .bars i{ width:3px; background:var(--ink); border-radius:1px }
-  .batt{ width:22px; height:11px; border:1px solid var(--ink); border-radius:3px; position:relative; opacity:.9 }
-  .batt::after{ content:''; position:absolute; inset:1.5px; width:70%; background:var(--ink); border-radius:1px }
+/* ═══ Prüfstand ═══ */
+.stand{max-width:1180px;margin:0 auto;padding:26px 22px 60px;display:grid;gap:28px;grid-template-columns:330px 1fr;align-items:start}
+@media (max-width:900px){.stand{grid-template-columns:1fr}}
+.panel{position:sticky;top:22px;background:#fff;border:1px solid #d8d4cd;border-radius:8px;padding:20px;
+  box-shadow:0 1px 2px rgba(20,18,16,.05),0 14px 34px -18px rgba(20,18,16,.25);color:#1a1817}
+@media (max-width:900px){.panel{position:static}}
+.panel h2{font-size:13px;font-weight:700;margin:0 0 4px}
+.panel > p{font-size:11.5px;line-height:1.5;color:#6b665f;margin:0 0 18px}
+.feld{margin:0 0 16px}
+.feld > label{display:block;font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:#6b665f;margin:0 0 7px}
+.feld select{width:100%;font-family:var(--ff);font-size:13px;padding:8px 10px;border:1px solid #d8d4cd;border-radius:4px;background:#faf8f4;color:#1a1817}
+.feld input[type=range]{width:100%;accent-color:#b91109;margin:2px 0 0}
+.wert{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#6b665f;margin:0 0 2px}
+.wert b{font-size:17px;color:#1a1817;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chips button{appearance:none;border:1px solid #d8d4cd;background:#faf8f4;border-radius:20px;cursor:pointer;
+  font-family:var(--ff);font-size:11.5px;padding:6px 11px;color:#4a4640;transition:all .25s var(--e)}
+.chips button[aria-pressed="true"]{background:#b91109;border-color:#b91109;color:#fff;font-weight:600}
+.chips button:focus-visible{outline:2px solid #b91109;outline-offset:2px}
+.abgeleitet{background:#faf8f4;border:1px solid #e4e0d8;border-radius:5px;padding:12px 14px;margin:18px 0 0}
+.abgeleitet dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12px}
+.abgeleitet dt{color:#6b665f} .abgeleitet dd{margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.abgeleitet .stufe{color:#b91109}
+.warnung{background:#fdf3e3;border:1px solid #e8d5ac;border-radius:5px;padding:10px 12px;margin:12px 0 0;font-size:11.5px;line-height:1.5;color:#6b4f14}
+.aktionen{display:flex;gap:8px;margin:16px 0 0}
+.aktionen button{flex:1;appearance:none;border:1px solid #d8d4cd;background:#faf8f4;border-radius:4px;cursor:pointer;
+  font-family:var(--ff);font-size:12px;font-weight:600;padding:9px;color:#1a1817;transition:all .25s var(--e)}
+.aktionen button:hover{background:#efece5}
 
-  /* ── Scrollfläche ───────────────────────────────────────────────── */
-  .screen{
-    position:absolute; inset:0; overflow-y:auto; overflow-x:hidden;
-    -webkit-overflow-scrolling:touch; scroll-behavior:smooth;
-  }
-  @media (prefers-reduced-motion:reduce){ .screen{ scroll-behavior:auto } }
-  .screen::-webkit-scrollbar{ width:0 }
-  .bgLayer{ position:sticky; top:0; height:0; z-index:0 }
-  .bgLayer .paint{
-    position:absolute; top:0; left:0; width:390px; height:min(844px, calc(100svh - 96px));
-    background:var(--bg); transition:background .45s linear; overflow:hidden;
-  }
-  @media (max-width:460px){ .bgLayer .paint{ width:100vw; height:100svh } }
-  .bgLayer i{ position:absolute; display:block; border-radius:50%; filter:blur(56px); will-change:transform,opacity }
+/* ═══ Telefon ═══ */
+.buehne{display:flex;justify-content:center}
+.telefon{width:390px;max-width:100%;height:min(844px,88vh);background:var(--seite);border-radius:44px;
+  border:11px solid #1a1817;box-shadow:0 2px 4px rgba(20,18,16,.2),0 30px 70px -26px rgba(20,18,16,.55);
+  position:relative;overflow:hidden;display:flex;flex-direction:column}
+.insel{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:112px;height:30px;background:#1a1817;border-radius:16px;z-index:70}
+.statusleiste{flex:none;height:46px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 5px;
+  font-size:13px;font-weight:600;color:var(--ink);z-index:65;position:relative}
+.statusleiste .r{display:flex;gap:5px;align-items:center}
+.statusleiste i{display:block;background:var(--ink);border-radius:1px}
+.rohr{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
+.rohr::-webkit-scrollbar{width:0}
+.fortschritt{position:absolute;top:0;left:0;height:2px;background:var(--marker);width:0;z-index:60;transition:width .1s linear}
 
-  .head{
-    position:sticky; top:0; z-index:30; height:52px; margin-top:44px;
-    display:grid; grid-template-columns:1fr auto 1fr; align-items:center; padding:0 16px;
-    background:color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter:blur(12px);
-    border-bottom:1px solid color-mix(in srgb,var(--ink) 8%,transparent);
-  }
-  .head .logo{ font-weight:700; font-size:17px; letter-spacing:.14em; text-align:center; white-space:nowrap }
-  .head button{ font:inherit; font-size:17px; background:none; border:0; padding:6px; cursor:pointer; color:var(--ink); justify-self:start; line-height:1 }
-  .head button.usr{ justify-self:end }
-  .prog{ position:absolute; top:44px; left:0; height:2px; width:0; background:var(--red); z-index:31 }
+/* ═══ Grundraster nach dem Entwurf: 16 px Rand ═══ */
+.abschnitt{padding:0 16px}
+.h1{font-size:34px;font-weight:700;line-height:1.1;margin:0;letter-spacing:-.01em}
+.h2{font-size:24px;font-weight:700;line-height:1.16;margin:0}
+.h3{font-size:22px;font-weight:700;line-height:1.18;margin:0}
+.h4{font-size:18px;font-weight:700;line-height:1.24;margin:0}
+.augen{font-size:14px;color:var(--ink3);margin:0 0 6px}
+.sub{font-size:18px;line-height:1.44;color:var(--ink2);margin:12px 0 0}
+.sub-s{font-size:14px;line-height:1.45;color:var(--ink3);margin:4px 0 0}
+.quelle{font-size:11.5px;line-height:1.55;color:var(--ink3);margin:16px 0 0}
+body.ohne-quellen .quelle{display:none}
+body.ohne-quellen .karte p{display:none}
+body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 
-  main{ position:relative; z-index:2 }
-  section{ padding:52px 16px }
-  section.tight{ padding-top:36px }
-  .col{ max-width:358px; margin-inline:auto }
-  .mid{ text-align:center }
+/* ═══ Einstieg ═══ */
+.einstieg{padding:56px 16px 48px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:470px}
+.hinunter{margin:44px 0 0;font-size:14px;color:var(--ink3)}
+.hinunter i{display:block;font-style:normal;font-size:18px;margin-top:2px;animation:wink 2.4s var(--e) infinite}
+@keyframes wink{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(6px);opacity:1}}
 
-  .zplus{ display:inline-flex; align-items:center; background:var(--red); color:#fff; font-weight:700; font-size:11px; padding:2px 5px; border-radius:2px; margin-right:7px; vertical-align:2px }
-  .kick{ font-size:14px; color:var(--mut); margin:0 0 8px }
-  h1{ font-weight:700; font-size:34px; line-height:1.16; letter-spacing:-.012em; margin:0 0 16px; text-wrap:balance }
-  h2{ font-weight:700; font-size:24px; line-height:1.25; letter-spacing:-.006em; margin:0 0 18px; text-wrap:balance }
-  h3{ font-weight:700; font-size:16px; line-height:1.3; margin:0 }
-  p{ margin:0 0 12px }
-  .body{ font-size:16px; line-height:1.55 }
-  .body.lg{ font-size:18px; line-height:1.55 }
-  .foot{ font-size:12px; line-height:1.5; color:var(--mut); margin:0 }
-  .num{ color:var(--red); font-variant-numeric:tabular-nums }
-  .tnum{ font-variant-numeric:tabular-nums }
-  .cue{ margin-top:26px; font-size:14px; color:var(--mut) }
-  .cue i{ display:block; margin-top:4px; font-style:normal }
-  @media (prefers-reduced-motion:no-preference){ .cue i{ animation:bob 2.4s ease-in-out infinite } }
-  @keyframes bob{ 0%,100%{ transform:translateY(0); opacity:.55 } 50%{ transform:translateY(5px); opacity:1 } }
+/* ═══ Datenbereich · abgesetzte Fläche ═══ */
+.daten{padding:8px 16px 24px}
+.szene{min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:44px 0;border-bottom:1px solid var(--linie)}
+.szene:last-child{border-bottom:0}
+.szene > *{width:100%}
+.szene .augen{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin:0 0 14px}
+.gross{font-size:clamp(40px,13vw,58px);font-weight:700;line-height:1;margin:0;letter-spacing:-.02em}
+.mittel{font-size:clamp(26px,7.4vw,34px);font-weight:700;line-height:1.1;margin:0}
+.lead{font-size:16.5px;line-height:1.5;color:var(--ink2);margin:14px auto 0;max-width:32ch}
+.szene .quelle{max-width:38ch;margin-left:auto;margin-right:auto}
+.zahl{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap}
+.zahl .e{font-size:clamp(17px,4.6vw,21px);font-weight:600;color:var(--ink2)}
+#zaehler{font-variant-numeric:tabular-nums}
 
-  .reveal>*{ opacity:0; transform:translateY(14px); transition:opacity .85s cubic-bezier(.2,.7,.3,1), transform .85s cubic-bezier(.2,.7,.3,1) }
-  .in .reveal>*{ opacity:1; transform:none }
-  .in .reveal>*:nth-child(2){ transition-delay:.08s } .in .reveal>*:nth-child(3){ transition-delay:.16s }
-  .in .reveal>*:nth-child(4){ transition-delay:.24s } .in .reveal>*:nth-child(5){ transition-delay:.32s }
-  .in .reveal>*:nth-child(6){ transition-delay:.4s }
+.an{opacity:0;transform:translateY(18px);filter:blur(5px);transition:opacity .8s var(--e),transform .9s var(--e),filter .8s var(--e)}
+.szene.sichtbar .an{opacity:1;transform:none;filter:none}
+.szene.sichtbar .an.v1{transition-delay:.04s} .szene.sichtbar .an.v2{transition-delay:.15s}
+.szene.sichtbar .an.v3{transition-delay:.28s} .szene.sichtbar .an.v4{transition-delay:.44s}
 
-  /* Punktraster */
-  .dots{ display:grid; grid-template-columns:repeat(21,1fr); gap:4px; margin:2px 0 18px }
-  .dots i{ display:block; aspect-ratio:1; border-radius:50%; background:#D8D2C6; transform:scale(.35); opacity:0; transition:background .45s ease }
-  .dots i.own{ background:var(--red) }
-  /* Verteilung */
-  .hist{ position:relative; height:112px; display:flex; align-items:flex-end; gap:2px; margin:4px 0 0 }
-  .hist b{ flex:1; background:#CFC8BA; height:var(--h); transform:scaleY(0); transform-origin:bottom; border-radius:1px }
-  .hist b.you{ background:var(--red) }
-  .youTag{ position:absolute; transform:translateX(-50%); font-size:12px; font-weight:700; color:var(--red); opacity:0 }
-  .rule{ height:1px; background:#CFC8BA; margin:0 0 6px }
-  .axis{ display:flex; justify-content:space-between; font-size:12px; color:var(--mut); margin-bottom:14px }
-  /* Ressort-Ringe */
-  .rings{ position:relative; width:290px; height:290px; margin:0 auto 18px }
-  .rings i{ position:absolute; left:50%; top:50%; border-radius:50%; transform:translate(-50%,-50%) scale(.3); opacity:0 }
-  .rings span{ position:absolute; left:50%; transform:translateX(-50%); font-size:12px; font-weight:700; white-space:nowrap; opacity:0 }
-  /* Stundenring */
-  .clock{ position:relative; width:280px; height:280px; margin:0 auto 18px }
-  .clock .glow{ position:absolute; inset:8%; border-radius:50%; background:var(--glow,#FFE7A6); filter:blur(18px); opacity:0; transition:opacity 1.2s ease, background .6s linear }
-  .in .clock .glow{ opacity:.9 }
-  .clock .hole{ position:absolute; inset:24%; border-radius:50%; background:color-mix(in srgb, var(--bg) 92%, #fff) }
-  .clock i{ position:absolute; border-radius:50%; background:#D8D2C6; transform:scale(.3); opacity:0 }
-  .clock i.own{ background:var(--red) }
-  .clock .cap{ position:absolute; inset:0; display:grid; place-content:center; opacity:0 }
-  .clock .cap b{ font-weight:700; font-size:24px }
+.band-huelle{position:relative;margin:26px 0 0}
+.band{display:flex;gap:5px;align-items:flex-end;height:118px}
+.band .s{flex:1;background:var(--bar);border-radius:3px;height:4px;transition:height 1.05s var(--e),background-color .5s var(--e),opacity .5s var(--e)}
+.szene.sichtbar .band .s{height:var(--h)}
+.band .s.sie{background:var(--marker)}
+.sie-marke{position:absolute;top:-6px;transform:translate(-50%,-6px) scale(.8);font-size:10px;font-weight:700;letter-spacing:.1em;
+  color:var(--marker);opacity:0;white-space:nowrap;transition:opacity .6s var(--e) 1.05s,transform .6s var(--e) 1.05s}
+.szene.sichtbar .sie-marke{opacity:1;transform:translate(-50%,0) scale(1)}
+.achse{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:10px 0 0}
+.spur-huelle{position:relative;margin:24px 0 0}
+.spur{height:10px;border-radius:5px;background:var(--track);overflow:hidden}
+.spur i{display:block;height:100%;border-radius:5px;background:var(--ink);width:0;transition:width 1.4s var(--e) .3s}
+.szene.sichtbar .spur i{width:var(--w)}
+.kerbe{position:absolute;top:-5px;left:50%;width:2px;height:20px;background:var(--ink3);opacity:0;transition:opacity .6s var(--e) .9s}
+.szene.sichtbar .kerbe{opacity:.5}
+.spur-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:12px 0 0}
+.spur-meta em{font-style:normal;color:var(--marker);font-weight:700}
+.tag{display:flex;gap:4px;align-items:flex-end;margin:26px 0 0}
+.tag .a{display:flex;flex-direction:column;gap:8px;min-width:0}
+.tag .a i{display:block;background:var(--bar);border-radius:3px;height:6px;transition:height .95s var(--e),background-color .6s var(--e)}
+.szene.sichtbar .tag .a i{height:20px}
+.szene.sichtbar .tag .a.aktiv i{height:50px;background:var(--marker);transition-delay:.5s}
+.tag .a span{font-size:10px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
+.szene.sichtbar .tag .a span{opacity:1}
+.tag .a.aktiv span{color:var(--marker);font-weight:700}
+.wolke-huelle{position:relative;margin:16px 0 0}
+.wolke{position:relative;height:280px;width:100%}
+.wolke span{position:absolute;line-height:1;white-space:nowrap;color:var(--ink);font-weight:600;text-align:left;
+  opacity:0;transform:scale(.86);transform-origin:center;will-change:transform,opacity;
+  transition:opacity .9s var(--e),transform 1.15s var(--e),color .8s var(--e)}
+.wolke.ein span{opacity:var(--o);transform:none}
+.wolke.fokus span{opacity:.08;transform:scale(.95);transition-duration:.85s}
+.wolke.fokus span.meins{opacity:1;color:var(--marker);z-index:2;transform:translate(var(--dx),var(--dy)) scale(var(--k))}
+.wolke-fuss{display:flex;justify-content:space-between;gap:12px;margin:10px 0 0;font-size:11px;color:var(--ink3)}
+.anteil{margin:14px 0 0}
+.anteil .sp{height:7px;border-radius:4px;background:var(--track);overflow:hidden}
+.anteil .sp i{display:block;height:100%;border-radius:4px;background:var(--marker);width:0;transition:width 1.4s var(--e) .2s}
+.anteil.da .sp i{width:var(--w)}
+.anteil .m{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:8px 0 0}
+.thema-satz{opacity:0;transform:translateY(10px);transition:opacity .9s var(--e) .25s,transform .9s var(--e) .25s}
+.thema-satz.da{opacity:1;transform:none}
 
-  /* Empfehlungen */
-  .rec{ margin-top:22px; text-align:left }
-  .rec .lab{ font-size:14px; color:var(--mut); margin:0 0 10px }
-  .tz{ display:flex; gap:12px; padding:12px 0; border-top:1px solid var(--line); align-items:center }
-  .tz:last-of-type{ border-bottom:1px solid var(--line) }
-  .tz .txt{ flex:1 }
-  .tz .txt .sp{ font-size:14px; color:var(--mut); display:block; margin-bottom:2px }
-  .tz .img{ width:92px; aspect-ratio:4/3; border-radius:2px; background:linear-gradient(140deg,#DED5C6,#C3B9A6) }
+/* ═══ Empfehlungskarte ═══ */
+.karten{margin:22px 0 0}
+.karte{background:var(--flaeche);border:1px solid transparent;border-radius:4px;padding:16px;text-align:left;
+  opacity:0;transform:translateY(14px);transition:opacity .7s var(--e) .2s,transform .7s var(--e) .2s}
+.szene.sichtbar .karte{opacity:1;transform:none}
+.karte .art{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--marker);margin:0 0 8px}
+.karte .art i{width:5px;height:5px;border-radius:3px;background:var(--marker);display:block}
+.karte h3{font-size:18px;font-weight:700;line-height:1.24;margin:0}
+.karte h3 + h3{margin-top:4px;font-size:15px;color:var(--ink2)}
+.karte p{margin:8px 0 0;font-size:13px;line-height:1.5;color:var(--ink3)}
+.karte.leer{background:transparent;border:1px dashed var(--bar)}
+.karte.leer .art{color:var(--ink3)} .karte.leer .art i{background:var(--ink3)}
+.karte.leer h3{font-size:16px;color:var(--ink2)}
 
-  .app{ margin-top:26px; padding:18px; background:#fff; border:1px solid var(--line); text-align:left }
-  .app .kick{ color:var(--red); font-weight:600; letter-spacing:.05em; text-transform:uppercase; font-size:12px; margin-bottom:4px }
-  .app h3{ font-size:20px; margin:0 0 8px }
-  .btn{ font:inherit; font-weight:600; font-size:15px; padding:13px 20px; width:100%; border:1px solid var(--ink); background:var(--ink); color:#fff; cursor:pointer; border-radius:2px }
-  .btn.ghost{ background:none; color:var(--ink) }
-  .btn-row{ display:flex; gap:10px; margin-top:14px }
-  .btn-row .btn{ width:auto; flex:1 }
-  :where(button,a,select):focus-visible{ outline:2px solid var(--red); outline-offset:2px }
+/* ═══ Variante B · Karten, die sich beim Scrollen stapeln ═══ */
+body[data-variante=karten] .daten{padding:16px 14px 56px;perspective:1400px}
+body[data-variante=karten] .szene{
+  position:sticky;background:var(--karte);border:1px solid var(--linie);border-radius:4px;
+  padding:44px 22px 48px;min-height:auto;margin-bottom:18px;border-bottom:1px solid var(--linie);
+  transform-origin:50% 0%;will-change:transform;
+  box-shadow:0 1px 1px rgba(20,18,16,.04), 0 2px 6px rgba(20,18,16,.05), 0 18px 40px -18px rgba(20,18,16,.28)}
+body[data-variante=karten] .szene:nth-child(1){top:14px;z-index:1}
+body[data-variante=karten] .szene:nth-child(2){top:22px;z-index:2}
+body[data-variante=karten] .szene:nth-child(3){top:30px;z-index:3}
+body[data-variante=karten] .szene:nth-child(4){top:38px;z-index:4}
+body[data-variante=karten] .szene:last-child{margin-bottom:0}
+/* der Schleier legt sich über die Karte, sobald die nächste sie überdeckt */
+body[data-variante=karten] .szene::after{
+  content:"";position:absolute;inset:0;border-radius:4px;pointer-events:none;
+  background:var(--seite);opacity:var(--schleier,0)}
+body[data-variante=karten] .szene::before{
+  content:attr(data-nr);position:absolute;top:18px;right:22px;font-size:11px;font-weight:700;
+  letter-spacing:.1em;color:var(--ink3);z-index:1}
+body[data-variante=karten] .wolke{height:240px}
+body[data-variante=karten] .band{height:100px}
+body[data-variante=karten] .gross{font-size:clamp(34px,11vw,48px)}
+body[data-variante=karten] .karten{margin-top:20px}
+body[data-variante=karten] .szene .quelle{margin-top:14px}
 
-  /* Karussell */
-  .white{ background:var(--paper) }
-  .rail{ display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding-bottom:2px }
-  .rail::-webkit-scrollbar{ display:none }
-  .card{ flex:0 0 168px; scroll-snap-align:start; position:relative; border-radius:2px; overflow:hidden; aspect-ratio:3/4 }
-  .card .ph{ position:absolute; inset:0 }
-  .card:nth-child(1) .ph{ background:linear-gradient(155deg,#B7C6E8,#D9A7C7 55%,#EBC9A0) }
-  .card:nth-child(2) .ph{ background:linear-gradient(155deg,#CBD7DB,#8FA6AE) }
-  .card:nth-child(3) .ph{ background:linear-gradient(155deg,#E0D3C2,#B9A186) }
-  .card::after{ content:''; position:absolute; inset:auto 0 0 0; height:62%; background:linear-gradient(180deg,transparent,rgba(24,22,20,.8)) }
-  .card .meta{ position:absolute; inset:auto 10px 10px 10px; z-index:2; color:#fff }
-  .card .sp{ font-size:12px; display:flex; align-items:center; margin-bottom:4px }
-  .card h3{ font-size:15px; line-height:1.25 }
-  .card .save{ position:absolute; top:8px; right:8px; z-index:3; width:30px; height:30px; border-radius:50%; border:0; background:rgba(255,255,255,.9); cursor:pointer; font-size:14px; line-height:1 }
-  .card .save[aria-pressed="true"]{ background:var(--ink); color:#fff }
-  .railNav{ display:flex; align-items:center; justify-content:space-between; margin-top:12px }
-  .pips{ display:flex; gap:6px }
-  .pips i{ width:6px; height:6px; border-radius:50%; background:#D8D2C6 }
-  .pips i.on{ background:var(--ink) }
-  .arrows{ display:flex; gap:8px }
-  .arrows button{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:#fff; cursor:pointer; font:inherit }
+/* ═══ Was bleibt ═══ */
+.bleibt{padding:48px 16px;text-align:center;border-top:1px solid var(--linie)}
+.bleibt .bedingung{font-size:11px;font-weight:600;color:#8a6400;margin:14px 0 0}
+:root[data-theme="dark"] .bleibt .bedingung{color:#e8c61a}
 
-  .colophon{ background:#fff; border-top:1px solid var(--line); padding:34px 16px 60px }
-  .colophon h4{ font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--red); margin:0 0 10px }
-  .colophon p{ font-size:14px; line-height:1.6; color:var(--mut) }
-  .colophon strong{ color:var(--ink) }
+/* ═══ Karussell ═══ */
+.parkett{padding:0 16px 8px}
+.parkett-kopf{border-top:1px solid var(--linie);padding-top:24px;margin-bottom:24px}
+.karussell{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px}
+.karussell::-webkit-scrollbar{height:0}
+.artikel{flex:0 0 179px;scroll-snap-align:start;border-radius:4px;overflow:hidden;position:relative;
+  aspect-ratio:179/253;background:var(--track);display:flex;align-items:flex-end}
+.artikel .flor{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.30) 46%,rgba(0,0,0,0) 78%)}
+.artikel .txt{position:relative;padding:14px;color:#fff}
+.artikel .k{font-size:14px;margin:0 0 4px;opacity:.85}
+.artikel .t{font-size:18px;font-weight:700;line-height:1.2;margin:0}
+.punkte{display:flex;justify-content:center;gap:6px;margin:16px 0 0}
+.punkte i{width:6px;height:6px;border-radius:3px;background:var(--track);display:block}
+.punkte i.an2{background:var(--ink3);width:18px}
 
-  .tools{ position:fixed; right:18px; bottom:18px; z-index:70; display:flex; flex-direction:column; gap:8px; align-items:flex-end }
-  .tools button{ font:inherit; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; background:#1C1A17; color:#fff; border:0; border-radius:2px; padding:9px 12px; cursor:pointer }
-  .panel{ position:fixed; right:18px; bottom:96px; z-index:70; width:min(19rem,calc(100vw - 36px)); background:#fff; border:1px solid #1C1A17; padding:16px; display:none }
-  .panel.open{ display:block }
-  .panel h5{ margin:0 0 10px; font-size:14px; color:var(--red) }
-  .panel label{ display:flex; justify-content:space-between; gap:10px; font-size:14px; padding:4px 0 }
-  .panel select{ font:inherit; font-size:14px; padding:3px 5px; border:1px solid var(--line); border-radius:2px; background:#fff }
-  @media (prefers-reduced-motion:reduce){ .reveal>*{ opacity:1; transform:none; transition:none } }
+/* ═══ Dynamische Ausspielfläche ═══ */
+.liste{display:grid;gap:24px;margin:0}
+.eintrag{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:start}
+.eintrag .bild{width:64px;height:64px;border-radius:4px;background:var(--track)}
+.eintrag h4{margin:0}
+.leerhinweis{font-size:14px;line-height:1.5;color:var(--ink3);margin:0}
+
+/* ═══ Abschluss ═══ */
+.ende{padding:32px 16px;display:grid;gap:24px;border-top:1px solid var(--linie)}
+.ende .inhalt{display:grid;gap:16px}
+.ende .knoepfe{display:flex;gap:16px;flex-wrap:wrap}
+.knopf{appearance:none;border:0;height:40px;padding:0 16px;border-radius:4px;cursor:pointer;
+  font-family:var(--ff);font-size:16px;font-weight:700}
+.knopf--sek{background:var(--flaeche);color:var(--ink)}
+.knopf--prim{background:var(--ink);color:var(--seite)}
+@media (max-width:700px){
+  body{background:var(--seite)}
+  .stand{padding:0;gap:0;grid-template-columns:1fr;max-width:none}
+  .panel{position:static;border-radius:0;border-left:0;border-right:0;border-top:0;box-shadow:none;padding:18px 16px}
+  .buehne{display:block}
+  .telefon{width:100%;max-width:none;height:100dvh;border:0;border-radius:0;box-shadow:none}
+  .insel{display:none}
+  .statusleiste{display:none}
+  .rohr{scroll-padding-top:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important;transition-delay:0s!important;animation:none!important}
+  .an,.karte{opacity:1;transform:none;filter:none}
+}
 </style>
 
-<div class="stageWrap">
-  <p class="caption">Vorschau im 390er Rahmen · scrollen im Gerät</p>
+<div class="stand">
 
-  <div class="device">
-    <div class="statusbar">
-      <span>9:41</span>
-      <span class="right">
-        <span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span>
-        <span style="font-size:12px">✳</span>
-        <span class="batt"></span>
-      </span>
-    </div>
-    <div class="prog" id="prog"></div>
+<aside class="panel">
+  <h2>Prüfstand</h2>
+  <p>Alle Werte aus <span style="color:#1a1817">export_abowrapped_28082026</span>, 1.756 Abonnentinnen und Abonnenten, die in diesem Zeitraum ein Abo abgeschlossen haben. Aufbau und Texte aus <span style="color:#1a1817">550:28224</span>.</p>
 
-    <div class="screen" id="screen">
-      <div class="bgLayer"><div class="paint" id="paint"></div></div>
-
-      <header class="head">
-        <button type="button" aria-label="Menü">☰</button>
-        <div class="logo">DIE ZEIT</div>
-        <button class="usr" type="button" aria-label="Konto">◍</button>
-      </header>
-
-      <main>
-        <!-- Auftakt -->
-        <section data-ch="Auftakt" data-pal="0">
-          <div class="col mid reveal">
-            <p class="kick"><span class="zplus">Z+</span>Ihr persönlicher Rückblick</p>
-            <h1>Schön, dass Sie bei uns sind</h1>
-            <p class="body lg">Seit einigen Tagen sind Sie nun Abonnentin. Bevor Sie weiterlesen, werfen wir gemeinsam einen Blick zurück — auf das, was Sie schon entdeckt haben, und das, was noch auf Sie wartet.</p>
-            <p class="cue">Scrollen Sie nach unten<i>↓</i></p>
-          </div>
-        </section>
-
-        <!-- Lesemenge -->
-        <section data-ch="Lesemenge" data-anim="dots" data-pal="1">
-          <div class="col mid reveal">
-            <p class="kick">Ihre Lesemenge</p>
-            <h2>Sie haben <span class="num" id="cnt">0</span> von <span class="tnum">1.240</span> Texten gelesen.</h2>
-            <div class="dots" id="dots" aria-hidden="true"></div>
-            <p class="body" id="dotsBody">So viele Texte sind in diesen fünf Wochen erschienen. Ein Punkt steht für zehn — die roten sind Ihre.</p>
-            <p class="foot">Grundlage sind Artikelaufrufe im Zeitraum.</p>
-          </div>
-        </section>
-
-        <!-- Vergleich -->
-        <section data-ch="Vergleich" data-anim="hist" data-pal="2">
-          <div class="col mid reveal">
-            <p class="kick">Ihr Platz im Vergleich</p>
-            <h2>Sie lesen mehr als <span class="num" id="rangTxt">vier von fünf</span> Abonnentinnen und Abonnenten.</h2>
-            <div class="hist" id="hist"><span class="youTag" id="youTag">SIE</span></div>
-            <div class="rule"></div>
-            <div class="axis"><span>weniger</span><span>Durchschnitt</span><span>mehr</span></div>
-            <p class="foot">Schematische Verteilung von 12.400 Abonnentinnen und Abonnenten mit Probeabo im selben Zeitraum.</p>
-          </div>
-        </section>
-
-        <!-- Ressort -->
-        <section data-ch="Ressort" data-anim="rings" data-pal="3">
-          <div class="col mid reveal">
-            <p class="kick">Ihr aktuelles Lieblingsressort</p>
-            <h2>Das sind Ihre vier meistgelesenen Ressorts:</h2>
-            <div class="rings" id="rings" aria-hidden="true"></div>
-            <p class="body" id="ressBody">8 Texte aus Wissen, 6 aus Politik. Auch insgesamt war Wissen in diesen Wochen eines der stärksten Ressorts.</p>
-            <div class="rec">
-              <p class="lab">Dazu empfehlen wir Ihnen folgenden Podcast</p>
-              <div class="tz"><div class="txt"><span class="sp">Titel</span><h3>Das ist ein Lorem ipsum dolor sit amet Teasertext</h3></div><div class="img"></div></div>
-              <div class="tz"><div class="txt"><span class="sp">Titel</span><h3>Das ist ein Lorem ipsum dolor sit amet Teasertext</h3></div><div class="img"></div></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Lesezeit -->
-        <section data-ch="Lesezeit" data-anim="clock" data-pal="4">
-          <div class="col mid reveal">
-            <p class="kick">Ihre Lesezeit</p>
-            <h2 id="zeitHead">Der Morgenkaffee mit der ZEIT</h2>
-            <div class="clock" id="clock">
-              <span class="glow"></span><span class="hole"></span>
-              <div class="cap"><b id="clockCap">6 – 9 Uhr</b></div>
-            </div>
-            <p class="body" id="zeitBody">Sie gehen am liebsten informiert in den Tag: Ihre Texte lesen Sie meist zwischen sechs und neun Uhr.</p>
-            <div class="rec">
-              <p class="lab">Daher empfehlen wir Ihnen folgenden Newsletter:</p>
-              <div class="tz"><div class="txt"><span class="sp">Titel</span><h3>Das ist ein Lorem ipsum dolor sit amet Teasertext</h3></div><div class="img"></div></div>
-            </div>
-            <div class="app">
-              <p class="kick">Nur in der App</p>
-              <h3 id="pushHead">Push um 7 Uhr</h3>
-              <p class="body" id="pushBody">Einmal täglich, zu Ihrer Lesezeit. Sonst hören Sie nichts von uns.</p>
-              <button class="btn" type="button" id="push">Push einrichten</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Beliebte Artikel -->
-        <section class="white" data-ch="Beliebte Artikel" data-pal="5">
-          <div class="col reveal">
-            <h2>Speichern Sie diese besonders beliebten Artikel</h2>
-            <p class="body" style="color:var(--mut)">Mit dem Speichern-Icon merken Sie sich Artikel, die Sie interessieren</p>
-            <div class="rail" id="rail">
-              <article class="card"><span class="ph"></span><button class="save" type="button" aria-pressed="false" aria-label="Merken">＋</button>
-                <div class="meta"><div class="sp"><span class="zplus">Z+</span>»Nihilist Penguin«</div><h3>Ich fühl dich, kleiner Pinguin!</h3></div></article>
-              <article class="card"><span class="ph"></span><button class="save" type="button" aria-pressed="false" aria-label="Merken">＋</button>
-                <div class="meta"><div class="sp">Schwachsinn der Woche</div><h3>Wem schlechte Forschung nützt</h3></div></article>
-              <article class="card"><span class="ph"></span><button class="save" type="button" aria-pressed="false" aria-label="Merken">＋</button>
-                <div class="meta"><div class="sp">Wissen</div><h3>Was das Gehirn im Schlaf mit dem Tag macht</h3></div></article>
-            </div>
-            <div class="railNav">
-              <div class="pips" id="pips" aria-hidden="true"></div>
-              <div class="arrows"><button type="button" id="rPrev" aria-label="Zurück">←</button><button type="button" id="rNext" aria-label="Weiter">→</button></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Platzhalter -->
-        <section class="white tight" data-ch="Angebote" data-pal="5">
-          <div class="col reveal">
-            <h2>Platzhalter für Hinweise zu anderen Angeboten</h2>
-            <p class="body" style="color:var(--mut)">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-          </div>
-        </section>
-
-        <!-- Danke -->
-        <section data-ch="Danke" data-anim="thanks" data-pal="6">
-          <div class="col reveal">
-            <h2>Danke, dass Sie dabei sind!</h2>
-            <p class="body">Mit Ihrem Abonnement unterstützen Sie den unabhängigen Journalismus der ZEIT. Sie haben sich <span class="num" id="merkCount">0</span> Artikel gemerkt — sie warten in Ihrer Merkliste.</p>
-            <div class="btn-row">
-              <button class="btn ghost" type="button" id="toMerk">Zur Merkliste</button>
-              <button class="btn" type="button" id="toStart">Zur Startseite</button>
-            </div>
-          </div>
-        </section>
-
-        <section class="colophon">
-          <div class="col">
-            <h4>Zum Prototyp</h4>
-            <p><strong>Vorlage:</strong> Ihre mobile Fassung aus dem File — Aufbau, Reihenfolge, Wortlaut, Maße. Rahmen 390 × 844, Inhalt 358, Auftakt 34 Bold, Kapitel 24 Bold, Fließtext 16 bis 18, Spitzmarke 14, Fußnote 12. Überschriften im Sans, weil Ihr Entwurf es so setzt.</p>
-            <p><strong>Diagramme:</strong> Jedes baut sich beim Eintreten langsam auf — Punktraster 2,4 s, Verteilung 2,6 s von der Mitte nach außen, Ressort-Ringe 2,4 s von außen nach innen, Stundenring 2,8 s im Uhrzeigersinn. Wer weiterscrollt und zurückkommt, sieht den Aufbau erneut.</p>
-            <p><strong>Fließender Grund:</strong> Ihre Farbfelder liegen als weiche Kreise auf einer festen Ebene im Gerät und wandern beim Scrollen; der Grundton wird zwischen den Kapiteln interpoliert.</p>
-            <p><strong>Testdaten</strong> unten rechts. Voreingestellt sind Ihre Werte: 24 von 1.240, Wissen vor Politik, sechs bis neun Uhr. Bei wenig gelesenen Texten stellt das Raster automatisch auf einen Punkt pro Text um, damit die roten Punkte sichtbar bleiben.</p>
-          </div>
-        </section>
-      </main>
+  <div class="feld">
+    <label>Darstellung der Daten</label>
+    <div class="chips" id="variante">
+      <button type="button" data-v="szenen" aria-pressed="true">Szenen</button>
+      <button type="button" data-v="karten" aria-pressed="false">Karten, gestapelt</button>
     </div>
   </div>
+
+  <div class="feld">
+    <label>Quellenzeilen — nur für uns, nicht im Produkt</label>
+    <div class="chips" id="quellen">
+      <button type="button" data-q="an" aria-pressed="true">eingeblendet</button>
+      <button type="button" data-q="aus" aria-pressed="false">ausgeblendet</button>
+    </div>
+  </div>
+
+  <div class="feld">
+    <label for="minuten">Lesezeit in der ersten Woche</label>
+    <div class="wert"><b id="minAnzeige">291 Min</b><span id="minLang">4 Std 51 Min</span></div>
+    <input type="range" id="minuten" min="0" max="600" step="1" value="291">
+  </div>
+
+  <div class="feld">
+    <label for="kohorte">Wie lange dabei — darin wird verglichen</label>
+    <select id="kohorte">
+      <option value="7">Tag 7 · 321 Menschen</option>
+      <option value="6">Tag 6 · 354</option>
+      <option value="5">Tag 5 · 297</option>
+      <option value="4">Tag 4 · 349</option>
+      <option value="3">Tag 3 · 395</option>
+      <option value="2">Tag 2 · 40 — sehr wenige</option>
+    </select>
+  </div>
+
+  <div class="feld">
+    <label>Meistgelesene Tageszeit</label>
+    <div class="chips" id="tageszeit">
+      <button type="button" data-t="abends" aria-pressed="true">abends 37 %</button>
+      <button type="button" data-t="morgens" aria-pressed="false">morgens 36 %</button>
+      <button type="button" data-t="nachmittags" aria-pressed="false">nachmittags 12 %</button>
+      <button type="button" data-t="mittags" aria-pressed="false">mittags 12 %</button>
+      <button type="button" data-t="nachts" aria-pressed="false">nachts 2 %</button>
+    </div>
+  </div>
+
+  <div class="feld">
+    <label for="thema">Meistgelesenes Themenfeld</label>
+    <select id="thema"></select>
+  </div>
+
+  <div class="feld">
+    <label>Schon entdeckt? — steuert die Ausspielfläche</label>
+    <div class="chips" id="entdeckt">
+      <button type="button" data-e="woma" aria-pressed="false">Wochenmarkt</button>
+      <button type="button" data-e="spiele" aria-pressed="false">Spiele</button>
+      <button type="button" data-e="app" aria-pressed="true">App</button>
+    </div>
+  </div>
+
+  <div class="feld">
+    <label>Blöcke unten — „Was bleibt“ folgt Tag 7</label>
+    <div class="chips" id="bloecke">
+      <button type="button" data-b="bleibt" aria-pressed="true">Was bleibt</button>
+      <button type="button" data-b="parkett" aria-pressed="true">Beliebte Artikel</button>
+      <button type="button" data-b="entdecken" aria-pressed="true">Entdecken</button>
+      <button type="button" data-b="ende" aria-pressed="true">Abschluss</button>
+    </div>
+  </div>
+
+  <div class="feld">
+    <label>Darstellung</label>
+    <div class="chips" id="modus">
+      <button type="button" data-m="system" aria-pressed="true">System</button>
+      <button type="button" data-m="light" aria-pressed="false">Hell</button>
+      <button type="button" data-m="dark" aria-pressed="false">Dunkel</button>
+    </div>
+  </div>
+
+  <div class="abgeleitet">
+    <dl>
+      <dt>Perzentil</dt><dd id="aPerz">90 %</dd>
+      <dt>Dezil</dt><dd id="aDezil">10</dd>
+      <dt>Tonstufe</dt><dd class="stufe" id="aStufe">A</dd>
+      <dt>Teaser sichtbar</dt><dd id="aTeaser">2 von 3</dd>
+    </dl>
+    <div class="warnung" id="warnKohorte" hidden></div>
+  </div>
+
+  <div class="aktionen">
+    <button type="button" id="wieder">Animation neu</button>
+    <button type="button" id="oben">Nach oben</button>
+  </div>
+</aside>
+
+<div class="buehne">
+<div class="telefon">
+  <div class="insel"></div>
+  <div class="statusleiste"><span>9:41</span>
+    <span class="r"><i style="width:17px;height:11px"></i><i style="width:15px;height:11px"></i><i style="width:24px;height:11px;border-radius:3px"></i></span></div>
+  <div class="rohr" id="rohr">
+    <div class="fortschritt" id="fortschritt"></div>
+
+    <!-- Einstieg -->
+    <section class="einstieg" id="s-intro">
+      <p class="augen">Ihr persönlicher Rückblick</p>
+      <h1 class="h1">Ihre erste Woche mit Z+</h1>
+      <p class="sub">Seit dem 21. August nutzen Sie Z+. Werfen wir gemeinsam einen letzten Blick zurück – auf das, was Sie bereits entdeckt haben, und das, was Sie noch alles entdecken können.</p>
+      <p class="hinunter">Scrollen Sie nach unten<i>↓</i></p>
+    </section>
+
+    <!-- Datenbereich -->
+    <div class="daten">
+      <section class="szene" id="s-zeit" data-nr="1 von 4">
+        <p class="augen an v1">Ihre Lesezeit</p>
+        <div class="zahl an v2"><span class="gross" id="zaehler">0</span><span class="e" id="einheit">Min</span></div>
+        <p class="lead an v3" id="zeitSatz"></p>
+        <div class="spur-huelle an v4" id="spurHuelle">
+          <div class="spur" id="spur"><i></i></div>
+          <div class="kerbe"></div>
+          <div class="spur-meta"><span id="spurLinks"></span><em id="spurRechts"></em></div>
+        </div>
+        <p class="quelle an v4" id="zeitQuelle"></p>
+      </section>
+
+      <section class="szene" id="s-band" data-nr="2 von 4">
+        <p class="augen an v1" id="bandAugen">Ihr Platz im Vergleich</p>
+        <h2 class="gross an v2" id="bandZahl">92 %</h2>
+        <p class="lead an v3" id="bandSatz"></p>
+        <div class="band-huelle an v3"><div class="band" id="band"></div><span class="sie-marke" id="sieMarke">SIE</span></div>
+        <div class="achse an v3"><span>wenig</span><span>viel</span></div>
+        <p class="quelle an v4" id="bandQuelle"></p>
+      </section>
+
+      <section class="szene" id="s-tag" data-nr="3 von 4">
+        <p class="augen an v1">Wann Sie lesen</p>
+        <h2 class="mittel an v2" id="tagTitel">Meist abends</h2>
+        <div class="tag an v3" id="tag"></div>
+        <p class="lead an v3" id="tagSatz"></p>
+        <p class="quelle an v4" id="tagQuelle"></p>
+        <div class="karten" id="kartenZeit"></div>
+      </section>
+
+      <section class="szene" id="s-thema" data-nr="4 von 4">
+        <p class="augen an v1" id="themaAugen">Ihr Thema der Woche</p>
+        <div class="an v2">
+          <div class="wolke-huelle">
+            <div class="wolke" id="wolke"></div>
+            <div class="wolke-fuss"><span>Vierzig Themenfelder, Größe nach Häufigkeit</span><span id="wolkeN"></span></div>
+          </div>
+          <div class="anteil" id="anteil"><div class="sp"><i></i></div>
+            <div class="m"><span id="anteilLinks"></span><span>1.756 insgesamt</span></div></div>
+        </div>
+        <div class="thema-satz" id="themaSatz">
+          <p class="lead" id="themaLead"></p>
+          <p class="quelle" id="themaQuelle"></p>
+        </div>
+        <div class="karten" id="kartenThema"></div>
+      </section>
+    </div>
+
+    <!-- Was bleibt · nur an Tag 7 -->
+    <section class="bleibt" id="s-bleibt">
+      <p class="augen">Was bleibt</p>
+      <h2 class="h2">Das war der Anfang</h2>
+      <p class="sub" style="font-size:16px;color:var(--ink)">Ab der zweiten Woche kommen wöchentliche Lesetrends und Monatsrückblicke dazu.</p>
+      <p class="bedingung quelle">Bedingung: nur an Tag 7. Bei Tag 2 bis 6 entfällt dieser Block.</p>
+    </section>
+
+    <!-- Beliebte Artikel -->
+    <section class="parkett" id="s-parkett">
+      <div class="parkett-kopf">
+        <h3 class="h3">Aktuell beliebte Artikel</h3>
+        <p class="sub-s">Was andere gerade lesen</p>
+      </div>
+      <div class="karussell" id="karussell"></div>
+      <div class="punkte"><i class="an2"></i><i></i><i></i><i></i></div>
+    </section>
+
+    <!-- Dynamische Ausspielfläche -->
+    <section class="parkett" id="s-entdecken" style="padding-bottom:24px">
+      <div class="parkett-kopf">
+        <h3 class="h3">Entdecken Sie weitere spannende Inhalte Ihres Abos</h3>
+        <p class="sub-s" id="entdeckenSub"></p>
+      </div>
+      <div class="liste" id="liste"></div>
+      <p class="quelle" id="entdeckenQuelle"></p>
+    </section>
+
+    <!-- Abschluss -->
+    <section class="ende" id="s-ende">
+      <h2 class="h2">Danke, dass Sie dabei sind!</h2>
+      <div class="inhalt">
+        <p class="sub" style="font-size:16px;margin:0">Sie sind seit heute an Bord. Mit Ihrem Abonnement unterstützen Sie den unabhängigen Journalismus der ZEIT — viel Freude beim Entdecken.</p>
+      </div>
+      <div class="knoepfe">
+        <button class="knopf knopf--sek">Zur Merkliste</button>
+        <button class="knopf knopf--prim">Zur Startseite</button>
+      </div>
+    </section>
+
+  </div>
+</div>
 </div>
 
-<div class="tools">
-  <button id="replay" type="button">Animation neu</button>
-  <button id="panelBtn" type="button" aria-expanded="false" aria-controls="panel">Testdaten</button>
-</div>
-<div class="panel" id="panel" role="dialog" aria-label="Testdaten">
-  <h5>Testdaten</h5>
-  <label>Ressort <select id="sRes"><option>Wissen</option><option>Politik</option><option>Wirtschaft</option><option>Kultur</option></select></label>
-  <label>Tageszeit <select id="sZeit"><option value="morgens">morgens</option><option value="tags">tagsüber</option><option value="abends">abends</option></select></label>
-  <label>Intensität <select id="sInt"><option value="wenig">wenig · 24</option><option value="mittel">mittel · 78</option><option value="viel">viel · 160</option></select></label>
-  <button class="btn" style="margin-top:10px;padding:9px" id="panelClose" type="button">Schließen</button>
 </div>
 
 <script>
-(() => {
-  'use strict';
-  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-  const de=n=>n.toLocaleString('de-DE');
-  const cl=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
-  const easeOut=t=>1-Math.pow(1-t,3);
-  const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+(function(){
+  var THEMEN=[["Innenpolitik Deutschland",437,116],["Familie, Erziehung",134,78],["Geschichte",126,37],["Arbeit, Berufsleben",114,68],["Digitalisierung, Medientrends und soziale Netzwerke",100,63],["Gesundheit, Medizin, Psychologie",82,59],["Technologie und Innovation",68,15],["Wirtschaftspolitik",58,88],["Persönlichkeiten",47,51],["Politik in anderen Ländern",46,75],["Bildung, Schule, Universität",42,37],["Inhalte für Kinder",40,129],["Unternehmen",35,38],["Nachhaltigkeit, Umwelt, Klimaschutz",34,40],["True Crime und Kriminalität",31,97],["Essen, Kulinarik",30,65],["Ratgeber zu Geld, Finanzen, Börse",28,114],["Außenpolitik",27,69],["Literatur, Bücher",26,50],["Liebe, Beziehung",26,67],["Fitness, Gesundheit",25,27],["Sinn, Philosophie, Ethik, Lebenshilfe",24,45],["Unfälle und Katastrophen",20,33],["Gesellschaft und Wirtschaft",20,24],["Sicherheit",17,72],["Mobilität",15,73],["Wissenschaft",15,49],["Gaming und Spiele",13,124],["Reise und Auswandern",13,18],["Kunst, Bühne, Ausstellungen",13,23],["Musik",11,45],["Produkttests und Empfehlungen",10,60],["Migration",9,54],["Wohnen, Bauen, Mieten",6,14],["Sportberichterstattung",5,45],["Familie, Erziehung, Kindergesundheit",3,11],["Filme, Serien, Streaming, TV, Mediatheken",2,39],["Stil, Mode, Design",2,13],["Studium, Studienbedingungen",1,120],["Familie, Erziehung, Geburt",1,179]], KOHORTEN={"2":{"n":40,"g":[5,9,17,21,27,34,41,70,104]},"3":{"n":395,"g":[5,14,23,40,58,83,119,169,267]},"4":{"n":349,"g":[6,15,28,49,70,106,135,188,286]},"5":{"n":297,"g":[10,21,32,48,68,102,136,197,312]},"6":{"n":354,"g":[5,12,22,33,60,85,127,186,294]},"7":{"n":321,"g":[9,18,32,45,71,100,151,198,317]}}, EMPF={"Innenpolitik Deutschland":{"benennung":"Politik","newsletter":["Was jetzt? – Der tägliche Morgenüberblick"],"podcasts":["OK, America?","Das Politikteil","Der Ostcast"],"serien":["5 vor 8","Stimmt das eigentlich?"],"autoren":["Rieke Havertz","Anne Hähnig","Bernd Ulrich","Mariam Lau","Mark Schieritz"]},"Politik in anderen Ländern":{"benennung":"Politik","newsletter":["Was jetzt? – Der tägliche Morgenüberblick"],"podcasts":["OK, America?","Das Politikteil","Der Ostcast"],"serien":["5 vor 8","Stimmt das eigentlich?"],"autoren":["Rieke Havertz","Anne Hähnig","Bernd Ulrich","Mariam Lau","Mark Schieritz"]},"Außenpolitik":{"benennung":"Politik","newsletter":["Was jetzt? – Der tägliche Morgenüberblick"],"podcasts":["OK, America?","Das Politikteil","Der Ostcast"],"serien":["5 vor 8","Stimmt das eigentlich?"],"autoren":["Rieke Havertz","Anne Hähnig","Bernd Ulrich","Mariam Lau","Mark Schieritz"]},"True Crime und Kriminalität":{"benennung":"True Crime","newsletter":["ZEIT-Verbrechen-Newsletter"],"podcasts":["Verbrechen"],"serien":["Täterwissen"],"autoren":["Sabine Rückert"]},"Gesundheit, Medizin, Psychologie":{"benennung":"Gesundheit und Psychologie","newsletter":["Das tut mir gut"],"podcasts":["Gehts dir auch so?"],"serien":["Die Diagnose"],"autoren":["Sven Stockrahm","Jakob Simmank"]},"Digitalisierung, Medientrends und soziale Netzwerke":{"benennung":"Digitalisierung und Künstliche Intelligenz","newsletter":["Natürlich intelligent"],"podcasts":["Neustart"],"serien":["Rose erklärt das Internet"],"autoren":["Jakob von Lindern","Eva Wolfangel"]},"Technologie und Innovation":{"benennung":"Digitalisierung und Künstliche Intelligenz","newsletter":["Natürlich intelligent"],"podcasts":["Neustart"],"serien":["Rose erklärt das Internet"],"autoren":["Jakob von Lindern","Eva Wolfangel"]},"Gesellschaft und Wirtschaft":{"benennung":"Gesellschaft und Wirtschaft","newsletter":[],"podcasts":["Ist das eine Blase?","Der Vernichter"],"serien":["Stimmt das eigentlich?"],"autoren":[]},"Familie, Erziehung":{"benennung":"Familie und Erziehung","newsletter":["Familienzeit"],"podcasts":[],"serien":["Wir sprechen uns wieder","Familienrat"],"autoren":[]},"Arbeit, Berufsleben":{"benennung":"Arbeit und Berufsleben","newsletter":["Endlich Montag"],"podcasts":["Frisch an die Arbeit"],"serien":["Kontoauszug"],"autoren":["David Gutensohn"]},"Liebe, Beziehung":{"benennung":"Liebe und Partnerschaft","newsletter":["Beziehungsweise"],"podcasts":["Ist das normal?"],"serien":["Lexikon der Liebe"],"autoren":[]},"Geschichte":{"benennung":"Geschichte","newsletter":[],"podcasts":["Wie war das noch mal?"],"serien":[],"autoren":[]},"Essen, Kulinarik":{"benennung":"Rezepte","newsletter":["Der kleine Wochenmarkt","Wochenmarkt-Newsletter"],"podcasts":[],"serien":["Leichte Mahlzeit"],"autoren":[]},"Persönlichkeiten":{"benennung":"Interviews und Gespräche","newsletter":["Alles gesagt?"],"podcasts":["Alles gesagt?","Nur eine Frage"],"serien":["Wofür leben Sie?"],"autoren":["Jochen Wegner"]},"Fitness, Gesundheit":{"benennung":"Fitness und gesundes Leben","newsletter":["Das tut mir gut – Der ZEIT-Gesundheitsnewsletter"],"podcasts":[],"serien":["Die Diagnose","Personal Trainer"],"autoren":[]},"Ratgeber zu Geld, Finanzen, Börse":{"benennung":"Geld und Finanzen","newsletter":["ZEIT Geldkurs","Der Geld-Newsletter"],"podcasts":[],"serien":["Die Geldverbesserer","Groschenoper"],"autoren":["Marilena Piesker","Jan Guldner"]},"Literatur, Bücher":{"benennung":"Literatur","newsletter":["Was wir lesen – Der ZEIT-Literaturnewsletter"],"podcasts":["Was liest du gerade?"],"serien":["Literaturkolumne"],"autoren":[]},"Reise und Auswandern":{"benennung":"Reise","newsletter":["Zeit Reise","Kommst Du mit? – Der ZEIT-Reisenewsletter"],"podcasts":[],"serien":[],"autoren":[]},"Wissenschaft":{"benennung":"Wissenschaft","newsletter":["ZEIT WISSEN-Newsletter"],"podcasts":["Woher weißt du das?"],"serien":["Über All","Worüber denken Sie gerade nach?"],"autoren":["Linda Fischer","Maria Mast"]},"Produkttests und Empfehlungen":{"benennung":"Produkttests und Empfehlungen","newsletter":[],"podcasts":["Geht da noch was?"],"serien":[],"autoren":["Henrik Oerding"]},"Sinn, Philosophie, Ethik, Lebenshilfe":{"benennung":"Sinn und Philosophie","newsletter":["Wofür leben wir? – Der Sinn-Newsletter"],"podcasts":[],"serien":["Sinn finden","Der Optimist"],"autoren":["Kilian Trotier"]},"Filme, Serien, Streaming, TV, Mediatheken":{"benennung":"Filme und Serien","newsletter":["DIE ZEIT – Kultur"],"podcasts":[],"serien":["Obduktionsbericht"],"autoren":["Volker Weidermann"]},"Kunst, Bühne, Ausstellungen":{"benennung":"Kunst","newsletter":["Weltkunst-Newsletter","DIE ZEIT – Kultur"],"podcasts":["Augen zu"],"serien":[],"autoren":[]},"spiele.zeit.de/*":{"benennung":"Spiele","newsletter":["Quiz – Der tägliche Wissenstest"],"podcasts":[],"serien":[],"autoren":[]},"Bildung, Schule, Universität":{"benennung":"Bildung, Schule, Universität","newsletter":[],"podcasts":[],"serien":["Wie wars in der Schule?"],"autoren":[]}};
+  var TAGE={nachts:['00–05',5,2.3,'Sie lesen, wenn es still ist — meist zwischen 0 und 5 Uhr.'],
+            morgens:['05–12',7,36.3,'Sie gehen informiert in den Tag — meist zwischen 5 und 12 Uhr.'],
+            mittags:['12–15',3,12.0,'Sie nehmen sich mitten am Tag Zeit — meist zwischen 12 und 15 Uhr.'],
+            nachmittags:['15–18',3,12.3,'Sie lesen, wenn der Tag sich neigt — meist zwischen 15 und 18 Uhr.'],
+            abends:['18–24',6,37.1,'Sie lassen den Tag lesend ausklingen — meist zwischen 18 und 24 Uhr.']};
+  var ARTIKEL=[['Alfaview','Wie man sich gegen einen Tech-Giganten wehrt'],
+               ['»Nihilist Penguin«','Ich fühl dich, kleiner Pinguin!'],
+               ['Schwächen der Wissenschaft','Wem schlechte Forschung nützt'],
+               ['Jugendwort des Jahres','»Ein Sprachverfall ist das auf keinen Fall«']];
+  var ANGEBOTE={woma:['Wochenmarkt','Rezepte und Küchengeschichten unserer Autorinnen und Autoren.'],
+                spiele:['Spiele','Kreuzworträtsel, Sudoku und mehr — jeden Tag neu.'],
+                app:['DIE ZEIT-App','Alle Artikel offline lesen, hören und merken.']};
+  var reduziert=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var Z={min:291,kohorte:'7',tageszeit:'abends',thema:'Innenpolitik Deutschland',
+         entdeckt:{woma:false,spiele:false,app:true},
+         bloecke:{bleibt:true,parkett:true,entdecken:true,ende:true}};
+  var $=function(i){return document.getElementById(i);};
+  function mt(m){ if(m<60) return m+' Min'; var h=Math.floor(m/60),r=m%60; return h+' Std'+(r?' '+r+' Min':''); }
+  function dezil(m,k){ var g=KOHORTEN[k].g,d=1; for(var i=0;i<g.length;i++) if(m>g[i]) d=i+2; return d; }
+  function stufe(d,k){ var klein=KOHORTEN[k].n<100;
+    if(d<=1) return 'D'; if(d<=4) return 'C'; if(d<=7||klein) return 'B'; return 'A'; }
 
-  const screenEl=$('#screen'), paint=$('#paint');
+  var sel=$('thema');
+  THEMEN.forEach(function(t){ var o=document.createElement('option'); o.value=t[0];
+    o.textContent=(t[0].length>40?t[0].slice(0,38)+'…':t[0])+'  ·  '+t[1]; sel.appendChild(o); });
+  sel.value=Z.thema;
 
-  /* Voreinstellung wie im Entwurf */
-  const st={ res:'Wissen', zeit:'morgens', int:'wenig' };
-  const INT={ wenig:{t:24,rank:'weniger als die Hälfte',pos:.34}, mittel:{t:78,rank:'etwa so viel wie die Hälfte',pos:.52}, viel:{t:160,rank:'vier von fünf',pos:.8} };
-  const RES={ Wissen:{sh:.34,o:['Politik','Kultur','Wirtschaft']}, Politik:{sh:.36,o:['Wissen','Kultur','Wirtschaft']},
-              Wirtschaft:{sh:.32,o:['Politik','Wissen','Kultur']}, Kultur:{sh:.33,o:['Politik','Wissen','Wirtschaft']} };
-  const ZT={ morgens:{v:6,b:9,head:'Der Morgenkaffee mit der ZEIT',cap:'6 – 9 Uhr',txt:'zwischen sechs und neun Uhr',push:'Push um 7 Uhr',pb:'Einmal täglich, zu Ihrer Lesezeit. Sonst hören Sie nichts von uns.',uhr:'7'},
-             tags:{v:11,b:17,head:'Die Pause mit der ZEIT',cap:'11 – 17 Uhr',txt:'zwischen elf und siebzehn Uhr',push:'Push um 12 Uhr',pb:'Einmal am Mittag, wenn bei uns am meisten erscheint.',uhr:'12'},
-             abends:{v:19,b:23,head:'Der Abend mit der ZEIT',cap:'19 – 23 Uhr',txt:'zwischen neunzehn und dreiundzwanzig Uhr',push:'Vorlesen um 20 Uhr',pb:'Abends starten wir die langen Stücke zum Hören.',uhr:'20'} };
+  // Karussell mit echten Artikeln
+  (function(){ var k=$('karussell');
+    ARTIKEL.forEach(function(a){ var d=document.createElement('div'); d.className='artikel';
+      d.innerHTML='<span class="flor"></span><div class="txt"><p class="k">'+a[0]+'</p><p class="t">'+a[1]+'</p></div>';
+      k.appendChild(d); }); })();
 
-  const PAL=[
-    {bg:'#FFFDF9', f:['#E7DCCB','#D6E0E3','#EFE0CB']},
-    {bg:'#FFFCF6', f:['#EFE0CB','#E7DCCB','#F3E7D6']},
-    {bg:'#FFFDF9', f:['#E7DCCB','#DCE4E6','#EFE0CB']},
-    {bg:'#F7FAFA', f:['#D3DEE1','#DCE4E6','#E7DCCB']},
-    {bg:'#FFFCF2', f:['#FFE18A','#F0DFC6','#FFEDAF']},
-    {bg:'#FFFDF9', f:['#F0DFC6','#DCE4E6','#E7DCCB']},
-    {bg:'#FDF9F0', f:['#E7DCCB','#F0DFC6','#D6E0E3']}
-  ];
-  /* Die Lesezeit-Sektion färbt sich nach der Tageszeit —
-     Morgenlicht, Tageslicht, Dämmerung. Alles hell, keine dunklen Flächen. */
-  const ZPAL={
-    morgens:{ bg:'#FFFCF2', f:['#FFE18A','#F0DFC6','#FFEDAF'], glow:'#FFE7A6' },
-    tags:   { bg:'#FBFDFA', f:['#FFF6C9','#E4EFE8','#F1F5EC'], glow:'#FBF3C4' },
-    abends: { bg:'#FCF7F4', f:['#F0C9A8','#E2CBD6','#EEDCC8'], glow:'#F5D2B6' }
-  };
-  const pal=i=> i===4 ? ZPAL[st.zeit] : PAL[i];
-  const rgb=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
-  const mix=(a,b,t)=>{const A=rgb(a),B=rgb(b);return 'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')+')';};
-
-  const FSPEC=[{s:112,x:-32,y:-8,k:.07},{s:92,x:44,y:24,k:.12},{s:124,x:-16,y:58,k:.05}];
-  const fields=FSPEC.map(o=>{ const i=document.createElement('i');
-    i.style.width=o.s+'%'; i.style.height=o.s+'%'; i.style.left=o.x+'%'; i.style.top=o.y+'%';
-    paint.append(i); return i; });
-
-  const secs=$$('main > section[data-ch]');
-
-  /* Bausteine */
-  const dotsEl=$('#dots');
-  for(let i=0;i<126;i++) dotsEl.append(document.createElement('i'));
-  const dotEls=$$('#dots i');
-
-  const histEl=$('#hist'), NH=41, HH=[];
-  for(let i=0;i<NH;i++){
-    const x=(i-(NH-1)/2)/((NH-1)/2), h=Math.round(100*Math.exp(-3.0*x*x))+3;
-    HH.push(h);
-    const b=document.createElement('b'); b.style.setProperty('--h',h+'%'); histEl.append(b);
-  }
-  const histBars=$$('#hist b');
-
-  const clockEl=$('#clock');
-  for(let i=0;i<24;i++) clockEl.append(document.createElement('i'));
-  const clockDots=$$('#clock i');
-  function placeClock(){
-    const w=clockEl.clientWidth||280, c=w/2, R=w*.385;
-    clockDots.forEach((el,i)=>{
-      const a=(i/24)*Math.PI*2-Math.PI/2, own=el.classList.contains('own'), s=own?14:6;
-      el.style.width=s+'px'; el.style.height=s+'px';
-      el.style.left=(c+Math.cos(a)*R-s/2)+'px'; el.style.top=(c+Math.sin(a)*R-s/2)+'px';
+  // Wolke
+  var wolke=$('wolke'), fokusTimer=null;
+  function baueWolke(){
+    wolke.innerHTML="";
+    var b=wolke.clientWidth||330,h=wolke.clientHeight||280,cx=b/2,cy=h/2,gesetzt=[],maxN=THEMEN[0][1];
+    // das eigene Thema zuerst — es bekommt die Mitte und wird nie verworfen
+    var reihe=THEMEN.slice().sort(function(x,y){
+      if(x[0]===Z.thema) return -1; if(y[0]===Z.thema) return 1; return y[1]-x[1]; });
+    reihe.forEach(function(t,i){
+      var meins = t[0]===Z.thema;
+      var sp=document.createElement("span");
+      var gr=10.5+21*Math.sqrt(t[1]/maxN);
+      sp.style.fontSize=gr.toFixed(1)+"px";
+      sp.style.setProperty("--o",(0.3+0.6*Math.sqrt(t[1]/maxN)).toFixed(2));
+      sp.style.transitionDelay=(0.026*i)+"s";
+      sp.textContent=t[0]; sp.dataset.name=t[0];
+      wolke.appendChild(sp);
+      // schrumpfen, bis es in die Breite passt
+      var schutz=0;
+      while(sp.offsetWidth > b-10 && gr > 8.5 && schutz++ < 40){ gr-=0.8; sp.style.fontSize=gr.toFixed(1)+"px"; }
+      var w=sp.offsetWidth,hh=sp.offsetHeight,ok=false;
+      if(meins){ // Mitte reservieren
+        var x0=cx-w/2, y0=cy-hh/2;
+        sp.style.left=Math.max(0,x0)+"px"; sp.style.top=Math.max(0,y0)+"px";
+        gesetzt.push({x:Math.max(0,x0),y:Math.max(0,y0),w:w,h:hh}); return;
+      }
+      for(var a=0;a<2400&&!ok;a++){
+        var wi=a*0.30,r=a*0.40, x=cx+r*Math.cos(wi)*1.30-w/2, y=cy+r*Math.sin(wi)*0.58-hh/2;
+        if(x<0||y<0||x+w>b||y+hh>h) continue;
+        var frei=true;
+        for(var p=0;p<gesetzt.length;p++){ var rr=gesetzt[p];
+          if(x<rr.x+rr.w+7&&x+w+7>rr.x&&y<rr.y+rr.h+4&&y+hh+4>rr.y){frei=false;break;} }
+        if(frei){ sp.style.left=x+"px"; sp.style.top=y+"px"; gesetzt.push({x:x,y:y,w:w,h:hh}); ok=true; }
+      }
+      if(!ok) sp.remove();
     });
+    $("wolkeN").textContent=wolke.children.length+" von 40 im Bild";
+    zielSetzen(); wolke.classList.remove("ein","fokus");
   }
-
-  const derived=()=>{
-    const i=INT[st.int], r=RES[st.res], z=ZT[st.zeit];
-    const top=Math.max(2,Math.round(i.t*r.sh));
-    const rest=[.75,.55,.4].map((f,n)=>({name:r.o[n],value:Math.max(1,Math.round(top*f))}));
-    const perDot = i.t/10 < 5 ? 1 : 10;   /* bei kleinen Werten ein Punkt je Text */
-    return {i,r,z,top,rest,perDot};
-  };
-
-  function buildRings(){
-    const wrap=$('#rings'); wrap.textContent='';
-    const d=derived();
-    const items=[{n:st.res},{n:d.rest[0].name},{n:d.rest[1].name},{n:d.rest[2].name}];
-    const sizes=[100,76,54,32], tone=['#CFDCE0','#DCE6E9','#E8EEF0','#FFFFFF'];
-    items.forEach((it,i)=>{ const r=document.createElement('i');
-      r.style.width=sizes[i]+'%'; r.style.height=sizes[i]+'%'; r.style.background=tone[i]; wrap.append(r); });
-    items.forEach((it,i)=>{ const l=document.createElement('span');
-      l.textContent=(i+1)+'. '+it.n;
-      l.style.top='calc(50% - '+(sizes[i]/2)+'% + '+(i===3?14:10)+'px)'; wrap.append(l); });
+  function zielSetzen(){
+    var ziel=null;
+    Array.prototype.forEach.call(wolke.children,function(sp){
+      var ist=sp.dataset.name===Z.thema; sp.classList.toggle("meins",ist); if(ist) ziel=sp; });
+    if(!ziel) return;
+    var b=wolke.clientWidth,h=wolke.clientHeight,w=ziel.offsetWidth,hh=ziel.offsetHeight;
+    var x=ziel.offsetLeft,y=ziel.offsetTop, gr=parseFloat(ziel.style.fontSize);
+    var zg=Math.min(34, gr*((b-16)/Math.max(1,w)));
+    ziel.style.setProperty("--dx",(b/2-(x+w/2))+"px");
+    ziel.style.setProperty("--dy",(h/2-(y+hh/2))+"px");
+    ziel.style.setProperty("--k",Math.max(1,(zg/gr)).toFixed(3));
   }
+  function wolkeEin(){ clearTimeout(fokusTimer); wolke.classList.remove('fokus');
+    requestAnimationFrame(function(){ wolke.classList.add('ein'); });
+    fokusTimer=setTimeout(wolkeFokus, reduziert?0:3400); }
+  function wolkeFokus(){ clearTimeout(fokusTimer); wolke.classList.add('ein','fokus');
+    $('anteil').classList.add('da'); $('themaSatz').classList.add('da'); }
 
-  function render(){
-    const d=derived();
-    $('#rangTxt').textContent=d.i.rank;
-    $('#dotsBody').textContent = d.perDot===10
-      ? 'So viele Texte sind in diesen fünf Wochen erschienen. Ein Punkt steht für zehn — die roten sind Ihre.'
-      : 'So viele Texte sind in diesen fünf Wochen erschienen. Ein Punkt steht für einen Text — die roten sind Ihre.';
-    $('#ressBody').textContent=d.top+' Texte aus '+st.res+', '+d.rest[0].value+' aus '+d.rest[0].name+'. Auch insgesamt war '+st.res+' in diesen Wochen eines der stärksten Ressorts.';
-    $('#zeitHead').textContent=d.z.head;
-    $('#zeitBody').textContent='Sie gehen am liebsten informiert in den Tag: Ihre Texte lesen Sie meist '+d.z.txt+'.';
-    $('#clockCap').textContent=d.z.cap;
-    $('#pushHead').textContent=d.z.push;
-    $('#pushBody').textContent=d.z.pb;
-    clockDots.forEach((el,i)=>el.classList.toggle('own', i>=d.z.v && i<d.z.b));
-    document.documentElement.style.setProperty('--glow', ZPAL[st.zeit].glow);
-    buildRings(); placeClock();
+  function baueTag(){
+    var el=$('tag'); el.innerHTML='';
+    Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
+      d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
+      d.innerHTML='<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
+    $('tagTitel').textContent='Meist '+Z.tageszeit;
+    $('tagSatz').textContent=TAGE[Z.tageszeit][3];
+    $('tagQuelle').textContent=TAGE[Z.tageszeit][2].toFixed(1).replace('.',',')+' % der Abonnentinnen und Abonnenten, die im selben Zeitraum ein Abo abgeschlossen haben, lesen '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
   }
-
-  /* ── Zeitgesteuerte Aufbauten ───────────────────────────────────── */
-  const timers=new Map();
-  function play(key, dur, step){
-    if(rm){ step(1); return; }
-    cancelAnimationFrame(timers.get(key));
-    const t0=performance.now();
-    const frame=now=>{
-      const p=cl((now-t0)/dur);
-      step(p);
-      if(p<1) timers.set(key, requestAnimationFrame(frame));
-    };
-    timers.set(key, requestAnimationFrame(frame));
+  function baueBand(d,rot){
+    var el=$('band'); el.innerHTML='';
+    for(var i=1;i<=10;i++){ var s=document.createElement('div');
+      s.className='s'+(i===d&&rot?' sie':'');
+      if(i===d&&!rot) s.style.background='var(--ink)';
+      s.style.setProperty('--h',(12+i*8.5)+'px'); s.style.transitionDelay=(0.045*i)+'s'; el.appendChild(s); }
+    var m=$('sieMarke'); m.style.left=((d-0.5)/10*100)+'%';
+    m.textContent=rot?'SIE':'Sie'; m.style.color=rot?'var(--marker)':'var(--ink3)';
   }
-  const stagger=(p,i,n,share)=>cl((p-(i/n)*(1-share))/share);
-
-  const ANIM={
-    dots:{
-      /* Zwei Phasen: erst baut sich das graue Raster langsam auf,
-         danach werden die eigenen Punkte einer nach dem anderen rot
-         und die Zahl blendet mit ihnen ein.                          */
-      dur:3600,
-      reset(){
-        const c=$('#cnt'); c.textContent='0'; c.style.opacity='0';
-        dotEls.forEach(d=>{ d.style.opacity='0'; d.style.transform='scale(.35)'; d.classList.remove('own'); });
-      },
-      step(p){
-        const d=derived();
-        const own=Math.max(1,Math.round(d.i.t/d.perDot));
-        // Phase 1 (0 – 48 %): Raster erscheint zeilenweise
-        const g=cl(p/.48);
-        dotEls.forEach((dot,i)=>{
-          const t=easeOut(stagger(g,i,dotEls.length,.5));
-          dot.style.opacity=(0.85*t).toFixed(2);
-          dot.style.transform='scale('+(0.35+0.65*t).toFixed(3)+')';
-        });
-        // Phase 2 (42 – 100 %): die eigenen Punkte werden rot, Zahl zählt mit
-        const r=easeOut(cl((p-.42)/.58));
-        const redCount=Math.round(own*r);
-        dotEls.forEach((dot,i)=>{
-          const on=i<redCount;
-          dot.classList.toggle('own', on);
-          if(on) dot.style.opacity='1';
-        });
-        const c=$('#cnt');
-        c.textContent=de(Math.round(d.i.t*r));
-        c.style.opacity=cl(r*4).toFixed(2);
-      }
-    },
-    hist:{
-      dur:3200,
-      reset(){ histBars.forEach(b=>{ b.style.transform='scaleY(0)'; b.classList.remove('you'); }); $('#youTag').style.opacity=0; },
-      step(p){
-        const d=derived(), e=easeIO(p);
-        const idx=Math.round((NH-1)*d.i.pos);
-        histBars.forEach((b,i)=>{
-          const fromCenter=Math.abs(i-(NH-1)/2)/((NH-1)/2);
-          const t=easeOut(cl((e-fromCenter*.55)/.45));
-          b.style.transform='scaleY('+t.toFixed(3)+')';
-          b.classList.toggle('you', i===idx);
-        });
-        const tag=$('#youTag');
-        tag.style.left=((idx+.5)/NH*100)+'%';
-        tag.style.bottom=(HH[idx]*1.12+6)+'px';
-        tag.style.opacity=cl((e-.6)/.25).toFixed(2);
-      }
-    },
-    rings:{
-      dur:3000,
-      reset(){ $$('#rings i').forEach(r=>{ r.style.opacity=0; r.style.transform='translate(-50%,-50%) scale(.3)'; }); $$('#rings span').forEach(s=>s.style.opacity=0); },
-      step(p){
-        const e=easeIO(p);
-        $$('#rings i').forEach((r,i)=>{
-          const t=easeOut(stagger(e,i,4,.58));
-          r.style.transform='translate(-50%,-50%) scale('+(0.3+0.7*t).toFixed(3)+')';
-          r.style.opacity=t.toFixed(2);
-        });
-        $$('#rings span').forEach((s,i)=>{ s.style.opacity=cl((e-.35-i*.09)/.28).toFixed(2); });
-      }
-    },
-    clock:{
-      dur:3400,
-      reset(){ clockDots.forEach(d=>{ d.style.opacity=0; d.style.transform='scale(.3)'; }); $('.cap',clockEl).style.opacity=0; },
-      step(p){
-        const e=easeOut(p);
-        clockDots.forEach((el,i)=>{
-          const t=easeOut(stagger(e,i,24,.42));
-          el.style.transform='scale('+(0.3+0.7*t).toFixed(3)+')';
-          el.style.opacity=(0.35+0.65*t).toFixed(2);
-        });
-        $('.cap',clockEl).style.opacity=cl((e-.55)/.3).toFixed(2);
-      }
-    },
-    thanks:{
-      dur:1800,
-      reset(){ $('#merkCount').textContent='0'; },
-      step(p){ $('#merkCount').textContent=String(Math.round(saved*easeOut(p))); }
+  function karte(ziel,art,werte,unten,leerTitel,leerText){
+    var k=$(ziel); k.innerHTML='';
+    var d=document.createElement('div'); d.className='karte'+(werte&&werte.length?'':' leer');
+    var kopf='<div class="art"><i></i>'+art+'</div>';
+    d.innerHTML = werte&&werte.length
+      ? kopf+werte.slice(0,2).map(function(w){return '<h3>'+w+'</h3>';}).join('')+'<p>'+unten+'</p>'
+      : kopf+'<h3>'+leerTitel+'</h3><p>'+leerText+'</p>';
+    k.appendChild(d);
+  }
+  function baueEmpfehlung(){
+    var e=EMPF[Z.thema];
+    karte('kartenZeit','Newsletter', e?e.newsletter:null,
+      e?'Gehört zu Ihrem Themenfeld '+e.benennung+'.':'',
+      'Hier ist noch Platz',
+      e?'Für '+e.benennung+' gibt es noch keinen eigenen Newsletter.'
+       :'Für dieses Themenfeld gibt es noch keine Zuordnung. Ihre Lektüre hilft uns, das zu ändern.');
+    var pod=e&&e.podcasts.length?e.podcasts:null, ser=e&&e.serien.length?e.serien:null;
+    var von=e&&e.autoren.length?' Von '+e.autoren.slice(0,2).join(' und ')+'.':'';
+    if(pod) karte('kartenThema','Podcast',pod,'Zum Hören unterwegs.'+von,'','');
+    else if(ser) karte('kartenThema','Serie',ser,'Mehrere Texte zum selben Faden.'+von,'','');
+    else karte('kartenThema','Podcast',null,'','Hier ist noch Platz',
+      e?'Für '+e.benennung+' gibt es noch keinen eigenen Podcast.'
+       :'Dieses Themenfeld ist eines von 16 ohne Zuordnung — zusammen 270 der 1.756 Abonnentinnen und Abonnenten.');
+  }
+  function baueEntdecken(){
+    var l=$('liste'); l.innerHTML='';
+    var offen=Object.keys(ANGEBOTE).filter(function(k){ return !Z.entdeckt[k]; });
+    offen.forEach(function(k){ var a=ANGEBOTE[k];
+      var d=document.createElement('div'); d.className='eintrag';
+      d.innerHTML='<div class="bild"></div><div><h4 class="h4">'+a[0]+'</h4><p class="sub-s">'+a[1]+'</p></div>';
+      l.appendChild(d); });
+    if(!offen.length){
+      var d=document.createElement('p'); d.className='leerhinweis';
+      d.textContent='Sie haben schon alles entdeckt — Wochenmarkt, Spiele und die App. Schön, dass Sie so neugierig sind.';
+      l.appendChild(d);
     }
-  };
-  let saved=3;
-
-  function runSection(sec){
-    const key=sec.dataset.anim;
-    if(!key||!ANIM[key]) return;
-    ANIM[key].reset();
-    play(key, ANIM[key].dur, ANIM[key].step);
-  }
-  function resetSection(sec){
-    const key=sec.dataset.anim;
-    if(!key||!ANIM[key]) return;
-    cancelAnimationFrame(timers.get(key));
-    ANIM[key].reset();
+    $('entdeckenSub').textContent = offen.length
+      ? 'Alles in Ihrem Abo enthalten' : 'Alles schon dabei';
+    $('aTeaser').textContent=offen.length+' von 3';
+    $('entdeckenQuelle').textContent='Gesteuert über has_pvs_woma_ressort, has_pvs_spiele_ressort und has_pvs_app. Im Export: Wochenmarkt bei 0 von 1.756 auf true, Spiele bei 227 (12,9 %), App bei 1.057 (60,2 %).';
   }
 
-  /* Texte blenden früh ein … */
-  const io=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
-  },{ root:screenEl, threshold:.18 });
-  secs.forEach(s=>io.observe(s));
+  function zeigeBloecke(){
+    var m={bleibt:'s-bleibt',parkett:'s-parkett',entdecken:'s-entdecken',ende:'s-ende'};
+    Object.keys(m).forEach(function(k){ $(m[k]).style.display = Z.bloecke[k] ? '' : 'none'; });
+  }
+  function rechne(){
+    var k=KOHORTEN[Z.kohorte], d=dezil(Z.min,Z.kohorte), st=stufe(d,Z.kohorte);
+    var perz=Math.min(99,Math.max(1,Math.round((d-0.5)*10))), klein=k.n<100;
+    $('minAnzeige').textContent=Z.min+' Min'; $('minLang').textContent=mt(Z.min);
+    $('aPerz').textContent=perz+' %'; $('aDezil').textContent=d; $('aStufe').textContent=st;
+    var w=$('warnKohorte');
+    if(klein){ w.hidden=false; w.textContent='Nur '+k.n+' Menschen sind genauso lange dabei — ein Zehntel sind vier Personen. Die Rangaussage wird ausgesetzt, das Modul bleibt sichtbar.'; }
+    else w.hidden=true;
 
-  /* … die Diagramme starten, wenn die Sektion die Bildschirmmitte erreicht. */
-  function checkCentre(){
-    const vh=screenEl.clientHeight, top=screenEl.getBoundingClientRect().top;
-    secs.forEach(s=>{
-      if(!s.dataset.anim) return;
-      const r=s.getBoundingClientRect();
-      const centre=r.top + r.height/2 - top;
-      const dist=Math.abs(centre - vh/2)/vh;
-      if(dist<0.42 && !s.dataset.running){ s.dataset.running='1'; runSection(s); }
-      else if(dist>0.95 && s.dataset.running){ delete s.dataset.running; resetSection(s); }
+    $('einheit').textContent = Z.min<60?'Min':(Z.min%60?'Std '+(Z.min%60)+' Min':'Std');
+    $('zaehler').dataset.ziel = Z.min<60?Z.min:Math.floor(Z.min/60);
+    $('spurHuelle').style.display=(st==='A'||st==='B')?'block':'none';
+    $('spur').style.setProperty('--w',perz+'%');
+    $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
+    $('spurRechts').textContent=st==='A'?'Sie gehören zum oberen Fünftel':'Sie liegen in der Mitte';
+    $('zeitSatz').textContent = st==='D'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
+      : st==='C'?'haben Sie in Ihrer ersten Woche gelesen. Jeder Text war eine Entscheidung.'
+      : 'haben Sie in Ihrer ersten Woche gelesen.';
+    $('zeitQuelle').textContent = st==='D'?'Ihr Rückblick wächst mit jedem Tag, an dem Sie lesen.'
+      : st==='C'?'Ein Vergleich mit anderen sagt über eine erste Woche wenig. Was zählt, ist der Anfang.'
+      : 'Verglichen mit '+k.n+' Menschen, die genauso lange dabei sind wie Sie.';
+
+    baueBand(d, st==='A');
+    var rang=st==='A';
+    $('bandAugen').textContent = rang?'Ihr Platz im Vergleich':'So lesen die anderen';
+    $('bandZahl').textContent = rang?perz+' %':(st==='B'?'So viel wie die meisten':'Sehr unterschiedlich');
+    $('bandZahl').className = 'an v2 '+(rang?'gross':'mittel');
+    $('bandSatz').textContent = rang
+      ? (d===10?'Sie gehören zu den zehn Prozent, die am meisten lesen.':'Sie lesen mehr als '+perz+' Prozent der anderen.')
+      : st==='B' ? 'Sie lesen so viel wie die meisten, die genauso lange dabei sind wie Sie.'
+      : st==='C' ? 'So weit liegen die '+k.n+' Menschen auseinander, die genauso lange dabei sind wie Sie. Ihr Platz darin verschiebt sich mit jedem Text.'
+      : 'Hier lesen '+k.n+' Menschen sehr unterschiedlich viel. Ihre Woche hat gerade erst begonnen.';
+    $('bandQuelle').textContent = klein
+      ? 'Nur '+k.n+' Menschen sind genauso lange dabei. Für einen Rangplatz ist das zu wenig — die Spannweite zeigen wir trotzdem.'
+      : 'Alle, die genauso lange dabei sind wie Sie, in zehn gleich große Gruppen geteilt.';
+
+    var t=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
+    $('themaAugen').textContent = st==='D'?'Ihr erstes Thema':'Ihr Thema der Woche';
+    $('themaLead').textContent = st==='D'
+      ? 'Hieraus kam Ihr erster Text. Was daraus wird, zeigt der nächste Rückblick.'
+      : 'Aus diesem Themenfeld kamen die meisten Ihrer gelesenen Texte.';
+    $('anteil').querySelector('i').style.setProperty('--w',Math.max(2,Math.round(100*t[1]/1756))+'%');
+    $('anteilLinks').textContent=t[1]+' von 1.756 lesen vor allem darüber';
+    $('themaQuelle').textContent = t[1]>=80
+      ? 'Diese Gruppe kommt im Mittel auf '+mt(t[2])+'. '+(Z.min>=t[2]?'Sie liegen darüber.':'Sie sind auf dem Weg dorthin.')
+      : 'Ein seltenes Themenfeld — nur '+t[1]+' der 1.756 lesen vor allem darüber. Sie gehören zu einer kleinen Gruppe.';
+
+    zeigeBloecke();
+    baueEmpfehlung(); baueEntdecken(); baueWolke();
+  }
+
+  // ── Auslösezone im oberen Sichtbereich
+  var rohr=$('rohr'), szenen=document.querySelectorAll('.szene');
+  var io=new IntersectionObserver(function(e){
+    e.forEach(function(x){
+      if(x.isIntersecting){
+        if(x.target.classList.contains('sichtbar')) return;
+        x.target.classList.add('sichtbar');
+        if(x.target.id==='s-zeit') zaehle();
+        if(x.target.id==='s-thema') wolkeEin();
+      } else {
+        x.target.classList.remove('sichtbar');
+        if(x.target.id==='s-zeit'){ gezaehlt=false; $('zaehler').textContent='0'; }
+        if(x.target.id==='s-thema'){ clearTimeout(fokusTimer); wolke.classList.remove('ein','fokus');
+          $('anteil').classList.remove('da'); $('themaSatz').classList.remove('da'); }
+      }
+    });
+  },{root:rohr,rootMargin:'0px 0px -52% 0px',threshold:0});
+  szenen.forEach(function(s){ io.observe(s); });
+  var ioFokus=new IntersectionObserver(function(e){
+    e.forEach(function(x){ if(x.isIntersecting) wolkeFokus(); });
+  },{root:rohr,rootMargin:'0px 0px -78% 0px',threshold:0});
+  ioFokus.observe($('s-thema'));
+
+  var gezaehlt=false;
+  function zaehle(){ if(gezaehlt) return; gezaehlt=true;
+    var el=$('zaehler'), ziel=+el.dataset.ziel||0;
+    if(reduziert){ el.textContent=ziel; return; }
+    var s=null; function tick(t){ if(s===null)s=t;
+      var p=Math.min(1,(t-s)/1200), e=1-Math.pow(1-p,4);
+      el.textContent=Math.round(ziel*e); if(p<1) requestAnimationFrame(tick); }
+    requestAnimationFrame(tick); }
+
+  function wiederhole(){
+    gezaehlt=false; $('zaehler').textContent='0';
+    szenen.forEach(function(s){ s.classList.remove('sichtbar'); });
+    wolke.classList.remove('ein','fokus'); $('anteil').classList.remove('da'); $('themaSatz').classList.remove('da');
+    setTimeout(function(){
+      szenen.forEach(function(s){
+        var r=s.getBoundingClientRect(), rr=rohr.getBoundingClientRect();
+        if(r.top<rr.bottom-60&&r.bottom>rr.top+60){ s.classList.add('sichtbar');
+          if(s.id==='s-zeit') zaehle(); if(s.id==='s-thema') wolkeEin(); }
+      });
+    },60);
+  }
+
+  // ── Stapeltiefe: je stärker die nächste Karte überdeckt, desto weiter sinkt diese zurück
+  var stapelKarten=[].slice.call(document.querySelectorAll('.szene'));
+  function stapel(){
+    if(document.body.getAttribute('data-variante')!=='karten'){
+      stapelKarten.forEach(function(k){ k.style.transform=''; k.style.setProperty('--schleier',0); });
+      return;
+    }
+    stapelKarten.forEach(function(k,i){
+      var naechste=stapelKarten[i+1];
+      if(!naechste){ k.style.transform=''; k.style.setProperty('--schleier',0); return; }
+      var kr=k.getBoundingClientRect(), nr=naechste.getBoundingClientRect();
+      var weg=Math.max(0, kr.bottom - nr.top);
+      var p=Math.min(1, weg / Math.max(1, kr.height*0.85));
+      var e=p*p*(3-2*p);
+      k.style.transform='scale('+(1-e*0.055).toFixed(4)+') translateY('+(-e*14).toFixed(1)+'px)';
+      k.style.setProperty('--schleier',(e*0.42).toFixed(3));
     });
   }
+  rohr.addEventListener('scroll',stapel,{passive:true});
+  rohr.addEventListener('scroll',function(){
+    var p=rohr.scrollTop/Math.max(1,rohr.scrollHeight-rohr.clientHeight);
+    $('fortschritt').style.width=(p*100).toFixed(1)+'%';
+  },{passive:true});
 
-  /* ── Grund und Fortschritt am Scroll ────────────────────────────── */
-  let queued=false;
-  function tick(){
-    const vh=screenEl.clientHeight, sc=screenEl.scrollTop, vc=sc+vh/2;
-    const centers=secs.map(s=>s.offsetTop+s.offsetHeight/2);
-    let i=0; while(i<centers.length-1 && vc>centers[i+1]) i++;
-    const span=Math.max(1,(centers[i+1]||centers[i]+1)-centers[i]);
-    const t=cl((vc-centers[i])/span);
-    const A=pal(+secs[i].dataset.pal), B=pal(+(secs[i+1]||secs[i]).dataset.pal);
-    document.documentElement.style.setProperty('--bg', mix(A.bg,B.bg,t));
-    fields.forEach((el,n)=>{
-      el.style.background=mix(A.f[n%3],B.f[n%3],t);
-      el.style.opacity=(0.52+0.2*Math.sin(sc/800+n)).toFixed(2);
-      if(!rm) el.style.transform='translate3d('+(Math.sin(sc/900+n)*3).toFixed(2)+'%,'+(-sc*FSPEC[n].k*.1).toFixed(1)+'px,0)';
-    });
-    const max=screenEl.scrollHeight-vh;
-    $('#prog').style.width=(max>0?sc/max*100:0)+'%';
-    checkCentre();
-    queued=false;
-  }
-  const onScroll=()=>{ if(!queued){ queued=true; requestAnimationFrame(tick); } };
-  screenEl.addEventListener('scroll',onScroll,{passive:true});
-  addEventListener('resize',()=>{ placeClock(); onScroll(); });
+  $('minuten').addEventListener('input',function(){ Z.min=+this.value; rechne();
+    gezaehlt=false; if($('s-zeit').classList.contains('sichtbar')) zaehle(); });
+  $('kohorte').addEventListener('change',function(){ Z.kohorte=this.value;
+    Z.bloecke.bleibt = (Z.kohorte==='7');
+    $('bloecke').querySelector('[data-b="bleibt"]').setAttribute('aria-pressed',String(Z.bloecke.bleibt));
+    rechne(); });
+  $('bloecke').addEventListener('click',function(e){ var b2=e.target.closest('button'); if(!b2) return;
+    Z.bloecke[b2.dataset.b]=!Z.bloecke[b2.dataset.b];
+    b2.setAttribute('aria-pressed',String(Z.bloecke[b2.dataset.b]));
+    zeigeBloecke(); });
+  $('thema').addEventListener('change',function(){ Z.thema=this.value; rechne();
+    if($('s-thema').classList.contains('sichtbar')) wolkeEin(); });
+  $('tageszeit').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    Z.tageszeit=b.dataset.t;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    baueTag(); });
+  $('entdeckt').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    Z.entdeckt[b.dataset.e]=!Z.entdeckt[b.dataset.e];
+    b.setAttribute('aria-pressed',String(Z.entdeckt[b.dataset.e]));
+    baueEntdecken(); });
+  $('variante').addEventListener('click',function(e){ var b2=e.target.closest('button'); if(!b2) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b2)); });
+    document.body.setAttribute('data-variante', b2.dataset.v);
+    setTimeout(function(){ baueWolke(); wiederhole(); stapel(); }, 80);
+    try{ localStorage.setItem('zeit-variante', b2.dataset.v); }catch(err){} });
+  try{ var vg=localStorage.getItem('zeit-variante');
+    if(vg==='karten'){ document.body.setAttribute('data-variante','karten');
+      $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v==='karten')); }); } }catch(err){}
+  $('quellen').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    document.body.classList.toggle('ohne-quellen', b.dataset.q==='aus'); });
+  $('modus').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    if(b.dataset.m==='system') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme',b.dataset.m);
+    document.body.classList.toggle('dunkel',b.dataset.m==='dark'); });
+  $('wieder').addEventListener('click',wiederhole);
+  $('oben').addEventListener('click',function(){ rohr.scrollTo({top:0,behavior:'smooth'}); });
 
-  /* Karussell */
-  const rail=$('#rail'), cards=$$('#rail .card');
-  cards.forEach(()=>$('#pips').append(document.createElement('i')));
-  const pips=$$('#pips i');
-  const syncPips=()=>{ const i=Math.round(rail.scrollLeft/(cards[0].offsetWidth+12));
-    pips.forEach((p,n)=>p.classList.toggle('on',n===Math.min(cards.length-1,i))); };
-  rail.addEventListener('scroll',syncPips,{passive:true});
-  $('#rNext').addEventListener('click',()=>rail.scrollBy({left:cards[0].offsetWidth+12,behavior:rm?'auto':'smooth'}));
-  $('#rPrev').addEventListener('click',()=>rail.scrollBy({left:-(cards[0].offsetWidth+12),behavior:rm?'auto':'smooth'}));
-  syncPips();
-  $$('#rail .save').forEach(b=>b.addEventListener('click',()=>{
-    const on=b.getAttribute('aria-pressed')==='true';
-    b.setAttribute('aria-pressed',String(!on)); b.textContent=on?'＋':'✓';
-    saved=Math.max(0,saved+(on?-1:1));
-  }));
-
-  $('#push').addEventListener('click',e=>{
-    const on=e.currentTarget.dataset.on==='1';
-    e.currentTarget.dataset.on=on?'':'1';
-    e.currentTarget.textContent=on?'Push einrichten':'Eingerichtet — täglich '+derived().z.uhr+' Uhr';
-  });
-  $('#toMerk').addEventListener('click',()=>{ $('#toMerk').textContent='Merkliste geöffnet'; });
-  $('#toStart').addEventListener('click',()=>screenEl.scrollTo({top:0,behavior:rm?'auto':'smooth'}));
-
-  const panel=$('#panel'), pb=$('#panelBtn');
-  pb.addEventListener('click',()=>{ const o=!panel.classList.contains('open'); panel.classList.toggle('open',o); pb.setAttribute('aria-expanded',String(o)); });
-  $('#panelClose').addEventListener('click',()=>{ panel.classList.remove('open'); pb.setAttribute('aria-expanded','false'); });
-  [['#sRes','res'],['#sZeit','zeit'],['#sInt','int']].forEach(([sel,key])=>{
-    $(sel).addEventListener('change',e=>{
-      st[key]=e.target.value; render(); tick();
-      secs.forEach(s=>{ if(s.dataset.running) runSection(s); });
-    });
-  });
-  $('#sRes').value=st.res; $('#sZeit').value=st.zeit; $('#sInt').value=st.int;
-  $('#replay').addEventListener('click',()=>{
-    secs.forEach(s=>{ delete s.dataset.running; resetSection(s); });
-    screenEl.scrollTo({top:0,behavior:rm?'auto':'smooth'});
-  });
-
-  render(); tick();
-  addEventListener('load',()=>{ placeClock(); tick(); });
+  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','szenen'); baueTag(); rechne(); }
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(los); else los();
+  var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(baueWolke,250); });
 })();
 </script>
