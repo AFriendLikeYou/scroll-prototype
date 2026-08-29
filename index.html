@@ -100,7 +100,8 @@ body.ohne-quellen .quelle{display:none}
 body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 
 /* ═══ Einstieg ═══ */
-.einstieg{padding:56px 16px 48px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:470px}
+.einstieg{padding:56px 16px 48px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:470px;
+  background:radial-gradient(60% 45% at 12% 18%,var(--k-warm) 0,transparent 70%),radial-gradient(55% 40% at 92% 62%,var(--k-blau) 0,transparent 70%),radial-gradient(50% 35% at 30% 96%,var(--k-gruen) 0,transparent 70%),var(--seite)}
 .hinunter{margin:44px 0 0;font-size:14px;color:var(--ink3)}
 .hinunter i{display:block;font-style:normal;font-size:18px;margin-top:2px;animation:wink 2.4s var(--e) infinite}
 @keyframes wink{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(6px);opacity:1}}
@@ -409,15 +410,15 @@ body[data-variante=ruhig] .band{height:110px}
 .tag .a b{display:block;font-size:11px;font-weight:700;color:var(--marker);text-align:center;opacity:0;transform:translateY(4px);transition:opacity .5s var(--e) 1.1s,transform .5s var(--e) 1.1s;font-variant-numeric:tabular-nums}
 .szene.sichtbar .tag .a.aktiv b{opacity:1;transform:none}
 body[data-variante=ruhig] .karten{margin-top:20px}
-body[data-variante=ruhig] .karte{background:var(--seite);border-color:var(--linie);border-radius:4px}
+body[data-variante=ruhig] .karte{border-radius:4px}
 body[data-variante=ruhig] .karte.leer{background:transparent}
-/* Kartenfarben: 1 warm, 2 blau, 3 grün, 4 warm — in beiden Kartenvarianten */
-body[data-variante=ruhig] .szene,body[data-variante=karten] .szene{border-color:transparent}
-body[data-variante=ruhig] .szene:nth-child(1),body[data-variante=karten] .szene:nth-child(1),
-body[data-variante=ruhig] .szene:nth-child(4),body[data-variante=karten] .szene:nth-child(4){background:var(--k-warm)}
-body[data-variante=ruhig] .szene:nth-child(2),body[data-variante=karten] .szene:nth-child(2){background:var(--k-blau)}
-body[data-variante=ruhig] .szene:nth-child(3),body[data-variante=karten] .szene:nth-child(3){background:var(--k-gruen)}
-body[data-variante=karten] .karte{background:var(--seite);border-color:var(--linie)}
+/* Farbakzente: Empfehlungskarten nach Art — Newsletter warm, Podcast blau, Serie grün */
+.karte[data-art=Newsletter]{background:var(--k-warm)}
+.karte[data-art=Podcast]{background:var(--k-blau)}
+.karte[data-art=Serie]{background:var(--k-gruen)}
+.karte.leer[data-art]{background:transparent}
+body[data-variante=karten] .karte,body[data-variante=ruhig] .karte{border-color:transparent}
+body[data-variante=karten] .karte.leer,body[data-variante=ruhig] .karte.leer{border-color:var(--bar)}
 body[data-variante=karten] .szene::after{background:var(--seite)}
 
 /* Desktop: 660 breit, luftiger */
@@ -801,7 +802,7 @@ body[data-breite=desktop-raster] .telefon::after{
   }
   function karte(ziel,art,werte,unten,leerTitel,leerText){
     var k=$(ziel); k.innerHTML='';
-    var d=document.createElement('div'); d.className='karte'+(werte&&werte.length?'':' leer');
+    var d=document.createElement('div'); d.className='karte'+(werte&&werte.length?'':' leer'); d.setAttribute('data-art',art);
     var kopf='<div class="art"><i></i>'+art+'</div>';
     d.innerHTML = werte&&werte.length
       ? kopf+werte.slice(0,2).map(function(w){return '<h3>'+w+'</h3>';}).join('')+'<p>'+unten+'</p>'
