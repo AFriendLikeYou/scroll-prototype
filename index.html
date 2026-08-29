@@ -168,18 +168,26 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .szene.sichtbar .tag .a i{height:20px}
 .szene.sichtbar .tag .a.aktiv i{height:50px;background:var(--marker);transition-delay:.5s}
 .tag .a span{font-size:10px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
-/* 24-Stunden-Variante: ein Uhrenkreis, jedes Fenster ein Bogen, das aktive in Rot; Ticks 0·6·12·18 */
-.uhrkreis{display:none;justify-content:center;margin:20px 0 0}
-body[data-tagform=uhr] .uhrkreis{display:flex}
+/* Horizont-Variante: der Tag als Landschaft. Sonne oder Mond stehen dort, wo Ihre Lesezeit liegt;
+   die 24 Stunden laufen als Achse am Horizont, das aktive Fenster ist rot markiert. */
+.uhrkreis{display:none;margin:18px 0 0;width:100%}
+body[data-tagform=uhr] .uhrkreis{display:block}
 body[data-tagform=uhr] .tag{display:none}
-.uhrkreis svg{width:200px;height:200px;overflow:visible}
-.uhrkreis .seg{fill:none;stroke:var(--track);stroke-width:14;stroke-linecap:butt;transition:stroke .6s var(--e)}
-.uhrkreis .seg.aktiv{stroke:var(--marker);stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.3s var(--e) .3s}
-.szene.sichtbar .uhrkreis .seg.aktiv{stroke-dashoffset:0}
-.uhrkreis .tick{font:10px var(--ff);fill:var(--ink3);text-anchor:middle;dominant-baseline:middle}
-.uhrkreis .mitte{font:700 15px var(--ff);fill:var(--ink);text-anchor:middle;dominant-baseline:middle}
-.uhrkreis .mitte2{font:11px var(--ff);fill:var(--ink3);text-anchor:middle;dominant-baseline:middle}
-body[data-breite^=desktop] .uhrkreis svg{width:220px;height:220px}
+.uhrkreis svg{width:100%;height:auto;overflow:visible}
+.hz-himmel{fill:url(#hz-grad)}
+.hz-linie{stroke:var(--ink);stroke-width:1.5;stroke-linecap:round}
+.hz-tick{stroke:var(--bar);stroke-width:1}
+.hz-tx{font:10px var(--ff);fill:var(--ink3);text-anchor:middle}
+.hz-tx.aktiv{fill:var(--marker);font-weight:700}
+.hz-fenster{stroke:var(--marker);stroke-width:4;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.2s var(--e) .2s}
+.szene.sichtbar .hz-fenster{stroke-dashoffset:0}
+.hz-koerper{transform:translateY(46px);transition:transform 1.6s cubic-bezier(.22,.8,.2,1) .3s}
+.szene.sichtbar .hz-koerper{transform:translateY(var(--dy,0px))}
+.hz-strahl{opacity:0;transform-origin:center;transform:scale(.6);transition:opacity .7s var(--e) 1.7s,transform .8s var(--e) 1.7s}
+.szene.sichtbar .hz-strahl{opacity:1;transform:none}
+.hz-stern{opacity:0;transition:opacity 1s var(--e)}
+.szene.sichtbar .hz-stern{opacity:1}
+.hz-stern:nth-of-type(2){transition-delay:1.2s}.hz-stern:nth-of-type(3){transition-delay:1.5s}.hz-stern:nth-of-type(4){transition-delay:1.8s}
 .szene.sichtbar .tag .a span{opacity:1}
 .tag .a.aktiv span{color:var(--marker);font-weight:700}
 .wolke-huelle{position:relative;margin:16px 0 0}
@@ -254,6 +262,26 @@ body[data-thema=kacheln] .wolke-fuss{display:none}
 .szene.sichtbar .ico-himmel .strahl{opacity:1}
 .ico-nachts .koerper{transform:translateY(10px) rotate(-12deg);transform-origin:16px 14px}
 body[data-breite^=desktop] .ico{width:36px;height:36px}
+
+/* ═══ Thema als Rangliste: die sechs größten Themenfelder als Balken mit Anteil, Ihres in Rot ═══ */
+.rangliste{display:none;margin:14px 0 0;text-align:left}
+body[data-thema=rang] .rangliste{display:block}
+body[data-thema=rang] .wolke-huelle,body[data-thema=rang] .anteil,body[data-thema=rang] .kacheln-fuss{display:none}
+.rz{display:grid;grid-template-columns:22px 1fr 44px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--linie);
+  opacity:0;transform:translateX(-8px);transition:opacity .6s var(--e),transform .7s var(--e)}
+.szene.sichtbar .rz{opacity:1;transform:none}
+.rz:last-child{border-bottom:0}
+.rz .nr{font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.rz .nm{font-size:13px;color:var(--ink2);line-height:1.25;overflow-wrap:anywhere}
+.rz .bl{height:6px;border-radius:3px;background:var(--track);margin-top:6px;overflow:hidden}
+.rz .bl i{display:block;height:100%;width:0;background:var(--bar);border-radius:3px;transition:width 1.1s var(--e) .3s}
+.szene.sichtbar .rz .bl i{width:var(--w)}
+.rz .pz{font-size:12px;color:var(--ink3);text-align:right;font-variant-numeric:tabular-nums}
+.rz.mein .nm{color:var(--ink);font-weight:700}
+.rz.mein .bl i{background:var(--marker)}
+.rz.mein .pz,.rz.mein .nr{color:var(--marker);font-weight:700}
+.rz.luecke{grid-template-columns:1fr;padding:4px 0;color:var(--ink3);font-size:11px;text-align:center;letter-spacing:.2em}
+.rang-fuss{font-size:11px;color:var(--ink3);margin:10px 0 0;text-align:center}
 
 /* ═══ Empfehlungskarte ═══ */
 .karten{margin:22px 0 0}
@@ -633,7 +661,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <label>Wann Sie lesen</label>
     <div class="chips" id="tagform">
       <button type="button" data-f="fenster" aria-pressed="true">Fünf Fenster</button>
-      <button type="button" data-f="uhr" aria-pressed="false">24 Stunden</button>
+      <button type="button" data-f="uhr" aria-pressed="false">Horizont</button>
     </div>
   </div>
 
@@ -642,6 +670,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <div class="chips" id="themaform">
       <button type="button" data-t="wolke" aria-pressed="true">Wortwolke</button>
       <button type="button" data-t="kacheln" aria-pressed="false">Band</button>
+      <button type="button" data-t="rang" aria-pressed="false">Rangliste</button>
     </div>
   </div>
 
@@ -803,6 +832,7 @@ body[data-breite=desktop-raster] .telefon::after{
             <div class="wolke-fuss"><span>Vierzig Themenfelder, Größe nach Häufigkeit</span><span id="wolkeN"></span></div>
           </div>
           <div class="kacheln" id="kacheln"></div>
+          <div class="rangliste" id="rangliste"></div>
           <div class="anteil" id="anteil"><div class="sp"><i></i></div>
             <div class="m"><span id="anteilLinks"></span><span>1.756 insgesamt</span></div></div>
         </div>
@@ -956,6 +986,22 @@ body[data-breite=desktop-raster] .telefon::after{
     var f=el.parentNode.querySelector(".kacheln-fuss"); if(!f){ f=document.createElement("div"); f.className="kacheln-fuss"; el.parentNode.insertBefore(f, el.nextSibling); }
     f.textContent="Alle 40 Themenfelder — Ihres bleibt stehen.";
   }
+  function baueRangliste(){
+    var el=$("rangliste"); el.innerHTML="";
+    var sortiert=THEMEN.slice().sort(function(a,b){return b[1]-a[1];}), mx=sortiert[0][1];
+    var rang=sortiert.findIndex(function(t){return t[0]===Z.thema;})+1;
+    var zeigen=sortiert.slice(0,6);
+    if(rang>6){ zeigen.push(null); zeigen.push(sortiert[rang-1]); }
+    zeigen.forEach(function(t,i){
+      if(!t){ var l=document.createElement("div"); l.className="rz luecke"; l.textContent="···"; el.appendChild(l); return; }
+      var d=document.createElement("div"), pr=Math.round(100*t[1]/1756), mein=t[0]===Z.thema;
+      d.className="rz"+(mein?" mein":""); d.style.transitionDelay=(0.08*i)+"s";
+      var platz = mein ? rang : (sortiert.indexOf(t)+1);
+      d.innerHTML='<span class="nr">'+platz+'</span><div><div class="nm">'+t[0]+'</div><div class="bl"><i style="--w:'+Math.max(3,Math.round(100*t[1]/mx))+'%"></i></div></div><span class="pz">'+(pr<1?"<1":pr)+' %</span>';
+      el.appendChild(d); });
+    var f=document.createElement("p"); f.className="rang-fuss";
+    f.textContent = rang<=6 ? "Ihr Thema auf Platz "+rang+" von 40 — Anteil derer, die vor allem darüber lesen." : "Ihr Thema auf Platz "+rang+" von 40 — ein seltenes Themenfeld."; el.appendChild(f);
+  }
   function zielSetzen(){
     var ziel=null;
     Array.prototype.forEach.call(wolke.children,function(sp){
@@ -979,18 +1025,35 @@ body[data-breite=desktop-raster] .telefon::after{
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
       d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
       d.innerHTML=(n===Z.tageszeit?'<b>'+Math.round(a[2])+' %</b>':'<b>&nbsp;</b>')+'<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
-    // Uhrenkreis: Stunden → Winkel, 0 Uhr oben, im Uhrzeigersinn; die Fenster aus TAGE (Stundenzahl = a[1])
-    var R=78,C=100,U=2*Math.PI*R, start=0, svg='';
-    function pt(h){ var w=(h/24)*2*Math.PI-Math.PI/2; return [C+R*Math.cos(w), C+R*Math.sin(w)]; }
-    Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1], a=pt(start), b=pt(start+h), gross=h>12?1:0, len=U*h/24;
-      svg+='<path class="seg'+(n===Z.tageszeit?' aktiv':'')+'" style="--len:'+len.toFixed(1)+'" d="M'+a[0].toFixed(1)+' '+a[1].toFixed(1)+' A'+R+' '+R+' 0 '+gross+' 1 '+b[0].toFixed(1)+' '+b[1].toFixed(1)+'"/>';
-      start+=h; });
-    // Trennfugen zwischen den Fenstern
-    start=0; Object.keys(TAGE).forEach(function(n){ var q=pt(start), q2=[C+(R+9)*((q[0]-C)/R), C+(R+9)*((q[1]-C)/R)], q1=[C+(R-9)*((q[0]-C)/R), C+(R-9)*((q[1]-C)/R)];
-      svg+='<line x1="'+q1[0].toFixed(1)+'" y1="'+q1[1].toFixed(1)+'" x2="'+q2[0].toFixed(1)+'" y2="'+q2[1].toFixed(1)+'" stroke="var(--seite)" stroke-width="2"/>'; start+=TAGE[n][1]; });
-    [[0,'0'],[6,'6'],[12,'12'],[18,'18']].forEach(function(t){ var q=pt(t[0]), f=(R+22)/R; svg+='<text class="tick" x="'+(C+(q[0]-C)*f).toFixed(1)+'" y="'+(C+(q[1]-C)*f).toFixed(1)+'">'+t[1]+'</text>'; });
-    svg+='<text class="mitte" x="100" y="94">'+TAGE[Z.tageszeit][0].replace('–',' bis ')+'</text><text class="mitte2" x="100" y="112">Uhr</text>';
-    $('uhrkreis').innerHTML='<svg viewBox="-24 -24 248 248" aria-hidden="true">'+svg+'</svg>';
+    // Horizont: Breite 360 = 24 Stunden; Horizontlinie bei y=96, Himmel darüber, Sonne/Mond je nach Fenster
+    var W=360, HZ=96, x=function(h){ return 12+(W-24)*h/24; };
+    var start=0, hz='', fensterStart=0, fensterEnde=0;
+    Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1]; if(n===Z.tageszeit){ fensterStart=start; fensterEnde=start+h; } start+=h; });
+    var nacht=Z.tageszeit==='nachts';
+    // Himmel: Farbton der Karte je Tageszeit (warm morgens/abends, blau mittags, grün am Nachmittag, dunkel nachts)
+    var himmel = nacht?'var(--track)':(Z.tageszeit==='mittags'?'var(--k-blau)':(Z.tageszeit==='nachmittags'?'var(--k-gruen)':'var(--k-warm)'));
+    hz+='<defs><linearGradient id="hz-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+himmel+'" stop-opacity="0"/><stop offset="1" stop-color="'+himmel+'" stop-opacity="1"/></linearGradient>'+
+        '<clipPath id="hz-clip"><rect x="0" y="0" width="'+W+'" height="'+HZ+'"/></clipPath></defs>';
+    hz+='<rect class="hz-himmel" x="0" y="0" width="'+W+'" height="'+HZ+'"/>';
+    if(nacht){ [[40,22],[88,40],[300,28],[250,52]].forEach(function(p){ hz+='<circle class="hz-stern" cx="'+p[0]+'" cy="'+p[1]+'" r="1.4" fill="var(--ink3)"/>'; }); }
+    // Sonne/Mond: x = Mitte des Fensters; Höhe: Bogen über den Tag (6 Uhr Aufgang, 12 Zenit, 18 Untergang)
+    var mitte=(fensterStart+fensterEnde)/2, cx=x(mitte);
+    var hoehe = nacht ? 34 : Math.max(0, Math.sin(Math.PI*(mitte-6)/12)); // 0 am Horizont, 1 im Zenit
+    var cy = nacht ? 34 : HZ - 8 - hoehe*58;
+    if(Z.tageszeit==='morgens') cy=HZ-2; if(Z.tageszeit==='abends') cy=HZ-2;  // halb aufgegangen / halb untergegangen
+    hz+='<g clip-path="url(#hz-clip)"><g class="hz-koerper" style="--dy:0px">';
+    if(nacht){ hz+='<path d="M'+(cx+4)+' '+(cy-11)+'a11 11 0 1 0 8 17.5A12 12 0 0 1 '+(cx+4)+' '+(cy-11)+'z" fill="var(--marker)"/>'; }
+    else { hz+='<circle cx="'+cx+'" cy="'+cy+'" r="11" fill="var(--marker)"/>';
+      if(Z.tageszeit!=='abends'){ hz+='<g class="hz-strahl" style="transform-origin:'+cx+'px '+cy+'px" stroke="var(--marker)" stroke-width="1.6" stroke-linecap="round">';
+        for(var k=0;k<8;k++){ var w=k*Math.PI/4, r1=15, r2=19; hz+='<line x1="'+(cx+r1*Math.cos(w)).toFixed(1)+'" y1="'+(cy+r1*Math.sin(w)).toFixed(1)+'" x2="'+(cx+r2*Math.cos(w)).toFixed(1)+'" y2="'+(cy+r2*Math.sin(w)).toFixed(1)+'"/>'; } hz+='</g>'; } }
+    hz+='</g></g>';
+    // Horizont, Achse, aktives Fenster
+    hz+='<line class="hz-linie" x1="6" y1="'+HZ+'" x2="'+(W-6)+'" y2="'+HZ+'"/>';
+    [0,6,12,18,24].forEach(function(h){ var akt=(h>=fensterStart&&h<=fensterEnde);
+      hz+='<line class="hz-tick" x1="'+x(h)+'" y1="'+(HZ+4)+'" x2="'+x(h)+'" y2="'+(HZ+9)+'"/><text class="hz-tx'+(akt?' aktiv':'')+'" x="'+x(h)+'" y="'+(HZ+22)+'">'+h+(h===24?' Uhr':'')+'</text>'; });
+    var len=x(fensterEnde)-x(fensterStart);
+    hz+='<line class="hz-fenster" style="--len:'+len.toFixed(1)+'" x1="'+x(fensterStart)+'" y1="'+HZ+'" x2="'+x(fensterEnde)+'" y2="'+HZ+'"/>';
+    $('uhrkreis').innerHTML='<svg viewBox="0 0 '+W+' '+(HZ+30)+'" aria-hidden="true">'+hz+'</svg>';
     $('tagTitel').textContent='Meist '+Z.tageszeit; if(typeof setzeIcon==='function') setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
     $('tagQuelle').textContent=Math.round(TAGE[Z.tageszeit][2])+' % der neuen Abonnentinnen und Abonnenten lesen auch '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
@@ -1000,7 +1063,8 @@ body[data-breite=desktop-raster] .telefon::after{
     var verteilung=document.body.getAttribute('data-vglform')==='verteilung', g=KOHORTEN[Z.kohorte].g, hoehen=[];
     if(verteilung){
       // Breite jedes Zehntels in Minuten; das zehnte ist nach oben offen — wir zeigen es so hoch wie das neunte, mit gestrichelter Kante
-      var br=[g[0]]; for(var j=1;j<9;j++) br.push(g[j]-g[j-1]); br.push(br[8]);
+      // das zehnte Zehntel ist nach oben offen: wir zeichnen es deutlich höher als das neunte (×1,4), die gestrichelte Kante sagt „ohne Obergrenze"
+      var br=[g[0]]; for(var j=1;j<9;j++) br.push(g[j]-g[j-1]); br.push(br[8]*1.4);
       var mx=Math.max.apply(null,br);
       var H=(el.clientHeight||118)*0.9;
       hoehen=br.map(function(b){ return Math.max(4, Math.round(H*b/mx)); });
@@ -1113,7 +1177,7 @@ body[data-breite=desktop-raster] .telefon::after{
       : 'Ein seltenes Themenfeld — nur '+t[1]+' der 1.756 lesen vor allem darüber. Sie gehören zu einer kleinen Gruppe.';
 
     zeigeBloecke();
-    baueEmpfehlung(); baueEntdecken(); baueWolke(); baueKacheln(); setTimeout(stapel,0);
+    baueEmpfehlung(); baueEntdecken(); baueWolke(); baueKacheln(); baueRangliste(); setTimeout(stapel,0);
   }
 
   // ── Auslösezone im oberen Sichtbereich
