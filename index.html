@@ -11,7 +11,7 @@
   --seite:#ffffff; --flaeche:#eeeeee; --track:#dfdfdf; --bar:#cccccc;
   --ink:#252525; --ink2:#444444; --ink3:#69696c;
   --marker:#b91109; --linie:#e4e4e4; --karte:#ffffff; --warn:#8a6400;
-  --k-blau:#e5f7ff; --k-warm:#fff6e8; --k-gruen:#e9f7ed;
+  --k-blau:#f1fbff; --k-warm:#fff8ed; --k-gruen:#f1fdf4;
   --ff:TabletGothic,'Helvetica Neue',Helvetica,Arial,sans-serif;
   --fs:FranziskaWebPro,Georgia,Palatino,serif;
   --e:cubic-bezier(.16,1,.3,1);
@@ -20,13 +20,13 @@
   --seite:#121212; --flaeche:#242424; --track:#363636; --bar:#444444;
   --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
   --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e; --warn:#e8c61a;
-  --k-blau:#1b2c32; --k-warm:#30281b; --k-gruen:#1f2d23;
+  --k-blau:#1c292e; --k-warm:#2c251b; --k-gruen:#1f2922;
 }}
 :root[data-theme="dark"]{
   --seite:#121212; --flaeche:#242424; --track:#363636; --bar:#444444;
   --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
   --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e; --warn:#e8c61a;
-  --k-blau:#1b2c32; --k-warm:#30281b; --k-gruen:#1f2d23;
+  --k-blau:#1c292e; --k-warm:#2c251b; --k-gruen:#1f2922;
 }
 *{box-sizing:border-box}
 h1,h2,h3,h4,.h1,.h2,.h3,.h4,.gross,.mittel,.karte h3,.artikel .t{text-wrap:balance}
@@ -412,6 +412,14 @@ body[data-variante=ruhig] .band{height:110px}
 body[data-variante=ruhig] .karten{margin-top:20px}
 body[data-variante=ruhig] .karte{border-radius:4px}
 body[data-variante=ruhig] .karte.leer{background:transparent}
+/* Kartenfarbe farbig: 1 warm, 2 blau, 3 grün, 4 warm; Empfehlung dann weiß */
+body.kfarbig[data-variante=ruhig] .szene,body.kfarbig[data-variante=karten] .szene{border-color:transparent}
+body.kfarbig[data-variante=ruhig] .szene:nth-child(1),body.kfarbig[data-variante=karten] .szene:nth-child(1),
+body.kfarbig[data-variante=ruhig] .szene:nth-child(4),body.kfarbig[data-variante=karten] .szene:nth-child(4){background:var(--k-warm)}
+body.kfarbig[data-variante=ruhig] .szene:nth-child(2),body.kfarbig[data-variante=karten] .szene:nth-child(2){background:var(--k-blau)}
+body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante=karten] .szene:nth-child(3){background:var(--k-gruen)}
+body.kfarbig .karte[data-art]{background:var(--karte)}
+body.kfarbig .karte.leer[data-art]{background:transparent}
 /* Farbakzente: Empfehlungskarten nach Art — Newsletter warm, Podcast blau, Serie grün */
 .karte[data-art=Newsletter]{background:var(--k-warm)}
 .karte[data-art=Podcast]{background:var(--k-blau)}
@@ -479,6 +487,14 @@ body[data-breite=desktop-raster] .telefon::after{
       <button type="button" data-v="szenen" aria-pressed="false">Ohne Karten</button>
       <button type="button" data-v="karten" aria-pressed="true">Karten, gestapelt</button>
       <button type="button" data-v="ruhig" aria-pressed="false">Karten, ruhig</button>
+    </div>
+  </div>
+
+  <div class="feld">
+    <label>Kartenfarbe</label>
+    <div class="chips" id="kfarbe">
+      <button type="button" data-k="grau" aria-pressed="true">Grau</button>
+      <button type="button" data-k="farbig" aria-pressed="false">Farbig, hell</button>
     </div>
   </div>
 
@@ -1020,6 +1036,9 @@ body[data-breite=desktop-raster] .telefon::after{
   try{ var vg=localStorage.getItem('zeit-variante');
     if(vg==='ruhig'||vg==='szenen'){ document.body.setAttribute('data-variante',vg);
       $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===vg)); }); } }catch(err){}
+  $('kfarbe').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    document.body.classList.toggle('kfarbig', b.dataset.k==='farbig'); });
   $('quellen').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
     document.body.classList.toggle('ohne-quellen', b.dataset.q==='aus'); });
