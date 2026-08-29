@@ -274,9 +274,8 @@ body[data-breite^=desktop] .ico{width:36px;height:36px}
 body[data-variante=karten] .daten{padding:24px 14px 48px}
 body[data-variante=karten] .szene{
   position:sticky;background:var(--karte);border:1px solid var(--linie);border-radius:4px;
-  padding:64px 22px 48px;margin-bottom:18px;border-bottom:1px solid var(--linie);justify-content:flex-start;
-  /* alle Karten gleich hoch (höchster Inhalt = Thema, ~714px), nie höher als der Schirm */
-  min-height:min(720px, calc(100cqh - 140px));
+  padding:56px 22px 40px;margin-bottom:18px;border-bottom:1px solid var(--linie);justify-content:flex-start;
+  min-height:0; /* so hoch wie der Inhalt */
   transform-origin:50% 0%;will-change:transform;
   box-shadow:0 1px 1px rgba(20,18,16,.04), 0 2px 6px rgba(20,18,16,.05), 0 18px 40px -18px rgba(20,18,16,.28)}
 body[data-variante=karten] .szene:nth-child(1){top:14px;z-index:1}
@@ -466,7 +465,7 @@ body[data-breite^=desktop] .karte p{font-size:13px}
 
 /* Stapelkarten auf Desktop: Karte 892, Inhalt 660 */
 body[data-breite^=desktop][data-variante=karten] .szene{
-  padding:64px 54px 56px;min-height:min(560px, calc(100cqh - 200px))}
+  padding:64px 54px 56px;min-height:0}
 body[data-breite^=desktop][data-variante=karten] .wolke{height:220px}
 body[data-breite^=desktop][data-variante=karten] .band{height:130px}
 body[data-breite^=desktop][data-variante=karten] .gross{font-size:56px}
