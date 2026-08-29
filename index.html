@@ -97,6 +97,7 @@ body[data-breite^=desktop] .webheader{display:none}
 .sub-s{font-size:14px;line-height:1.45;color:var(--ink3);margin:4px 0 0}
 .quelle{font-size:11.5px;line-height:1.55;color:var(--ink3);margin:16px 0 0}
 body.ohne-quellen .quelle{display:none}
+body.ohne-quellen .quelle.bild{display:block}
 body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 
 /* ═══ Einstieg ═══ */
@@ -113,6 +114,7 @@ body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 body[data-breite^=desktop] .farbwolken{height:1200px}
 @media (prefers-reduced-motion:no-preference){.farbwolken{animation:atem 14s ease-in-out infinite alternate;transform-origin:50% 0}}
 @keyframes atem{to{transform:scale(1.05)}}
+.zeitraum{font-size:13px;color:var(--ink3);margin:12px 0 0;font-variant-numeric:tabular-nums;letter-spacing:.01em}
 .hinunter{margin:44px 0 0;font-size:14px;color:var(--ink3)}
 .hinunter i{display:block;font-style:normal;font-size:18px;margin-top:2px;animation:wink 2.4s var(--e) infinite}
 @keyframes wink{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(6px);opacity:1}}
@@ -143,6 +145,8 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .band .s{flex:1;background:var(--track);border-radius:2px 2px 0 0;height:4px;transition:height 1.05s var(--e),background-color .5s var(--e),opacity .5s var(--e)}
 .szene.sichtbar .band .s{height:var(--h)}
 .band .s.sie{background:var(--marker)}
+.band.verteilung .s.offen{border-top:2px dashed var(--ink3);background-clip:padding-box}
+.band .s.offen.sie{border-top-color:var(--marker)}
 .sie-marke{position:absolute;top:-6px;transform:translate(-50%,-6px) scale(.8);font-size:10px;font-weight:700;letter-spacing:.1em;
   color:var(--marker);opacity:0;white-space:nowrap;transition:opacity .6s var(--e) 1.05s,transform .6s var(--e) 1.05s}
 .szene.sichtbar .sie-marke{opacity:1;transform:translate(-50%,0) scale(1)}
@@ -152,7 +156,8 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .spur i{display:block;height:100%;border-radius:4px;background:var(--ink);width:0;transition:width 1.4s var(--e) .3s}
 .szene.sichtbar .spur i{width:var(--w)}
 .kerbe{position:absolute;top:-5px;left:50%;width:2px;height:20px;background:var(--ink3);opacity:0;transition:opacity .6s var(--e) .9s}
-.kerbe::after{content:"Mitte Ihrer Gruppe";position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:var(--ink3);font-weight:400}
+.protag{font-size:13px;color:var(--ink3);margin:6px 0 0;font-variant-numeric:tabular-nums}
+.kerbe::after{content:attr(data-l);position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:var(--ink3);font-weight:400}
 .spur-meta{margin-top:28px!important}
 .szene.sichtbar .kerbe{opacity:.5}
 .spur-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:12px 0 0}
@@ -163,6 +168,18 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .szene.sichtbar .tag .a i{height:20px}
 .szene.sichtbar .tag .a.aktiv i{height:50px;background:var(--marker);transition-delay:.5s}
 .tag .a span{font-size:10px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
+/* 24-Stunden-Variante: Fenster liegen auf einer echten Zeitachse, Beschriftung wandert unter die Achse */
+.uhrachse{display:none;justify-content:space-between;font-size:10px;color:var(--ink3);margin:8px 0 0;font-variant-numeric:tabular-nums;position:relative}
+.uhrachse::before{content:"";position:absolute;left:0;right:0;top:-4px;height:1px;background:var(--linie)}
+body[data-tagform=uhr] .uhrachse{display:flex}
+body[data-tagform=uhr] .tag{gap:2px}
+body[data-tagform=uhr] .tag .a span{display:none}
+body[data-tagform=uhr] .tag .a i{border-radius:2px 2px 0 0}
+body[data-tagform=uhr] .szene.sichtbar .tag .a i{height:14px}
+body[data-tagform=uhr] .szene.sichtbar .tag .a.aktiv i{height:50px}
+body[data-tagform=uhr] .tag .a.aktiv{position:relative}
+body[data-tagform=uhr] .tag .a.aktiv::after{content:attr(data-fenster);position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--marker);white-space:nowrap}
+body[data-tagform=uhr] .uhrachse{margin-top:22px}
 .szene.sichtbar .tag .a span{opacity:1}
 .tag .a.aktiv span{color:var(--marker);font-weight:700}
 .wolke-huelle{position:relative;margin:16px 0 0}
@@ -570,6 +587,22 @@ body[data-breite=desktop-raster] .telefon::after{
   </div>
 
   <div class="feld">
+    <label>Platz im Vergleich</label>
+    <div class="chips" id="vglform">
+      <button type="button" data-f="treppe" aria-pressed="true">Treppe</button>
+      <button type="button" data-f="verteilung" aria-pressed="false">Verteilung</button>
+    </div>
+  </div>
+
+  <div class="feld">
+    <label>Wann Sie lesen</label>
+    <div class="chips" id="tagform">
+      <button type="button" data-f="fenster" aria-pressed="true">Fünf Fenster</button>
+      <button type="button" data-f="uhr" aria-pressed="false">24 Stunden</button>
+    </div>
+  </div>
+
+  <div class="feld">
     <label>Thema der Woche</label>
     <div class="chips" id="themaform">
       <button type="button" data-t="wolke" aria-pressed="true">Wortwolke</button>
@@ -689,6 +722,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <section class="einstieg" id="s-intro">
       <p class="augen">Ihr persönlicher Rückblick</p>
       <h1 class="h1">Ihre erste Woche mit Z+</h1>
+      <p class="zeitraum" id="zeitraum">21. bis 28. August 2026 · Tag 7 von 7</p>
       <p class="sub">Seit dem 21. August nutzen Sie Z+. Werfen wir gemeinsam einen letzten Blick zurück – auf das, was Sie bereits entdeckt haben, und das, was Sie noch alles entdecken können.</p>
       <p class="hinunter">Scrollen Sie nach unten<i>↓</i></p>
     </section>
@@ -699,9 +733,10 @@ body[data-breite=desktop-raster] .telefon::after{
         <p class="augen an v1">Ihre Lesezeit</p>
         <div class="zahl an v2"><span class="gross" id="zaehler">0</span><span class="e" id="einheit">Min</span></div>
         <p class="lead an v3" id="zeitSatz"></p>
+        <p class="protag an v3" id="proTag"></p>
         <div class="spur-huelle an v4" id="spurHuelle">
           <div class="spur" id="spur"><i></i></div>
-          <div class="kerbe"></div>
+          <div class="kerbe" id="kerbe" data-l="Mitte Ihrer Gruppe"></div>
           <div class="spur-meta"><span id="spurLinks"></span><em id="spurRechts"></em></div>
         </div>
         <p class="quelle an v4" id="zeitQuelle"></p>
@@ -713,15 +748,16 @@ body[data-breite=desktop-raster] .telefon::after{
         <p class="lead an v3" id="bandSatz"></p>
         <div class="band-huelle an v3"><div class="band" id="band"></div><span class="sie-marke" id="sieMarke">SIE</span></div>
         <div class="achse an v3"><span>wenig</span><span>viel</span></div>
-        <p class="quelle an v4" id="bandQuelle"></p>
+        <p class="quelle bild an v4" id="bandQuelle"></p>
       </section>
 
       <section class="szene" id="s-tag" data-nr="3 von 4">
         <p class="augen an v1">Wann Sie lesen</p>
         <h2 class="mittel an v2" id="tagTitel">Meist abends</h2>
         <div class="tag an v3" id="tag"></div>
+        <div class="uhrachse an v3" id="uhrachse"><span>0</span><span>6</span><span>12</span><span>18</span><span>24 Uhr</span></div>
         <p class="lead an v3" id="tagSatz"></p>
-        <p class="quelle an v4" id="tagQuelle"></p>
+        <p class="quelle bild an v4" id="tagQuelle"></p>
         <div class="karten" id="kartenZeit"></div>
       </section>
 
@@ -907,18 +943,26 @@ body[data-breite=desktop-raster] .telefon::after{
   function baueTag(){
     var el=$('tag'); el.innerHTML='';
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
-      d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
+      d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1]; d.setAttribute('data-fenster',a[0].replace('–',' bis ')+' Uhr');
       d.innerHTML=(n===Z.tageszeit?'<b>'+Math.round(a[2])+' %</b>':'<b>&nbsp;</b>')+'<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
     $('tagTitel').textContent='Meist '+Z.tageszeit; if(typeof setzeIcon==='function') setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
-    $('tagQuelle').textContent=TAGE[Z.tageszeit][2].toFixed(1).replace('.',',')+' % der Abonnentinnen und Abonnenten, die im selben Zeitraum ein Abo abgeschlossen haben, lesen '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
+    $('tagQuelle').textContent=Math.round(TAGE[Z.tageszeit][2])+' % der neuen Abonnentinnen und Abonnenten lesen auch '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
   }
   function baueBand(d,rot){
     var el=$('band'); el.innerHTML='';
+    var verteilung=document.body.getAttribute('data-vglform')==='verteilung', g=KOHORTEN[Z.kohorte].g, hoehen=[];
+    if(verteilung){
+      // Breite jedes Zehntels in Minuten; das zehnte ist nach oben offen — wir zeigen es so hoch wie das neunte, mit gestrichelter Kante
+      var br=[g[0]]; for(var j=1;j<9;j++) br.push(g[j]-g[j-1]); br.push(br[8]);
+      var mx=Math.max.apply(null,br);
+      hoehen=br.map(function(b){ return Math.max(4, Math.round(118*b/mx)); });
+    }
+    el.classList.toggle('verteilung',verteilung);
     for(var i=1;i<=10;i++){ var s=document.createElement('div');
-      s.className='s'+(i===d&&rot?' sie':'');
+      s.className='s'+(i===d&&rot?' sie':'')+(verteilung&&i===10?' offen':'');
       if(i===d&&!rot) s.style.background='var(--ink)';
-      s.style.setProperty('--h',(12+i*8.5)+'px'); s.style.transitionDelay=(0.045*i)+'s'; el.appendChild(s); }
+      s.style.setProperty('--h',(verteilung?hoehen[i-1]:(12+i*8.5))+'px'); s.style.transitionDelay=(0.045*i)+'s'; el.appendChild(s); }
     var m=$('sieMarke'); m.style.left=((d-0.5)/10*100)+'%';
     m.textContent=rot?'SIE':'Sie'; m.style.color=rot?'var(--marker)':'var(--ink3)'; m.setAttribute('data-min', Z.min+' Min');
   }
@@ -983,7 +1027,12 @@ body[data-breite=desktop-raster] .telefon::after{
     $('spurHuelle').style.display=(st==='A'||st==='B')?'block':'none';
     $('spur').style.setProperty('--w',perz+'%');
     $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
-    $('spurRechts').textContent=st==='A'?'Sie gehören zum oberen Fünftel':'Sie liegen in der Mitte';
+    $('spurRechts').textContent='Sie · '+mt(Z.min);
+    $('kerbe').setAttribute('data-l','Mitte Ihrer Gruppe · '+mt(k.g[4]));
+    $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
+    var tagK=+Z.kohorte, proTag=Math.round(Z.min/tagK);
+    $('proTag').textContent = tagK>1 ? 'Das sind im Schnitt '+(proTag>=60?mt(proTag):proTag+' Minuten')+' pro Tag.' : '';
+    $('zeitraum').textContent = (28-tagK+1)+'. bis 28. August 2026 · Tag '+tagK+' von 7';
     $('zeitSatz').textContent = st==='D'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
       : st==='C'?'haben Sie in Ihrer ersten Woche gelesen. Jeder Text war eine Entscheidung.'
       : (Z.min>=300?'haben Sie in Ihrer ersten Woche gelesen — beeindruckend.':'haben Sie in Ihrer ersten Woche gelesen.');
@@ -997,7 +1046,7 @@ body[data-breite=desktop-raster] .telefon::after{
     $('bandZahl').textContent = rang?perz+' %':(st==='B'?'Mittendrin':st==='C'?'Ein guter Start':'Jeder in seinem Tempo');
     $('bandZahl').className = 'an v2 '+(rang?'gross':'mittel');
     $('bandSatz').textContent = rang
-      ? (d===10?'Sie gehören zu den zehn Prozent, die am meisten lesen.':'Sie lesen mehr als '+perz+' Prozent der anderen.')
+      ? (d===10?'Sie gehören zu den '+Math.round(k.n/10)+' von '+k.n+', die am meisten lesen.':'Sie lesen mehr als '+Math.round(k.n*perz/100)+' der '+k.n+' Menschen, die genauso lange dabei sind wie Sie.')
       : st==='B' ? 'Sie lesen so viel wie die meisten, die genauso lange dabei sind wie Sie.'
       : st==='C' ? 'So weit liegen die '+k.n+' Menschen auseinander, die genauso lange dabei sind wie Sie. Ihr Platz darin verschiebt sich mit jedem Text.'
       : 'Hier lesen '+k.n+' Menschen sehr unterschiedlich viel. Ihre Woche hat gerade erst begonnen.';
@@ -1167,6 +1216,12 @@ body[data-breite=desktop-raster] .telefon::after{
   try{ var vg=localStorage.getItem('zeit-variante');
     if(vg==='ruhig'||vg==='szenen'){ document.body.setAttribute('data-variante',vg);
       $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===vg)); }); } }catch(err){}
+  $('vglform').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    this.querAll=null; this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    document.body.setAttribute('data-vglform', b.dataset.f); rechne(); });
+  $('tagform').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    document.body.setAttribute('data-tagform', b.dataset.f); });
   $('themaform').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
     document.body.setAttribute('data-thema', b.dataset.t); setTimeout(function(){ baueWolke(); stapel(); },40); });
