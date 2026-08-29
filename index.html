@@ -183,18 +183,35 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .thema-satz.da{opacity:1;transform:none}
 
 /* ═══ Thema als Kacheln (Option 4, angepasst: Größe nach Rang, weil wir Gruppen­größen haben, keine Artikelzahlen) ═══ */
-.kacheln{display:none;flex-wrap:wrap;justify-content:center;gap:8px;margin:16px 0 0}
-body[data-thema=kacheln] .kacheln{display:flex}
+.kacheln{display:none;position:relative;height:118px;margin:14px 0 0;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent)}
+body[data-thema=kacheln] .kacheln{display:block}
+.band-reihe{position:absolute;left:0;display:flex;gap:8px;white-space:nowrap;will-change:transform;
+  transition:opacity 1.2s var(--e),filter 1.2s var(--e),transform 1.2s var(--e)}
+.band-reihe.r1{top:8px;animation:band-l 38s linear infinite}
+.band-reihe.r2{top:64px;animation:band-r 46s linear infinite}
+.szene:not(.sichtbar) .band-reihe{animation-play-state:paused}
+@keyframes band-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes band-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+/* Fokus: Band tritt zurück — kleiner, blasser, leicht unscharf, läuft langsam weiter */
+.kacheln.fokus .band-reihe{opacity:.28;filter:blur(1.2px);transform-origin:50% 50%}
+.kacheln.fokus .band-reihe.r1{animation-duration:110s}.kacheln.fokus .band-reihe.r2{animation-duration:130s}
+.band-mein{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.6);opacity:0;z-index:2;
+  transition:transform 1.1s cubic-bezier(.22,1,.36,1) .15s,opacity .7s var(--e) .15s}
+.kacheln.fokus .band-mein{transform:translate(-50%,-50%) scale(1);opacity:1}
+body[data-breite^=desktop] .kacheln{height:132px}
+body[data-breite^=desktop] .band-reihe.r2{top:74px}
 body[data-thema=kacheln] .wolke-huelle,body[data-thema=kacheln] .anteil{display:none}
-.kachel{border-radius:4px;padding:7px 12px;border:1px solid var(--bar);color:var(--ink2);font-size:12.5px;line-height:1.3;
-  opacity:0;transform:translateY(8px);transition:opacity .6s var(--e),transform .7s var(--e)}
-.szene.sichtbar .kachel{opacity:var(--o,1);transform:none}
+.kachel{flex:none;border-radius:4px;padding:8px 12px;border:1px solid var(--bar);color:var(--ink2);font-size:12.5px;line-height:1.3;background:var(--karte)}
 .kachel b{font-weight:400}
-.kachel.gross{flex-basis:100%;padding:16px 18px;background:var(--marker);border-color:transparent;color:#fff;text-align:center;margin-bottom:6px}
-.kachel.gross b{display:block;font-size:20px;font-weight:700;line-height:1.2;text-wrap:balance}
-.kachel.gross span{display:block;font-size:12px;margin-top:6px;opacity:.85;font-variant-numeric:tabular-nums}
-.kachel.gross.neutral{background:var(--ink);color:var(--seite)}
-.kacheln-fuss{flex-basis:100%;font-size:11px;color:var(--ink3);margin-top:6px;text-align:center}
+.kachel.gross{padding:12px 18px;background:var(--marker);border-color:transparent;color:#fff;text-align:center;white-space:nowrap;
+  box-shadow:0 10px 30px -12px rgba(185,17,9,.45)}
+.kachel.gross b{display:block;font-size:18px;font-weight:700;line-height:1.2}
+.kachel.gross span{display:block;font-size:11px;margin-top:4px;opacity:.85;font-variant-numeric:tabular-nums}
+.kachel.gross.neutral{background:var(--ink);color:var(--seite);box-shadow:0 10px 30px -12px rgba(0,0,0,.35)}
+.kacheln-fuss{font-size:11px;color:var(--ink3);margin:8px 0 0;text-align:center}
+body[data-thema=kacheln] .wolke-fuss{display:none}
+.kacheln-fuss{display:none} body[data-thema=kacheln] .kacheln-fuss{display:block}
 
 .reset,.reset *{transition:none!important;animation:none!important}
 
@@ -556,7 +573,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <label>Thema der Woche</label>
     <div class="chips" id="themaform">
       <button type="button" data-t="wolke" aria-pressed="true">Wortwolke</button>
-      <button type="button" data-t="kacheln" aria-pressed="false">Kacheln</button>
+      <button type="button" data-t="kacheln" aria-pressed="false">Band</button>
     </div>
   </div>
 
@@ -857,15 +874,17 @@ body[data-breite=desktop-raster] .telefon::after{
     var st=stufe(dezil(Z.min,Z.kohorte),Z.kohorte);
     var mein=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
     var rest=THEMEN.filter(function(x){return x[0]!==Z.thema;}).sort(function(a,b){return b[1]-a[1];});
+    el.classList.remove("fokus");
     var proz=Math.round(100*mein[1]/1756);
-    var g=document.createElement("div"); g.className="kachel gross"+(st==="D"?" neutral":"");
-    g.innerHTML="<b>"+mein[0]+"</b><span>"+(proz<1?"unter 1":proz)+" % der neuen Abonnentinnen und Abonnenten lesen vor allem darüber</span>"; el.appendChild(g);
-    // die anderen: Umrisse, mit dem Rang blasser — sie treten zurück, das eigene steht vorn
-    var N=11;
-    rest.slice(0,N).forEach(function(t,i){ var d=document.createElement("div"); d.className="kachel";
-      d.style.transitionDelay=(0.15+i*0.045)+"s"; d.style.setProperty("--o",(0.85-0.5*(i/(N-1))).toFixed(2));
-      d.innerHTML="<b>"+t[0]+"</b>"; el.appendChild(d); });
-    var f=document.createElement("div"); f.className="kacheln-fuss"; f.textContent="und "+(rest.length-N)+" weitere Themenfelder"; el.appendChild(f);
+    // zwei gegenläufige Reihen mit allen anderen Themen; jede Reihe doppelt, damit die Schleife nahtlos ist
+    var h1=rest.filter(function(x,i){return i%2===0;}), h2=rest.filter(function(x,i){return i%2===1;});
+    [["r1",h1],["r2",h2]].forEach(function(pair){ var row=document.createElement("div"); row.className="band-reihe "+pair[0];
+      var html=pair[1].map(function(t){return '<div class="kachel"><b>'+t[0]+'</b></div>';}).join("");
+      row.innerHTML=html+html; el.appendChild(row); });
+    var g=document.createElement("div"); g.className="band-mein kachel gross"+(st==="D"?" neutral":"");
+    g.innerHTML="<b>"+mein[0]+"</b><span>"+(proz<1?"unter 1":proz)+" % lesen vor allem darüber</span>"; el.appendChild(g);
+    var f=el.parentNode.querySelector(".kacheln-fuss"); if(!f){ f=document.createElement("div"); f.className="kacheln-fuss"; el.parentNode.insertBefore(f, el.nextSibling); }
+    f.textContent="Alle 40 Themenfelder — Ihres bleibt stehen.";
   }
   function zielSetzen(){
     var ziel=null;
@@ -879,10 +898,10 @@ body[data-breite=desktop-raster] .telefon::after{
     ziel.style.setProperty("--dy",(h/2-(y+hh/2))+"px");
     ziel.style.setProperty("--k",Math.max(1,(zg/gr)).toFixed(3));
   }
-  function wolkeEin(){ clearTimeout(fokusTimer); wolke.classList.remove('fokus');
+  function wolkeEin(){ clearTimeout(fokusTimer); wolke.classList.remove('fokus'); $('kacheln').classList.remove('fokus');
     requestAnimationFrame(function(){ wolke.classList.add('ein'); });
     fokusTimer=setTimeout(wolkeFokus, reduziert?0:3400); }
-  function wolkeFokus(){ clearTimeout(fokusTimer); wolke.classList.add('ein','fokus');
+  function wolkeFokus(){ clearTimeout(fokusTimer); wolke.classList.add('ein','fokus'); $('kacheln').classList.add('fokus');
     $('anteil').classList.add('da'); $('themaSatz').classList.add('da'); }
 
   function baueTag(){
@@ -1037,7 +1056,7 @@ body[data-breite=desktop-raster] .telefon::after{
     gezaehlt=false; $('zaehler').textContent='0';
     document.body.classList.add('reset'); szenen.forEach(function(s){ s.classList.remove('sichtbar'); }); void document.body.offsetWidth;
     requestAnimationFrame(function(){ document.body.classList.remove('reset'); });
-    wolke.classList.remove('ein','fokus'); $('anteil').classList.remove('da'); $('themaSatz').classList.remove('da');
+    wolke.classList.remove('ein','fokus'); $('kacheln').classList.remove('fokus'); $('anteil').classList.remove('da'); $('themaSatz').classList.remove('da');
     setTimeout(function(){
       szenen.forEach(function(s){
         var r=s.getBoundingClientRect(), rr=rohr.getBoundingClientRect();
