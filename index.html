@@ -535,6 +535,42 @@ body[data-breite^=desktop][data-variante=ruhig] .lead{font-size:18px}
 body[data-breite^=desktop][data-variante=ruhig] .band{height:130px}
 body[data-breite^=desktop][data-variante=ruhig] .wolke{height:220px}
 
+
+/* ═══ Desktop · 2: Einstieg als Fullwidth-Header (wie header-fullwidth auf zeit.de) ═══
+   Farbflächen über die volle Seite, Titel groß, Vorspann in 660. Danach beginnt der Inhalt.      */
+body[data-breite^=desktop] .einstieg{min-height:520px;padding:96px var(--rand) 88px;justify-content:center;
+  border-bottom:1px solid var(--linie);margin-bottom:8px}
+body[data-breite^=desktop] .farbwolken{height:1300px;
+  background:radial-gradient(48% 50% at 6% 14%,var(--k-warm) 0,transparent 70%),
+             radial-gradient(44% 46% at 96% 26%,var(--k-blau) 0,transparent 70%),
+             radial-gradient(52% 36% at 30% 58%,var(--k-gruen) 0,transparent 70%),
+             radial-gradient(46% 30% at 84% 82%,var(--k-warm) 0,transparent 70%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 40%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 40%,transparent 100%)}
+body[data-breite^=desktop] .einstieg .augen{font-size:14px;color:var(--marker);margin-bottom:20px}
+body[data-breite^=desktop] .einstieg .h1{font-size:54px;line-height:1.08;letter-spacing:-.015em;max-width:16ch}
+body[data-breite^=desktop] .einstieg .sub{font-size:20px;line-height:1.5;max-width:var(--w-text);margin-top:22px}
+body[data-breite^=desktop] .einstieg .hinunter{margin-top:56px}
+
+/* ═══ Desktop · 3: Teaser im Raster statt Slider und Liste ═══
+   „Beliebte Artikel": vier Teaser nebeneinander in 892 (wie die Teaserzeile auf zeit.de);
+   „Entdecken": bis zu drei Kacheln nebeneinander mit Bild oben.                                   */
+body[data-breite^=desktop] .parkett{padding-left:var(--rand);padding-right:var(--rand)}
+body[data-breite^=desktop] .parkett-kopf > *{max-width:none}
+body[data-breite^=desktop] .parkett-kopf{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:24px}
+body[data-breite^=desktop] .parkett-kopf .sub-s{margin:0}
+body[data-breite^=desktop] .karussell{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0;padding:0;overflow:visible;scroll-snap-type:none}
+body[data-breite^=desktop] .artikel{flex:none;aspect-ratio:3/4;width:auto}
+body[data-breite^=desktop] .artikel .t{font-size:17px}
+body[data-breite^=desktop] .artikel .k{font-size:13px}
+body[data-breite^=desktop] .punkte{display:none}
+body[data-breite^=desktop] .liste{grid-template-columns:repeat(3,1fr);gap:16px}
+body[data-breite^=desktop] .liste .eintrag{display:flex;flex-direction:column;gap:14px;background:var(--flaeche);border:1px solid var(--linie);border-radius:4px;padding:16px}
+body[data-breite^=desktop] .liste .eintrag .bild{width:100%;height:auto;aspect-ratio:16/9;border-radius:4px}
+body[data-breite^=desktop] .liste .eintrag h4{font-size:18px}
+body[data-breite^=desktop] .liste .eintrag .sub-s{font-size:15px}
+body[data-breite^=desktop] .liste .leerhinweis{grid-column:1/-1}
+body[data-breite^=desktop] #s-entdecken .quelle{max-width:none}
+
 /* Rasterlineale, nur zum Prüfen */
 body[data-breite=desktop-raster] .telefon::after{
   content:"";position:absolute;inset:0;pointer-events:none;z-index:55;
