@@ -171,6 +171,24 @@ body.ohne-quellen .wolke-fuss span:last-child{visibility:hidden}
 .thema-satz{opacity:0;transform:translateY(10px);transition:opacity .9s var(--e) .25s,transform .9s var(--e) .25s}
 .thema-satz.da{opacity:1;transform:none}
 
+/* ═══ Thema als Kacheln (Option 4, angepasst: Größe nach Rang, weil wir Gruppen­größen haben, keine Artikelzahlen) ═══ */
+.kacheln{display:none;grid-template-columns:repeat(6,1fr);gap:8px;margin:16px 0 0;text-align:left}
+body[data-thema=kacheln] .kacheln{display:grid}
+body[data-thema=kacheln] .wolke-huelle,body[data-thema=kacheln] .anteil{display:none}
+.kachel{border-radius:4px;padding:12px;min-width:0;background:var(--karte);border:1px solid var(--linie);
+  opacity:0;transform:translateY(10px) scale(.97);transition:opacity .6s var(--e),transform .7s var(--e)}
+.szene.sichtbar .kachel{opacity:1;transform:none}
+.kachel b{display:block;font-size:13px;font-weight:700;line-height:1.25;overflow-wrap:anywhere;text-wrap:balance}
+.kachel span{display:block;font-size:11px;color:var(--ink3);margin-top:6px;font-variant-numeric:tabular-nums}
+.kachel.gross{grid-column:span 6;padding:18px 16px;background:var(--marker);border-color:transparent;color:#fff}
+.kachel.gross b{font-size:20px} .kachel.gross span{color:rgba(255,255,255,.8);font-size:12px}
+.kachel.gross.neutral{background:var(--ink);color:var(--seite)} .kachel.gross.neutral span{color:var(--seite);opacity:.75}
+.kachel.mittel{grid-column:span 3}
+.kachel.klein{grid-column:span 2;background:transparent}
+.kachel.klein b{font-size:12px;font-weight:400;color:var(--ink2)} .kachel.klein span{display:none}
+.kacheln-fuss{grid-column:span 6;font-size:11px;color:var(--ink3);margin-top:2px}
+body[data-breite^=desktop] .kachel.klein{grid-column:span 2}
+
 /* ═══ Empfehlungskarte ═══ */
 .karten{margin:22px 0 0}
 .karte{background:var(--flaeche);border:1px solid transparent;border-radius:4px;padding:16px;text-align:left;
@@ -503,6 +521,14 @@ body[data-breite=desktop-raster] .telefon::after{
   </div>
 
   <div class="feld">
+    <label>Thema der Woche</label>
+    <div class="chips" id="themaform">
+      <button type="button" data-t="wolke" aria-pressed="true">Wortwolke</button>
+      <button type="button" data-t="kacheln" aria-pressed="false">Kacheln</button>
+    </div>
+  </div>
+
+  <div class="feld">
     <label>Kartenfarbe</label>
     <div class="chips" id="kfarbe">
       <button type="button" data-k="grau" aria-pressed="true">Grau</button>
@@ -656,6 +682,7 @@ body[data-breite=desktop-raster] .telefon::after{
             <div class="wolke" id="wolke"></div>
             <div class="wolke-fuss"><span>Vierzig Themenfelder, Größe nach Häufigkeit</span><span id="wolkeN"></span></div>
           </div>
+          <div class="kacheln" id="kacheln"></div>
           <div class="anteil" id="anteil"><div class="sp"><i></i></div>
             <div class="m"><span id="anteilLinks"></span><span>1.756 insgesamt</span></div></div>
         </div>
@@ -717,10 +744,10 @@ body[data-breite=desktop-raster] .telefon::after{
 (function(){
   var THEMEN=[["Innenpolitik Deutschland",437,116],["Familie, Erziehung",134,78],["Geschichte",126,37],["Arbeit, Berufsleben",114,68],["Digitalisierung, Medientrends und soziale Netzwerke",100,63],["Gesundheit, Medizin, Psychologie",82,59],["Technologie und Innovation",68,15],["Wirtschaftspolitik",58,88],["Persönlichkeiten",47,51],["Politik in anderen Ländern",46,75],["Bildung, Schule, Universität",42,37],["Inhalte für Kinder",40,129],["Unternehmen",35,38],["Nachhaltigkeit, Umwelt, Klimaschutz",34,40],["True Crime und Kriminalität",31,97],["Essen, Kulinarik",30,65],["Ratgeber zu Geld, Finanzen, Börse",28,114],["Außenpolitik",27,69],["Literatur, Bücher",26,50],["Liebe, Beziehung",26,67],["Fitness, Gesundheit",25,27],["Sinn, Philosophie, Ethik, Lebenshilfe",24,45],["Unfälle und Katastrophen",20,33],["Gesellschaft und Wirtschaft",20,24],["Sicherheit",17,72],["Mobilität",15,73],["Wissenschaft",15,49],["Gaming und Spiele",13,124],["Reise und Auswandern",13,18],["Kunst, Bühne, Ausstellungen",13,23],["Musik",11,45],["Produkttests und Empfehlungen",10,60],["Migration",9,54],["Wohnen, Bauen, Mieten",6,14],["Sportberichterstattung",5,45],["Familie, Erziehung, Kindergesundheit",3,11],["Filme, Serien, Streaming, TV, Mediatheken",2,39],["Stil, Mode, Design",2,13],["Studium, Studienbedingungen",1,120],["Familie, Erziehung, Geburt",1,179]], KOHORTEN={"2":{"n":40,"g":[5,9,17,21,27,34,41,70,104]},"3":{"n":395,"g":[5,14,23,40,58,83,119,169,267]},"4":{"n":349,"g":[6,15,28,49,70,106,135,188,286]},"5":{"n":297,"g":[10,21,32,48,68,102,136,197,312]},"6":{"n":354,"g":[5,12,22,33,60,85,127,186,294]},"7":{"n":321,"g":[9,18,32,45,71,100,151,198,317]}}, EMPF={"Innenpolitik Deutschland":{"benennung":"Politik","newsletter":["Was jetzt? – Der tägliche Morgenüberblick"],"podcasts":["OK, America?","Das Politikteil","Der Ostcast"],"serien":["5 vor 8","Stimmt das eigentlich?"],"autoren":["Rieke Havertz","Anne Hähnig","Bernd Ulrich","Mariam Lau","Mark Schieritz"]},"Politik in anderen Ländern":{"benennung":"Politik","newsletter":["Was jetzt? – Der tägliche Morgenüberblick"],"podcasts":["OK, America?","Das Politikteil","Der Ostcast"],"serien":["5 vor 8","Stimmt das eigentlich?"],"autoren":["Rieke Havertz","Anne Hähnig","Bernd Ulrich","Mariam Lau","Mark Schieritz"]},"Außenpolitik":{"benennung":"Politik","newsletter":["Was jetzt? – Der tägliche Morgenüberblick"],"podcasts":["OK, America?","Das Politikteil","Der Ostcast"],"serien":["5 vor 8","Stimmt das eigentlich?"],"autoren":["Rieke Havertz","Anne Hähnig","Bernd Ulrich","Mariam Lau","Mark Schieritz"]},"True Crime und Kriminalität":{"benennung":"True Crime","newsletter":["ZEIT-Verbrechen-Newsletter"],"podcasts":["Verbrechen"],"serien":["Täterwissen"],"autoren":["Sabine Rückert"]},"Gesundheit, Medizin, Psychologie":{"benennung":"Gesundheit und Psychologie","newsletter":["Das tut mir gut"],"podcasts":["Gehts dir auch so?"],"serien":["Die Diagnose"],"autoren":["Sven Stockrahm","Jakob Simmank"]},"Digitalisierung, Medientrends und soziale Netzwerke":{"benennung":"Digitalisierung und Künstliche Intelligenz","newsletter":["Natürlich intelligent"],"podcasts":["Neustart"],"serien":["Rose erklärt das Internet"],"autoren":["Jakob von Lindern","Eva Wolfangel"]},"Technologie und Innovation":{"benennung":"Digitalisierung und Künstliche Intelligenz","newsletter":["Natürlich intelligent"],"podcasts":["Neustart"],"serien":["Rose erklärt das Internet"],"autoren":["Jakob von Lindern","Eva Wolfangel"]},"Gesellschaft und Wirtschaft":{"benennung":"Gesellschaft und Wirtschaft","newsletter":[],"podcasts":["Ist das eine Blase?","Der Vernichter"],"serien":["Stimmt das eigentlich?"],"autoren":[]},"Familie, Erziehung":{"benennung":"Familie und Erziehung","newsletter":["Familienzeit"],"podcasts":[],"serien":["Wir sprechen uns wieder","Familienrat"],"autoren":[]},"Arbeit, Berufsleben":{"benennung":"Arbeit und Berufsleben","newsletter":["Endlich Montag"],"podcasts":["Frisch an die Arbeit"],"serien":["Kontoauszug"],"autoren":["David Gutensohn"]},"Liebe, Beziehung":{"benennung":"Liebe und Partnerschaft","newsletter":["Beziehungsweise"],"podcasts":["Ist das normal?"],"serien":["Lexikon der Liebe"],"autoren":[]},"Geschichte":{"benennung":"Geschichte","newsletter":[],"podcasts":["Wie war das noch mal?"],"serien":[],"autoren":[]},"Essen, Kulinarik":{"benennung":"Rezepte","newsletter":["Der kleine Wochenmarkt","Wochenmarkt-Newsletter"],"podcasts":[],"serien":["Leichte Mahlzeit"],"autoren":[]},"Persönlichkeiten":{"benennung":"Interviews und Gespräche","newsletter":["Alles gesagt?"],"podcasts":["Alles gesagt?","Nur eine Frage"],"serien":["Wofür leben Sie?"],"autoren":["Jochen Wegner"]},"Fitness, Gesundheit":{"benennung":"Fitness und gesundes Leben","newsletter":["Das tut mir gut – Der ZEIT-Gesundheitsnewsletter"],"podcasts":[],"serien":["Die Diagnose","Personal Trainer"],"autoren":[]},"Ratgeber zu Geld, Finanzen, Börse":{"benennung":"Geld und Finanzen","newsletter":["ZEIT Geldkurs","Der Geld-Newsletter"],"podcasts":[],"serien":["Die Geldverbesserer","Groschenoper"],"autoren":["Marilena Piesker","Jan Guldner"]},"Literatur, Bücher":{"benennung":"Literatur","newsletter":["Was wir lesen – Der ZEIT-Literaturnewsletter"],"podcasts":["Was liest du gerade?"],"serien":["Literaturkolumne"],"autoren":[]},"Reise und Auswandern":{"benennung":"Reise","newsletter":["Zeit Reise","Kommst Du mit? – Der ZEIT-Reisenewsletter"],"podcasts":[],"serien":[],"autoren":[]},"Wissenschaft":{"benennung":"Wissenschaft","newsletter":["ZEIT WISSEN-Newsletter"],"podcasts":["Woher weißt du das?"],"serien":["Über All","Worüber denken Sie gerade nach?"],"autoren":["Linda Fischer","Maria Mast"]},"Produkttests und Empfehlungen":{"benennung":"Produkttests und Empfehlungen","newsletter":[],"podcasts":["Geht da noch was?"],"serien":[],"autoren":["Henrik Oerding"]},"Sinn, Philosophie, Ethik, Lebenshilfe":{"benennung":"Sinn und Philosophie","newsletter":["Wofür leben wir? – Der Sinn-Newsletter"],"podcasts":[],"serien":["Sinn finden","Der Optimist"],"autoren":["Kilian Trotier"]},"Filme, Serien, Streaming, TV, Mediatheken":{"benennung":"Filme und Serien","newsletter":["DIE ZEIT – Kultur"],"podcasts":[],"serien":["Obduktionsbericht"],"autoren":["Volker Weidermann"]},"Kunst, Bühne, Ausstellungen":{"benennung":"Kunst","newsletter":["Weltkunst-Newsletter","DIE ZEIT – Kultur"],"podcasts":["Augen zu"],"serien":[],"autoren":[]},"spiele.zeit.de/*":{"benennung":"Spiele","newsletter":["Quiz – Der tägliche Wissenstest"],"podcasts":[],"serien":[],"autoren":[]},"Bildung, Schule, Universität":{"benennung":"Bildung, Schule, Universität","newsletter":[],"podcasts":[],"serien":["Wie wars in der Schule?"],"autoren":[]}};
   var TAGE={nachts:['00–05',5,2.3,'Sie lesen, wenn es still ist — meist zwischen 0 und 5 Uhr.'],
-            morgens:['05–12',7,36.3,'Sie gehen informiert in den Tag — meist zwischen 5 und 12 Uhr.'],
-            mittags:['12–15',3,12.0,'Sie nehmen sich mitten am Tag Zeit — meist zwischen 12 und 15 Uhr.'],
+            morgens:['05–12',7,36.3,'Sie starten informiert in den Tag — meist zwischen 5 und 12 Uhr.'],
+            mittags:['12–15',3,12.0,'Sie nutzen die Mitte des Tages für Z+ — meist zwischen 12 und 15 Uhr.'],
             nachmittags:['15–18',3,12.3,'Sie lesen, wenn der Tag sich neigt — meist zwischen 15 und 18 Uhr.'],
-            abends:['18–24',6,37.1,'Sie lassen den Tag lesend ausklingen — meist zwischen 18 und 24 Uhr.']};
+            abends:['18–24',6,37.1,'Sie lassen den Tag mit Z+ ausklingen — meist zwischen 18 und 24 Uhr.']};
   var ARTIKEL=[['Alfaview','Wie man sich gegen einen Tech-Giganten wehrt'],
                ['»Nihilist Penguin«','Ich fühl dich, kleiner Pinguin!'],
                ['Schwächen der Wissenschaft','Wem schlechte Forschung nützt'],
@@ -791,6 +818,19 @@ body[data-breite=desktop-raster] .telefon::after{
     $("wolkeN").textContent=wolke.children.length+" von "+reihe.length+" im Bild";
     zielSetzen(); wolke.classList.remove("ein","fokus");
     if($("s-thema").classList.contains("sichtbar")) wolkeFokus();
+  }
+  function baueKacheln(){
+    var el=$("kacheln"); el.innerHTML="";
+    var st=stufe(dezil(Z.min,Z.kohorte),Z.kohorte);
+    var mein=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
+    var rest=THEMEN.filter(function(x){return x[0]!==Z.thema;}).sort(function(a,b){return b[1]-a[1];});
+    var g=document.createElement("div"); g.className="kachel gross"+(st==="D"?" neutral":"");
+    g.innerHTML="<b>"+mein[0]+"</b><span>"+mein[1]+" von 1.756 lesen vor allem darüber</span>"; el.appendChild(g);
+    rest.slice(0,2).forEach(function(t,i){ var d=document.createElement("div"); d.className="kachel mittel"; d.style.transitionDelay=(0.12+i*0.06)+"s";
+      d.innerHTML="<b>"+t[0]+"</b><span>"+t[1]+" Leser:innen</span>"; el.appendChild(d); });
+    rest.slice(2,8).forEach(function(t,i){ var d=document.createElement("div"); d.className="kachel klein"; d.style.transitionDelay=(0.26+i*0.05)+"s";
+      d.innerHTML="<b>"+t[0]+"</b>"; el.appendChild(d); });
+    var f=document.createElement("div"); f.className="kacheln-fuss"; f.textContent="und "+(rest.length-8)+" weitere Themenfelder"; el.appendChild(f);
   }
   function zielSetzen(){
     var ziel=null;
@@ -891,7 +931,7 @@ body[data-breite=desktop-raster] .telefon::after{
     $('spurRechts').textContent=st==='A'?'Sie gehören zum oberen Fünftel':'Sie liegen in der Mitte';
     $('zeitSatz').textContent = st==='D'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
       : st==='C'?'haben Sie in Ihrer ersten Woche gelesen. Jeder Text war eine Entscheidung.'
-      : 'haben Sie in Ihrer ersten Woche gelesen.';
+      : (Z.min>=300?'haben Sie in Ihrer ersten Woche gelesen — beeindruckend.':'haben Sie in Ihrer ersten Woche gelesen.');
     $('zeitQuelle').textContent = st==='D'?'Ihr Rückblick wächst mit jedem Tag, an dem Sie lesen.'
       : st==='C'?'Ein Vergleich mit anderen sagt über eine erste Woche wenig. Was zählt, ist der Anfang.'
       : 'Verglichen mit '+k.n+' Menschen, die genauso lange dabei sind wie Sie.';
@@ -899,7 +939,7 @@ body[data-breite=desktop-raster] .telefon::after{
     baueBand(d, st==='A');
     var rang=st==='A';
     $('bandAugen').textContent = rang?'Ihr Platz im Vergleich':'So lesen die anderen';
-    $('bandZahl').textContent = rang?perz+' %':(st==='B'?'So viel wie die meisten':'Sehr unterschiedlich');
+    $('bandZahl').textContent = rang?perz+' %':(st==='B'?'Mittendrin':st==='C'?'Ein guter Start':'Jeder in seinem Tempo');
     $('bandZahl').className = 'an v2 '+(rang?'gross':'mittel');
     $('bandSatz').textContent = rang
       ? (d===10?'Sie gehören zu den zehn Prozent, die am meisten lesen.':'Sie lesen mehr als '+perz+' Prozent der anderen.')
@@ -922,7 +962,7 @@ body[data-breite=desktop-raster] .telefon::after{
       : 'Ein seltenes Themenfeld — nur '+t[1]+' der 1.756 lesen vor allem darüber. Sie gehören zu einer kleinen Gruppe.';
 
     zeigeBloecke();
-    baueEmpfehlung(); baueEntdecken(); baueWolke(); setTimeout(stapel,0);
+    baueEmpfehlung(); baueEntdecken(); baueWolke(); baueKacheln(); setTimeout(stapel,0);
   }
 
   // ── Auslösezone im oberen Sichtbereich
@@ -1048,6 +1088,9 @@ body[data-breite=desktop-raster] .telefon::after{
   try{ var vg=localStorage.getItem('zeit-variante');
     if(vg==='ruhig'||vg==='szenen'){ document.body.setAttribute('data-variante',vg);
       $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===vg)); }); } }catch(err){}
+  $('themaform').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    document.body.setAttribute('data-thema', b.dataset.t); setTimeout(function(){ baueWolke(); stapel(); },40); });
   $('kfarbe').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
     document.body.classList.toggle('kfarbig', b.dataset.k==='farbig'); });
