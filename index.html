@@ -420,6 +420,18 @@ body.kfarbig[data-variante=ruhig] .szene:nth-child(2),body.kfarbig[data-variante
 body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante=karten] .szene:nth-child(3){background:var(--k-gruen)}
 body.kfarbig .karte[data-art]{background:var(--karte)}
 body.kfarbig .karte.leer[data-art]{background:transparent}
+
+/* Farbig: Diagramm-Neutrale folgen dem Farbton der Karte (OKLCH, gleicher Hue; Linie L.93 / Track L.90 / Balken L.84). Rot bleibt der einzige Akzent. */
+body.kfarbig[data-variante=ruhig] .szene:nth-child(1),body.kfarbig[data-variante=karten] .szene:nth-child(1),body.kfarbig[data-variante=ruhig] .szene:nth-child(4),body.kfarbig[data-variante=karten] .szene:nth-child(4){--linie:#f0e7d8;--track:#e9dcc8;--bar:#d9c8ae}
+body.kfarbig[data-variante=ruhig] .szene:nth-child(2),body.kfarbig[data-variante=karten] .szene:nth-child(2){--linie:#d9ebf3;--track:#cae3ed;--bar:#b0d1df}
+body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante=karten] .szene:nth-child(3){--linie:#ddede2;--track:#cfe4d5;--bar:#b7d3bf}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body.kfarbig[data-variante=ruhig] .szene:nth-child(1),body.kfarbig[data-variante=karten] .szene:nth-child(1),body.kfarbig[data-variante=ruhig] .szene:nth-child(4),body.kfarbig[data-variante=karten] .szene:nth-child(4){--linie:#362f25;--track:#42392c;--bar:#534938}
+:root:not([data-theme="light"]) body.kfarbig[data-variante=ruhig] .szene:nth-child(2),body.kfarbig[data-variante=karten] .szene:nth-child(2){--linie:#263338;--track:#2d3d45;--bar:#394e57}
+:root:not([data-theme="light"]) body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante=karten] .szene:nth-child(3){--linie:#28332c;--track:#303f35;--bar:#3e4f43} }
+:root[data-theme="dark"] body.kfarbig[data-variante=ruhig] .szene:nth-child(1),body.kfarbig[data-variante=karten] .szene:nth-child(1),body.kfarbig[data-variante=ruhig] .szene:nth-child(4),body.kfarbig[data-variante=karten] .szene:nth-child(4){--linie:#362f25;--track:#42392c;--bar:#534938}
+:root[data-theme="dark"] body.kfarbig[data-variante=ruhig] .szene:nth-child(2),body.kfarbig[data-variante=karten] .szene:nth-child(2){--linie:#263338;--track:#2d3d45;--bar:#394e57}
+:root[data-theme="dark"] body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante=karten] .szene:nth-child(3){--linie:#28332c;--track:#303f35;--bar:#3e4f43}
+body.kfarbig .karte[data-art]{border-color:transparent}
 /* Farbakzente: Empfehlungskarten nach Art — Newsletter warm, Podcast blau, Serie grün */
 .karte[data-art=Newsletter]{background:var(--k-warm)}
 .karte[data-art=Podcast]{background:var(--k-blau)}
