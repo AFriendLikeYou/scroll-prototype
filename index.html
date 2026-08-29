@@ -189,6 +189,27 @@ body[data-thema=kacheln] .wolke-huelle,body[data-thema=kacheln] .anteil{display:
 .kacheln-fuss{grid-column:span 6;font-size:11px;color:var(--ink3);margin-top:2px}
 body[data-breite^=desktop] .kachel.klein{grid-column:span 2}
 
+.reset,.reset *{transition:none!important;animation:none!important}
+
+/* ═══ Icons über den Kickern ═══ */
+.ico{display:block;width:32px;height:32px;margin:0 auto 12px;color:var(--ink);overflow:visible}
+.szene .textspalte > .ico{width:32px}
+.ico-uhr .zeiger{transform-origin:16px 16px}
+.szene.sichtbar .ico-uhr .zeiger{animation:ico-dreh 1.4s var(--e) forwards}
+@keyframes ico-dreh{to{transform:rotate(var(--grad,720deg))}}
+.ico-podest rect{transform:scaleY(.12);transform-origin:50% 100%;transition:transform .8s var(--e)}
+.ico-podest rect:nth-child(2){transition-delay:.1s}.ico-podest rect.rot{fill:var(--marker);transition-delay:.2s}
+.szene.sichtbar .ico-podest rect{transform:none}
+.ico-hash path{stroke-dasharray:30;stroke-dashoffset:30;transition:stroke-dashoffset .7s var(--e)}
+.ico-hash path:nth-child(2){transition-delay:.12s}.ico-hash path:nth-child(3){transition-delay:.28s}.ico-hash path:nth-child(4){transition-delay:.4s}
+.szene.sichtbar .ico-hash path{stroke-dashoffset:0}
+.ico-himmel .koerper{transform:translateY(14px);transition:transform 1.2s var(--e)}
+.ico-himmel .strahl{opacity:0;transition:opacity .6s var(--e) .9s}
+.szene.sichtbar .ico-himmel .koerper{transform:none}
+.szene.sichtbar .ico-himmel .strahl{opacity:1}
+.ico-nachts .koerper{transform:translateY(10px) rotate(-12deg);transform-origin:16px 14px}
+body[data-breite^=desktop] .ico{width:36px;height:36px}
+
 /* ═══ Empfehlungskarte ═══ */
 .karten{margin:22px 0 0}
 .karte{background:var(--flaeche);border:1px solid transparent;border-radius:4px;padding:16px;text-align:left;
@@ -855,7 +876,7 @@ body[data-breite=desktop-raster] .telefon::after{
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
       d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
       d.innerHTML=(n===Z.tageszeit?'<b>'+Math.round(a[2])+' %</b>':'<b>&nbsp;</b>')+'<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
-    $('tagTitel').textContent='Meist '+Z.tageszeit;
+    $('tagTitel').textContent='Meist '+Z.tageszeit; if(typeof setzeIcon==='function') setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
     $('tagQuelle').textContent=TAGE[Z.tageszeit][2].toFixed(1).replace('.',',')+' % der Abonnentinnen und Abonnenten, die im selben Zeitraum ein Abo abgeschlossen haben, lesen '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
   }
@@ -925,6 +946,7 @@ body[data-breite=desktop-raster] .telefon::after{
 
     $('einheit').textContent = Z.min<60?'Min':(Z.min%60?'Std '+(Z.min%60)+' Min':'Std');
     $('zaehler').dataset.ziel = Z.min<60?Z.min:Math.floor(Z.min/60);
+    var ic=$('s-zeit').querySelector('.ico-uhr'); if(ic) ic.style.setProperty('--grad', Math.max(180, Math.round(Z.min/60*360))+'deg');
     $('spurHuelle').style.display=(st==='A'||st==='B')?'block':'none';
     $('spur').style.setProperty('--w',perz+'%');
     $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
@@ -999,7 +1021,8 @@ body[data-breite=desktop-raster] .telefon::after{
 
   function wiederhole(){
     gezaehlt=false; $('zaehler').textContent='0';
-    szenen.forEach(function(s){ s.classList.remove('sichtbar'); });
+    document.body.classList.add('reset'); szenen.forEach(function(s){ s.classList.remove('sichtbar'); }); void document.body.offsetWidth;
+    requestAnimationFrame(function(){ document.body.classList.remove('reset'); });
     wolke.classList.remove('ein','fokus'); $('anteil').classList.remove('da'); $('themaSatz').classList.remove('da');
     setTimeout(function(){
       szenen.forEach(function(s){
@@ -1025,6 +1048,29 @@ body[data-breite=desktop-raster] .telefon::after{
       var text=/(^| )(augen|zahl|gross|mittel|lead|quelle|thema-satz)( |$)/.test(c.className);
       (text?t:g).appendChild(c); });
     k.appendChild(t); k.appendChild(g); });
+  // ── Icons über den Kickern (Strich-Stil, 32 px). Bewegen sich einmal beim Eintritt. ──
+  var ICO={
+    uhr:'<svg class="ico ico-uhr" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="16" r="12.5"/><line class="zeiger" x1="16" y1="16" x2="16" y2="7.5" stroke-width="2"/><circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"/></svg>',
+    podest:'<svg class="ico ico-podest" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><rect x="5" y="18" width="5" height="12" rx="1"/><rect x="13.5" y="10" width="5" height="20" rx="1"/><rect class="rot" x="22" y="3" width="5" height="27" rx="1"/></svg>',
+    hash:'<svg class="ico ico-hash" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5 9 27"/><path d="M23 5 20 27"/><path d="M5 12h23"/><path d="M4 20h23"/></svg>',
+    // Tageszeiten: alles unter der Horizontlinie ist maskiert
+    himmel:function(art){
+      var clip='<clipPath id="hz-'+art+'"><rect x="0" y="0" width="32" height="24"/></clipPath>';
+      var sonne=function(cx,cy,strahlen){ return '<g class="koerper" clip-path="url(#hz-'+art+')"><circle cx="'+cx+'" cy="'+cy+'" r="5.5" fill="var(--marker)"/>'+(strahlen?'<g class="strahl" stroke="var(--marker)" stroke-width="1.6" stroke-linecap="round" transform="translate('+cx+' '+cy+')"><line x1="0" y1="-8" x2="0" y2="-10.5"/><line x1="6" y1="-6" x2="7.8" y2="-7.8"/><line x1="-6" y1="-6" x2="-7.8" y2="-7.8"/><line x1="8" y1="0" x2="10.5" y2="0"/><line x1="-8" y1="0" x2="-10.5" y2="0"/></g>':'')+'</g>'; };
+      var mond='<g class="koerper" clip-path="url(#hz-'+art+')"><path d="M19 6.5a8 8 0 1 0 6.5 12.5A9 9 0 0 1 19 6.5z" fill="var(--marker)"/></g>';
+      var inhalt = art==='nachts' ? mond
+        : art==='morgens' ? sonne(16,24,true)        // halb aufgegangen
+        : art==='mittags' ? sonne(16,11,true)         // hoch
+        : art==='nachmittags' ? sonne(22,17,true)     // tief, rechts
+        : sonne(24,24,false);                          // abends: geht rechts unter, ohne Strahlen
+      return '<svg class="ico ico-himmel ico-'+art+'" viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs>'+clip+'</defs>'+inhalt+'<line x1="3" y1="24" x2="29" y2="24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+    }
+  };
+  function setzeIcon(szeneId, html){
+    var sz=$(szeneId), alt=sz.querySelector('.ico'); if(alt) alt.remove();
+    var ziel=sz.querySelector('.textspalte')||sz; ziel.insertAdjacentHTML('afterbegin', html);
+  }
+  setzeIcon('s-zeit',ICO.uhr); setzeIcon('s-band',ICO.podest); setzeIcon('s-thema',ICO.hash); setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
   function stapel(){
     if(document.body.getAttribute('data-variante')!=='karten'){
       stapelKarten.forEach(function(k){ k.style.transform=''; k.style.setProperty('--schleier',0); });
