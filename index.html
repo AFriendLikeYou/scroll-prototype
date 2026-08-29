@@ -168,18 +168,18 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .szene.sichtbar .tag .a i{height:20px}
 .szene.sichtbar .tag .a.aktiv i{height:50px;background:var(--marker);transition-delay:.5s}
 .tag .a span{font-size:10px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
-/* 24-Stunden-Variante: Fenster liegen auf einer echten Zeitachse, Beschriftung wandert unter die Achse */
-.uhrachse{display:none;justify-content:space-between;font-size:10px;color:var(--ink3);margin:8px 0 0;font-variant-numeric:tabular-nums;position:relative}
-.uhrachse::before{content:"";position:absolute;left:0;right:0;top:-4px;height:1px;background:var(--linie)}
-body[data-tagform=uhr] .uhrachse{display:flex}
-body[data-tagform=uhr] .tag{gap:2px}
-body[data-tagform=uhr] .tag .a span{display:none}
-body[data-tagform=uhr] .tag .a i{border-radius:2px 2px 0 0}
-body[data-tagform=uhr] .szene.sichtbar .tag .a i{height:14px}
-body[data-tagform=uhr] .szene.sichtbar .tag .a.aktiv i{height:50px}
-body[data-tagform=uhr] .tag .a.aktiv{position:relative}
-body[data-tagform=uhr] .tag .a.aktiv::after{content:attr(data-fenster);position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--marker);white-space:nowrap}
-body[data-tagform=uhr] .uhrachse{margin-top:22px}
+/* 24-Stunden-Variante: ein Uhrenkreis, jedes Fenster ein Bogen, das aktive in Rot; Ticks 0·6·12·18 */
+.uhrkreis{display:none;justify-content:center;margin:20px 0 0}
+body[data-tagform=uhr] .uhrkreis{display:flex}
+body[data-tagform=uhr] .tag{display:none}
+.uhrkreis svg{width:200px;height:200px;overflow:visible}
+.uhrkreis .seg{fill:none;stroke:var(--track);stroke-width:14;stroke-linecap:butt;transition:stroke .6s var(--e)}
+.uhrkreis .seg.aktiv{stroke:var(--marker);stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.3s var(--e) .3s}
+.szene.sichtbar .uhrkreis .seg.aktiv{stroke-dashoffset:0}
+.uhrkreis .tick{font:10px var(--ff);fill:var(--ink3);text-anchor:middle;dominant-baseline:middle}
+.uhrkreis .mitte{font:700 15px var(--ff);fill:var(--ink);text-anchor:middle;dominant-baseline:middle}
+.uhrkreis .mitte2{font:11px var(--ff);fill:var(--ink3);text-anchor:middle;dominant-baseline:middle}
+body[data-breite^=desktop] .uhrkreis svg{width:220px;height:220px}
 .szene.sichtbar .tag .a span{opacity:1}
 .tag .a.aktiv span{color:var(--marker);font-weight:700}
 .wolke-huelle{position:relative;margin:16px 0 0}
@@ -722,8 +722,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <section class="einstieg" id="s-intro">
       <p class="augen">Ihr persönlicher Rückblick</p>
       <h1 class="h1">Ihre erste Woche mit Z+</h1>
-      <p class="zeitraum" id="zeitraum">21. bis 28. August 2026 · Tag 7 von 7</p>
-      <p class="sub">Seit dem 21. August nutzen Sie Z+. Werfen wir gemeinsam einen letzten Blick zurück – auf das, was Sie bereits entdeckt haben, und das, was Sie noch alles entdecken können.</p>
+      <p class="sub">Seit dem 21. August nutzen Sie Z+ — <span id="tagX">heute ist Tag 7 von 7</span>. Werfen wir gemeinsam einen letzten Blick zurück – auf das, was Sie bereits entdeckt haben, und das, was Sie noch alles entdecken können.</p>
       <p class="hinunter">Scrollen Sie nach unten<i>↓</i></p>
     </section>
 
@@ -755,7 +754,7 @@ body[data-breite=desktop-raster] .telefon::after{
         <p class="augen an v1">Wann Sie lesen</p>
         <h2 class="mittel an v2" id="tagTitel">Meist abends</h2>
         <div class="tag an v3" id="tag"></div>
-        <div class="uhrachse an v3" id="uhrachse"><span>0</span><span>6</span><span>12</span><span>18</span><span>24 Uhr</span></div>
+        <div class="uhrkreis an v3" id="uhrkreis"></div>
         <p class="lead an v3" id="tagSatz"></p>
         <p class="quelle bild an v4" id="tagQuelle"></p>
         <div class="karten" id="kartenZeit"></div>
@@ -943,8 +942,20 @@ body[data-breite=desktop-raster] .telefon::after{
   function baueTag(){
     var el=$('tag'); el.innerHTML='';
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
-      d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1]; d.setAttribute('data-fenster',a[0].replace('–',' bis ')+' Uhr');
+      d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
       d.innerHTML=(n===Z.tageszeit?'<b>'+Math.round(a[2])+' %</b>':'<b>&nbsp;</b>')+'<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
+    // Uhrenkreis: Stunden → Winkel, 0 Uhr oben, im Uhrzeigersinn; die Fenster aus TAGE (Stundenzahl = a[1])
+    var R=78,C=100,U=2*Math.PI*R, start=0, svg='';
+    function pt(h){ var w=(h/24)*2*Math.PI-Math.PI/2; return [C+R*Math.cos(w), C+R*Math.sin(w)]; }
+    Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1], a=pt(start), b=pt(start+h), gross=h>12?1:0, len=U*h/24;
+      svg+='<path class="seg'+(n===Z.tageszeit?' aktiv':'')+'" style="--len:'+len.toFixed(1)+'" d="M'+a[0].toFixed(1)+' '+a[1].toFixed(1)+' A'+R+' '+R+' 0 '+gross+' 1 '+b[0].toFixed(1)+' '+b[1].toFixed(1)+'"/>';
+      start+=h; });
+    // Trennfugen zwischen den Fenstern
+    start=0; Object.keys(TAGE).forEach(function(n){ var q=pt(start), q2=[C+(R+9)*((q[0]-C)/R), C+(R+9)*((q[1]-C)/R)], q1=[C+(R-9)*((q[0]-C)/R), C+(R-9)*((q[1]-C)/R)];
+      svg+='<line x1="'+q1[0].toFixed(1)+'" y1="'+q1[1].toFixed(1)+'" x2="'+q2[0].toFixed(1)+'" y2="'+q2[1].toFixed(1)+'" stroke="var(--seite)" stroke-width="2"/>'; start+=TAGE[n][1]; });
+    [[0,'0'],[6,'6'],[12,'12'],[18,'18']].forEach(function(t){ var q=pt(t[0]), f=(R+22)/R; svg+='<text class="tick" x="'+(C+(q[0]-C)*f).toFixed(1)+'" y="'+(C+(q[1]-C)*f).toFixed(1)+'">'+t[1]+'</text>'; });
+    svg+='<text class="mitte" x="100" y="94">'+TAGE[Z.tageszeit][0].replace('–',' bis ')+'</text><text class="mitte2" x="100" y="112">Uhr</text>';
+    $('uhrkreis').innerHTML='<svg viewBox="-24 -24 248 248" aria-hidden="true">'+svg+'</svg>';
     $('tagTitel').textContent='Meist '+Z.tageszeit; if(typeof setzeIcon==='function') setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
     $('tagQuelle').textContent=Math.round(TAGE[Z.tageszeit][2])+' % der neuen Abonnentinnen und Abonnenten lesen auch '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
@@ -956,7 +967,8 @@ body[data-breite=desktop-raster] .telefon::after{
       // Breite jedes Zehntels in Minuten; das zehnte ist nach oben offen — wir zeigen es so hoch wie das neunte, mit gestrichelter Kante
       var br=[g[0]]; for(var j=1;j<9;j++) br.push(g[j]-g[j-1]); br.push(br[8]);
       var mx=Math.max.apply(null,br);
-      hoehen=br.map(function(b){ return Math.max(4, Math.round(118*b/mx)); });
+      var H=(el.clientHeight||118)*0.9;
+      hoehen=br.map(function(b){ return Math.max(4, Math.round(H*b/mx)); });
     }
     el.classList.toggle('verteilung',verteilung);
     for(var i=1;i<=10;i++){ var s=document.createElement('div');
@@ -1032,13 +1044,13 @@ body[data-breite=desktop-raster] .telefon::after{
     $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
     var tagK=+Z.kohorte, proTag=Math.round(Z.min/tagK);
     $('proTag').textContent = tagK>1 ? 'Das sind im Schnitt '+(proTag>=60?mt(proTag):proTag+' Minuten')+' pro Tag.' : '';
-    $('zeitraum').textContent = (28-tagK+1)+'. bis 28. August 2026 · Tag '+tagK+' von 7';
+    $('tagX').textContent = 'heute ist Tag '+tagK+' von 7';
     $('zeitSatz').textContent = st==='D'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
       : st==='C'?'haben Sie in Ihrer ersten Woche gelesen. Jeder Text war eine Entscheidung.'
       : (Z.min>=300?'haben Sie in Ihrer ersten Woche gelesen — beeindruckend.':'haben Sie in Ihrer ersten Woche gelesen.');
     $('zeitQuelle').textContent = st==='D'?'Ihr Rückblick wächst mit jedem Tag, an dem Sie lesen.'
       : st==='C'?'Ein Vergleich mit anderen sagt über eine erste Woche wenig. Was zählt, ist der Anfang.'
-      : 'Verglichen mit '+k.n+' Menschen, die genauso lange dabei sind wie Sie.';
+      : 'Verglichen mit allen, die genauso lange dabei sind wie Sie.';
 
     baueBand(d, st==='A');
     var rang=st==='A';
@@ -1046,12 +1058,12 @@ body[data-breite=desktop-raster] .telefon::after{
     $('bandZahl').textContent = rang?perz+' %':(st==='B'?'Mittendrin':st==='C'?'Ein guter Start':'Jeder in seinem Tempo');
     $('bandZahl').className = 'an v2 '+(rang?'gross':'mittel');
     $('bandSatz').textContent = rang
-      ? (d===10?'Sie gehören zu den '+Math.round(k.n/10)+' von '+k.n+', die am meisten lesen.':'Sie lesen mehr als '+Math.round(k.n*perz/100)+' der '+k.n+' Menschen, die genauso lange dabei sind wie Sie.')
+      ? (d===10?'Sie gehören zu den zehn Prozent, die am meisten lesen.':'Sie lesen mehr als '+perz+' Prozent derer, die genauso lange dabei sind wie Sie.')
       : st==='B' ? 'Sie lesen so viel wie die meisten, die genauso lange dabei sind wie Sie.'
-      : st==='C' ? 'So weit liegen die '+k.n+' Menschen auseinander, die genauso lange dabei sind wie Sie. Ihr Platz darin verschiebt sich mit jedem Text.'
-      : 'Hier lesen '+k.n+' Menschen sehr unterschiedlich viel. Ihre Woche hat gerade erst begonnen.';
+      : st==='C' ? 'So weit liegen die auseinander, die genauso lange dabei sind wie Sie. Ihr Platz darin verschiebt sich mit jedem Text.'
+      : 'Hier wird sehr unterschiedlich viel gelesen. Ihre Woche hat gerade erst begonnen.';
     $('bandQuelle').textContent = klein
-      ? 'Nur '+k.n+' Menschen sind genauso lange dabei. Für einen Rangplatz ist das zu wenig — die Spannweite zeigen wir trotzdem.'
+      ? 'Noch sind wenige genauso lange dabei wie Sie. Für einen Rangplatz ist das zu wenig — die Spannweite zeigen wir trotzdem.'
       : 'Alle, die genauso lange dabei sind wie Sie, in zehn gleich große Gruppen geteilt.';
 
     var t=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
