@@ -269,7 +269,7 @@ body[data-breite^=desktop] .ico{width:36px;height:36px}
 
 /* ═══ Thema als Kreise (wie TIDE): Ihr Thema ist der große rote Kreis, die anderen Themenfelder umgeben ihn
    als gleich große, blasse Kreise — sie zeigen die Vielfalt, behaupten aber keine Reihenfolge Ihrer Interessen. ═══ */
-.kreise{display:none;position:relative;height:230px;margin:10px 0 0}
+.kreise{display:none;position:relative;height:210px;margin:6px 0 0}
 body[data-thema=kreise] .kreise{display:block}
 body[data-thema=kreise] .wolke-huelle,body[data-thema=kreise] .anteil,body[data-thema=kreise] .kacheln-fuss{display:none}
 .kreis{position:absolute;border-radius:50%;display:grid;place-items:center;text-align:center;
@@ -278,7 +278,7 @@ body[data-thema=kreise] .wolke-huelle,body[data-thema=kreise] .anteil,body[data-
 .kreis.mein{width:150px;height:150px;background:var(--marker);color:#fff;z-index:2;padding:14px;
   box-shadow:0 14px 34px -14px rgba(185,17,9,.5)}
 .kreis.mein b{display:block;font-size:15px;line-height:1.2;font-weight:700;text-wrap:balance;overflow-wrap:anywhere}
-.kreis.mein span{display:block;font-size:10.5px;margin-top:6px;opacity:.85;letter-spacing:.04em}
+.kreis.mein span{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .kreis.mein.neutral{background:var(--ink);color:var(--seite);box-shadow:0 14px 34px -14px rgba(0,0,0,.4)}
 .kreis.andere{width:64px;height:64px;background:var(--karte);border:1px solid var(--linie);color:var(--ink2);font-size:10.5px;line-height:1.2;padding:7px;overflow-wrap:anywhere;--o:.95}
 .kreise-fuss{display:none;font-size:11px;color:var(--ink3);margin:8px 0 0;text-align:center}
@@ -862,6 +862,7 @@ body[data-breite=desktop-raster] .telefon::after{
 
       <section class="szene" id="s-thema" data-nr="4 von 4">
         <p class="augen an v1" id="themaAugen">Was Sie am meisten interessiert hat</p>
+        <h2 class="mittel an v2" id="themaTitel"></h2>
         <div class="an v2">
           <div class="wolke-huelle">
             <div class="wolke" id="wolke"></div>
@@ -1027,11 +1028,11 @@ body[data-breite=desktop-raster] .telefon::after{
     var el=$("kreise"); el.innerHTML="";
     var st=stufe(dezil(Z.min,Z.kohorte),Z.kohorte);
     var desktop=/^desktop/.test(document.body.getAttribute("data-breite")||"");
-    var W=el.clientWidth||358, H=el.clientHeight||230, R=desktop?80:72, rk=desktop?36:33;
+    var W=el.clientWidth||358, H=el.clientHeight||210, R=desktop?64:58, rk=desktop?36:33;
     var cx=W/2+(desktop?26:18), cy=H/2+6;                       // Ihr Kreis leicht rechts unten, der Klumpen wächst nach oben links
     var m=document.createElement("div"); m.className="kreis mein"+(st==="D"?" neutral":"");
     m.style.width=m.style.height=(2*R)+"px"; m.style.left=cx+"px"; m.style.top=cy+"px";
-    m.innerHTML="<b>"+Z.thema+"</b><span>Ihr Thema</span>"; el.appendChild(m);
+    m.innerHTML="<span>Ihr Thema</span>"; el.appendChild(m);
     var andere=THEMEN.filter(function(t){return t[0]!==Z.thema && t[0].length<=22;}).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
     var platz=[{x:cx,y:cy,r:R}], schwer={x:cx-R*0.9,y:cy-R*0.7};
     function frei(x,y){ if(x-rk<2||y-rk<2||x+rk>W-2||y+rk>H-2) return false;
@@ -1099,7 +1100,7 @@ body[data-breite=desktop-raster] .telefon::after{
     if(!ziel) return;
     var b=wolke.clientWidth,h=wolke.clientHeight,w=ziel.offsetWidth,hh=ziel.offsetHeight;
     var x=ziel.offsetLeft,y=ziel.offsetTop, gr=parseFloat(ziel.style.fontSize);
-    var zg=Math.min(34, gr*((b-16)/Math.max(1,w)));
+    var zg=Math.min(22, gr*((b-16)/Math.max(1,w)));
     ziel.style.setProperty("--dx",(b/2-(x+w/2))+"px");
     ziel.style.setProperty("--dy",(h/2-(y+hh/2))+"px");
     ziel.style.setProperty("--k",Math.max(1,(zg/gr)).toFixed(3));
@@ -1267,6 +1268,7 @@ body[data-breite=desktop-raster] .telefon::after{
 
     var t=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
     $('themaAugen').textContent = st==='D'?'Ihr erstes Thema':'Was Sie am meisten interessiert hat';
+    $('themaTitel').textContent = Z.thema;
     $('themaLead').textContent = st==='D'
       ? 'Hieraus kam Ihr erster Text. Was daraus wird, zeigt der nächste Rückblick.'
       : 'Zu diesem Thema haben Sie in Ihrer ersten Woche am meisten gelesen.';
