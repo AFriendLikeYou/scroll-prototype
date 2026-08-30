@@ -175,11 +175,13 @@ body[data-tagform=uhr] .uhrkreis{display:block}
 body[data-tagform=uhr] .tag{display:none}
 .uhrkreis svg{width:100%;height:auto;overflow:visible}
 .hz-himmel{fill:url(#hz-grad)}
-.hz-linie{stroke:var(--ink);stroke-width:1.5;stroke-linecap:round}
+.hz-linie{stroke:var(--ink);stroke-width:1.2;stroke-linecap:round;opacity:.7}
+.hz-land{fill:var(--flaeche)}
+body[data-variante=ruhig] .hz-land,body[data-variante=karten] .hz-land{fill:var(--karte)}
 .hz-tick{stroke:var(--bar);stroke-width:1}
-.hz-tx{font:10px var(--ff);fill:var(--ink3);text-anchor:middle}
+.hz-tx{font:10px var(--ff);fill:var(--ink3);text-anchor:middle;letter-spacing:.02em}
 .hz-tx.aktiv{fill:var(--marker);font-weight:700}
-.hz-fenster{stroke:var(--marker);stroke-width:4;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.2s var(--e) .2s}
+.hz-fenster{stroke:var(--marker);stroke-width:3;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.2s var(--e) .2s}
 .szene.sichtbar .hz-fenster{stroke-dashoffset:0}
 .hz-koerper{will-change:transform}
 #hzSterne{transition:opacity .4s linear}
@@ -1117,19 +1119,22 @@ body[data-breite=desktop-raster] .telefon::after{
     Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1]; if(n===Z.tageszeit){ fensterStart=start; fensterEnde=start+h; } start+=h; });
     var mitte=(fensterStart+fensterEnde)/2;
     hz+='<defs><linearGradient id="hz-grad" x1="0" y1="0" x2="0" y2="1"><stop id="hzS0" offset="0" stop-color="#dff3ff"/><stop id="hzS1" offset="1" stop-color="#dff3ff" stop-opacity="0"/></linearGradient>'+
-        '<clipPath id="hz-clip"><rect x="0" y="0" width="'+W+'" height="'+HZ+'"/></clipPath></defs>';
-    hz+='<rect class="hz-himmel" x="0" y="0" width="'+W+'" height="'+HZ+'" rx="4"/>';
+        '<clipPath id="hz-clip"><rect x="0" y="0" width="'+W+'" height="'+(HZ+8)+'"/></clipPath></defs>';
+    hz+='<defs><radialGradient id="hz-schein"><stop offset="0" stop-color="var(--marker)" stop-opacity=".28"/><stop offset="1" stop-color="var(--marker)" stop-opacity="0"/></radialGradient>'+
+        '<clipPath id="hz-land"><path d="M0 '+(HZ+30)+' V'+HZ+' C '+(W*0.18)+' '+(HZ-9)+', '+(W*0.42)+' '+(HZ+4)+', '+(W*0.62)+' '+(HZ-5)+' S '+(W*0.9)+' '+(HZ-11)+', '+W+' '+(HZ-3)+' V'+(HZ+30)+' Z"/></clipPath></defs>';
+    hz+='<rect class="hz-himmel" x="0" y="0" width="'+W+'" height="'+(HZ+8)+'" rx="4"/>';
     hz+='<g id="hzSterne" opacity="0">'+[[40,22],[88,40],[300,28],[250,52],[170,18],[330,60]].map(function(q){return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="1.3" fill="var(--ink3)"/>';}).join('')+'</g>';
-    hz+='<path d="M'+x(6)+' '+HZ+' Q '+x(12)+' '+(HZ-2*66)+' '+x(18)+' '+HZ+'" fill="none" stroke="var(--bar)" stroke-width="1" stroke-dasharray="3 4"/>';
+
     hz+='<g clip-path="url(#hz-clip)">'+
-        '<g id="hzSonne"><circle cx="0" cy="0" r="11" fill="var(--marker)"/><g id="hzStrahl" stroke="var(--marker)" stroke-width="1.6" stroke-linecap="round">'+
+        '<g id="hzSonne"><circle cx="0" cy="0" r="30" fill="url(#hz-schein)"/><circle cx="0" cy="0" r="11" fill="var(--marker)"/><g id="hzStrahl" stroke="var(--marker)" stroke-width="1.6" stroke-linecap="round">'+
         [0,1,2,3,4,5,6,7].map(function(k){ var w=k*Math.PI/4; return '<line x1="'+(15*Math.cos(w)).toFixed(1)+'" y1="'+(15*Math.sin(w)).toFixed(1)+'" x2="'+(19*Math.cos(w)).toFixed(1)+'" y2="'+(19*Math.sin(w)).toFixed(1)+'"/>'; }).join('')+'</g></g>'+
-        '<g id="hzMond"><path d="M4 -11a11 11 0 1 0 8 17.5A12 12 0 0 1 4 -11z" fill="var(--marker)"/></g></g>';
-    hz+='<line class="hz-linie" x1="6" y1="'+HZ+'" x2="'+(W-6)+'" y2="'+HZ+'"/>';
+        '<g id="hzMond"><circle cx="8" cy="-3" r="26" fill="url(#hz-schein)"/><path d="M4 -11a11 11 0 1 0 8 17.5A12 12 0 0 1 4 -11z" fill="var(--marker)"/></g></g>';
+    hz+='<rect class="hz-land" x="0" y="0" width="'+W+'" height="'+(HZ+30)+'" clip-path="url(#hz-land)"/>';
+    hz+='<path class="hz-linie" fill="none" d="M0 '+HZ+' C '+(W*0.18)+' '+(HZ-9)+', '+(W*0.42)+' '+(HZ+4)+', '+(W*0.62)+' '+(HZ-5)+' S '+(W*0.9)+' '+(HZ-11)+', '+W+' '+(HZ-3)+'"/>';
     [0,6,12,18,24].forEach(function(h){ var akt=(h>=fensterStart&&h<=fensterEnde);
-      hz+='<line class="hz-tick" x1="'+x(h)+'" y1="'+(HZ+4)+'" x2="'+x(h)+'" y2="'+(HZ+9)+'"/><text class="hz-tx'+(akt?' aktiv':'')+'" x="'+x(h)+'" y="'+(HZ+22)+'">'+h+(h===24?' Uhr':'')+'</text>'; });
+      hz+='<text class="hz-tx'+(akt?' aktiv':'')+'" x="'+x(h)+'" y="'+(HZ+24)+'">'+h+(h===24?' Uhr':'')+'</text>'; });
     var len=x(fensterEnde)-x(fensterStart);
-    hz+='<line class="hz-fenster" style="--len:'+len.toFixed(1)+'" x1="'+x(fensterStart)+'" y1="'+HZ+'" x2="'+x(fensterEnde)+'" y2="'+HZ+'"/>';
+    hz+='<line class="hz-fenster" style="--len:'+len.toFixed(1)+'" x1="'+x(fensterStart)+'" y1="'+(HZ+12)+'" x2="'+x(fensterEnde)+'" y2="'+(HZ+12)+'"/>';
     var uk=$('uhrkreis'); uk.innerHTML='<svg viewBox="0 0 '+W+' '+(HZ+30)+'" aria-hidden="true">'+hz+'</svg>';
     uk.dataset.ziel=mitte.toFixed(2);
     sonnenuhr(true);
@@ -1383,8 +1388,8 @@ body[data-breite=desktop-raster] .telefon::after{
   }
   function sonnenuhrZeichne(h){
     var W=360, HZ=96, x=function(hh){ return 12+(W-24)*hh/24; };
-    var sonneY=function(hh){ return HZ-8-Math.max(-0.35,Math.sin(Math.PI*(hh-6)/12))*58; };
-    var mondY=function(hh){ var m=(hh+12)%24; return HZ-8-Math.max(-0.35,Math.sin(Math.PI*(m-6)/12))*58; };
+    var sonneY=function(hh){ return HZ-12-Math.max(-0.4,Math.sin(Math.PI*(hh-6)/12))*56; };
+    var mondY=function(hh){ var m=(hh+12)%24; return HZ-12-Math.max(-0.4,Math.sin(Math.PI*(m-6)/12))*56; };
     var so=$('hzSonne'), mo=$('hzMond'), st=$('hzSterne'), s0=$('hzS0'), s1=$('hzS1'); if(!so) return;
     so.setAttribute('transform','translate('+x(h).toFixed(1)+' '+sonneY(h).toFixed(1)+')');
     mo.setAttribute('transform','translate('+x(h).toFixed(1)+' '+mondY(h).toFixed(1)+')');
