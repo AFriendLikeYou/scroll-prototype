@@ -145,6 +145,14 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .band .s{flex:1;background:var(--track);border-radius:2px 2px 0 0;height:4px;transition:height 1.05s var(--e),background-color .5s var(--e),opacity .5s var(--e)}
 .szene.sichtbar .band .s{height:var(--h)}
 .band .s.sie{background:var(--marker)}
+/* Punkte-Variante */
+.band.punkte{background:none;align-items:flex-end;gap:6px}
+.band.punkte .sp{flex:1;display:grid;grid-template-columns:repeat(var(--b,3),1fr);gap:2px;align-content:end;justify-items:center;direction:rtl}
+.band.punkte .sp i{width:5px;height:5px;border-radius:50%;background:var(--bar);opacity:0;transform:scale(.4);transition:opacity .4s var(--e),transform .5s var(--e)}
+.szene.sichtbar .band.punkte .sp i{opacity:1;transform:none}
+.band.punkte .sp.meine i{background:var(--ink3)}
+.band.punkte .sp i.ich{background:var(--marker);width:7px;height:7px;box-shadow:0 0 0 2px var(--flaeche)}
+body[data-variante=karten] .band.punkte .sp i.ich,body[data-variante=ruhig] .band.punkte .sp i.ich{box-shadow:0 0 0 2px var(--flaeche)}
 .band.verteilung .s.offen{border-top:2px dashed var(--ink3);background-clip:padding-box}
 .band .s.offen.sie{border-top-color:var(--marker)}
 .sie-marke{position:absolute;top:-6px;transform:translate(-50%,-6px) scale(.8);font-size:10px;font-weight:700;letter-spacing:.1em;
@@ -687,6 +695,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <div class="chips" id="vglform">
       <button type="button" data-f="treppe" aria-pressed="false">Treppe</button>
       <button type="button" data-f="verteilung" aria-pressed="true">Verteilung</button>
+      <button type="button" data-f="punkte" aria-pressed="false">Punkte</button>
     </div>
   </div>
 
@@ -1160,6 +1169,18 @@ body[data-breite=desktop-raster] .telefon::after{
   }
   function baueBand(d,rot){
     var el=$('band'); el.innerHTML='';
+    var form=document.body.getAttribute('data-vglform');
+    el.classList.toggle('punkte', form==='punkte');
+    if(form==='punkte'){
+      var n=KOHORTEN[Z.kohorte].n, je=Math.floor(n/10), rest=n-je*10;
+      for(var c=1;c<=10;c++){ var sp=document.createElement('div'); sp.className='sp'+(c===d?' meine':'');
+        var anz=je+(c===10?rest:0), breit=Math.max(2,Math.min(4,Math.ceil(Math.sqrt(anz/2.6))));
+        sp.style.setProperty('--b',breit);
+        for(var i=0;i<anz;i++){ var pt=document.createElement('i'); if(c===d && i===anz-1){ pt.className='ich'; } pt.style.transitionDelay=(0.05*c+0.004*i)+'s'; sp.appendChild(pt); }
+        el.appendChild(sp); }
+      var m=$('sieMarke'); m.style.left=((d-0.5)/10*100)+'%'; m.textContent=rot?'SIE':'Sie'; m.style.color=rot?'var(--marker)':'var(--ink3)'; m.setAttribute('data-min', Z.min+' Min');
+      return;
+    }
     var verteilung=document.body.getAttribute('data-vglform')==='verteilung', g=KOHORTEN[Z.kohorte].g, hoehen=[];
     if(verteilung){
       // Breite jedes Zehntels in Minuten; das zehnte ist nach oben offen — wir zeigen es so hoch wie das neunte, mit gestrichelter Kante
@@ -1263,7 +1284,9 @@ body[data-breite=desktop-raster] .telefon::after{
       : 'Hier wird sehr unterschiedlich viel gelesen. Ihre Woche hat gerade erst begonnen.';
     $('bandQuelle').textContent = klein
       ? 'Noch sind wenige genauso lange dabei wie Sie. Für einen Rangplatz ist das zu wenig — die Spannweite zeigen wir trotzdem.'
-      : (document.body.getAttribute('data-vglform')==='verteilung' ? 'Balkenhöhe = Spannweite des Zehntels in Minuten. Das oberste ist nach oben offen.' : 'Zehn gleich große Gruppen, sortiert nach Lesezeit. Die Treppe zeigt die Reihenfolge, nicht den Abstand.');
+      : (document.body.getAttribute('data-vglform')==='verteilung' ? 'Balkenhöhe = Spannweite des Zehntels in Minuten. Das oberste ist nach oben offen.'
+        : document.body.getAttribute('data-vglform')==='punkte' ? 'Jeder Punkt ist eine Person, die genauso lange dabei ist wie Sie — von links (wenig) nach rechts (viel). Der rote Punkt sind Sie.'
+        : 'Zehn gleich große Gruppen, sortiert nach Lesezeit. Die Treppe zeigt die Reihenfolge, nicht den Abstand.');
 
     var t=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
     $('themaAugen').textContent = st==='D'?'Ihr erstes Thema':'Was Sie am meisten interessiert hat';
