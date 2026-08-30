@@ -189,6 +189,32 @@ body[data-lzform=ringe] .ringe{display:block;margin:18px auto 0;width:min(100%,2
 .szene.sichtbar .tag .a i{height:var(--ah,20px)}
 .szene.sichtbar .tag .a.aktiv i{background:var(--marker);transition-delay:.5s}
 .tag .a span{font-size:10px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
+/* Bogen: gestrichelter Halbkreis, die Sonne (nachts der Mond) steht dort, wo Ihre Lesezeit liegt */
+.sonnenbogen,.sonnenkurve{display:none;margin:18px 0 0;width:100%}
+body[data-tagform=bogen] .sonnenbogen{display:block}
+body[data-tagform=kurve] .sonnenkurve{display:block}
+body[data-tagform=bogen] .tag,body[data-tagform=kurve] .tag{display:none}
+.sonnenbogen svg,.sonnenkurve svg{display:block;width:100%;height:auto;overflow:visible}
+.sb-bahn{fill:none;stroke:var(--bar);stroke-width:2;stroke-dasharray:6 6;stroke-linecap:round}
+.sb-koerper{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(.6);transition:opacity .7s var(--e) .4s,transform .9s cubic-bezier(.22,1,.36,1) .4s}
+.szene.sichtbar .sb-koerper{opacity:1;transform:none}
+.sb-strahl{stroke:var(--marker);stroke-width:1.6;stroke-linecap:round;transform-origin:center;transform-box:fill-box}
+.szene.sichtbar .sb-strahl{animation:sb-dreh 40s linear infinite}
+@keyframes sb-dreh{to{transform:rotate(360deg)}}
+.sb-tx{font:10px var(--ff);fill:var(--ink3);text-anchor:middle}
+.sb-tx.aktiv{fill:var(--marker);font-weight:700}
+/* Kurve: Sinuswelle über 24 h, Tag hell gefüllt, Nacht dunkel; Ihr Fenster mit zwei Marken */
+.sk-tag{fill:var(--k-blau);opacity:.9}
+.sk-nacht{fill:var(--track);opacity:.7}
+.sk-linie{fill:none;stroke:var(--ink3);stroke-width:1;opacity:.6}
+.sk-welle{fill:none;stroke:var(--seite);stroke-width:1.2;opacity:.9}
+.sk-marke{stroke:var(--ink3);stroke-width:1;opacity:.7}
+.sk-tx{font:11px var(--ff);fill:var(--ink3);text-anchor:middle}
+.sk-tx.gross{font:700 16px var(--ff);fill:var(--ink)}
+.sk-koerper{opacity:0;transition:opacity .7s var(--e) .5s}
+.szene.sichtbar .sk-koerper{opacity:1}
+.sk-fenster{stroke:var(--marker);stroke-width:3;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.1s var(--e) .3s}
+.szene.sichtbar .sk-fenster{stroke-dashoffset:0}
 /* Horizont-Variante: der Tag als Landschaft. Sonne oder Mond stehen dort, wo Ihre Lesezeit liegt;
    die 24 Stunden laufen als Achse am Horizont, das aktive Fenster ist rot markiert. */
 .uhrkreis{display:none;margin:18px 0 0;width:100%}
@@ -725,6 +751,8 @@ body[data-breite=desktop-raster] .telefon::after{
     <div class="chips" id="tagform">
       <button type="button" data-f="fenster" aria-pressed="true">Fünf Fenster</button>
       <button type="button" data-f="uhr" aria-pressed="false">Horizont</button>
+      <button type="button" data-f="bogen" aria-pressed="false">Bogen</button>
+      <button type="button" data-f="kurve" aria-pressed="false">Kurve</button>
     </div>
   </div>
 
@@ -885,6 +913,8 @@ body[data-breite=desktop-raster] .telefon::after{
         <h2 class="mittel an v2" id="tagTitel">Meist abends</h2>
         <div class="tag an v3" id="tag"></div>
         <div class="uhrkreis an v3" id="uhrkreis"></div>
+        <div class="sonnenbogen an v3" id="sonnenbogen"></div>
+        <div class="sonnenkurve an v3" id="sonnenkurve"></div>
         <p class="lead an v3" id="tagSatz"></p>
         <p class="quelle bild an v4" id="tagQuelle"></p>
         <div class="karten" id="kartenZeit"></div>
@@ -1187,6 +1217,40 @@ body[data-breite=desktop-raster] .telefon::after{
     uk._cum=cum; uk._total=cum[cum.length-1];
     var sp=$('hzSpur'); sp.style.strokeDasharray=uk._total; sp.style.strokeDashoffset=uk._total;
     sonnenuhr(true);
+    // ── Bogen ──
+    (function(){ var W=320,R=120,cx=W/2,cy=150, fs_=0,fe=0,st=0;
+      Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1]; if(n===Z.tageszeit){ fs_=st; fe=st+h; } st+=h; });
+      var mitte=(fs_+fe)/2, nacht=Z.tageszeit==='nachts';
+      // Tag (6–18) auf dem Bogen links→rechts; Nacht (18–6) läuft denselben Bogen als Mondbahn
+      var frac = nacht ? ((mitte+6)%24)/12 : Math.min(1,Math.max(0,(mitte-6)/12)); if(Z.tageszeit==='abends') frac=Math.min(0.98,((mitte-18)/12)); // abends: Mond früh am linken Fuß
+      var ang=Math.PI*(1-frac), x=cx+R*Math.cos(ang), y=cy-R*Math.sin(ang);
+      var koerper = (nacht||Z.tageszeit==='abends')
+        ? '<g class="sb-koerper"><path d="M'+(x+4)+' '+(y-12)+'a12 12 0 1 0 8.5 19A13 13 0 0 1 '+(x+4)+' '+(y-12)+'z" fill="var(--marker)"/></g>'
+        : '<g class="sb-koerper"><circle cx="'+x+'" cy="'+y+'" r="11" fill="var(--marker)"/><g class="sb-strahl">'+[0,1,2,3,4,5,6,7,8,9,10,11].map(function(k){var w=k*Math.PI/6,r1=15,r2=k%2?19:22;return '<line x1="'+(x+r1*Math.cos(w)).toFixed(1)+'" y1="'+(y+r1*Math.sin(w)).toFixed(1)+'" x2="'+(x+r2*Math.cos(w)).toFixed(1)+'" y2="'+(y+r2*Math.sin(w)).toFixed(1)+'"/>';}).join('')+'</g></g>';
+      var lab=(nacht||Z.tageszeit==='abends') ? ['18','0','6'] : ['6','12','18'];
+      var sv='<path class="sb-bahn" d="M'+(cx-R)+' '+cy+' A'+R+' '+R+' 0 0 1 '+(cx+R)+' '+cy+'"/>'+koerper+
+        '<text class="sb-tx" x="'+(cx-R)+'" y="'+(cy+18)+'">'+lab[0]+' Uhr</text><text class="sb-tx" x="'+cx+'" y="'+(cy-R-12)+'">'+lab[1]+' Uhr</text><text class="sb-tx" x="'+(cx+R)+'" y="'+(cy+18)+'">'+lab[2]+' Uhr</text>';
+      $('sonnenbogen').innerHTML='<svg viewBox="0 -8 '+W+' '+(cy+30)+'" aria-hidden="true">'+sv+'</svg>';
+    })();
+    // ── Kurve ──
+    (function(){ var W=340,HZ=96,A=52, x=function(h){return 10+(W-20)*h/24;}, y=function(h){return HZ-A*Math.sin(Math.PI*(h-6)/12);};
+      var fs_=0,fe=0,st=0; Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1]; if(n===Z.tageszeit){ fs_=st; fe=st+h; } st+=h; });
+      var pts=[]; for(var h=0;h<=24.001;h+=0.5) pts.push(x(h).toFixed(1)+' '+y(h).toFixed(1));
+      var tagPfad='M'+x(6)+' '+HZ+' '+pts.filter(function(_,i){var h=i*0.5;return h>=6&&h<=18;}).map(function(p){return 'L'+p;}).join(' ')+' Z';
+      var nachtL='M'+x(0)+' '+HZ+' '+pts.filter(function(_,i){return i*0.5<=6;}).map(function(p){return 'L'+p;}).join(' ')+' Z';
+      var nachtR='M'+x(18)+' '+HZ+' '+pts.filter(function(_,i){return i*0.5>=18;}).map(function(p){return 'L'+p;}).join(' ')+' L'+x(24)+' '+HZ+' Z';
+      var mitte=(fs_+fe)/2, nacht=Math.sin(Math.PI*(mitte-6)/12)<0, kx=x(mitte), ky=y(mitte);
+      var koerper = nacht ? '<circle class="sk-koerper" cx="'+kx+'" cy="'+ky+'" r="9" fill="var(--marker)"/>' : '<circle class="sk-koerper" cx="'+kx+'" cy="'+ky+'" r="9" fill="var(--marker)"/>';
+      var sv='<path class="sk-nacht" d="'+nachtL+'"/><path class="sk-nacht" d="'+nachtR+'"/><path class="sk-tag" d="'+tagPfad+'"/>'+
+        '<path class="sk-welle" d="M'+pts.join(' L ')+'"/>'+
+        '<line class="sk-linie" x1="'+x(0)+'" y1="'+HZ+'" x2="'+x(24)+'" y2="'+HZ+'"/>'+
+        '<line class="sk-marke" x1="'+x(fs_)+'" y1="'+(HZ-A-30)+'" x2="'+x(fs_)+'" y2="'+HZ+'"/><line class="sk-marke" x1="'+x(fe)+'" y1="'+(HZ-A-30)+'" x2="'+x(fe)+'" y2="'+HZ+'"/>'+
+        '<text class="sk-tx" x="'+x(fs_)+'" y="'+(HZ-A-52)+'">von</text><text class="sk-tx gross" x="'+x(fs_)+'" y="'+(HZ-A-36)+'">'+fs_+':00</text>'+
+        '<text class="sk-tx" x="'+x(fe)+'" y="'+(HZ-A-52)+'">bis</text><text class="sk-tx gross" x="'+x(fe)+'" y="'+(HZ-A-36)+'">'+(fe===24?'0':fe)+':00</text>'+
+        koerper+'<line class="sk-fenster" style="--len:'+(x(fe)-x(fs_)).toFixed(1)+'" x1="'+x(fs_)+'" y1="'+(HZ+A+8)+'" x2="'+x(fe)+'" y2="'+(HZ+A+8)+'"/>'+
+        '<text class="sk-tx" x="'+x(0)+'" y="'+(HZ+A+24)+'">0</text><text class="sk-tx" x="'+x(12)+'" y="'+(HZ+A+24)+'">12</text><text class="sk-tx" x="'+x(24)+'" y="'+(HZ+A+24)+'">24 Uhr</text>';
+      $('sonnenkurve').innerHTML='<svg viewBox="0 '+(HZ-A-62)+' '+W+' '+(A*2+62+34)+'" aria-hidden="true">'+sv+'</svg>';
+    })();
     $('tagTitel').textContent='Meist '+Z.tageszeit; if(typeof setzeIcon==='function') setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
     $('tagQuelle').textContent='Das Zeitfenster, in dem Sie in Ihrer ersten Woche am häufigsten gelesen haben. Die Balkenbreite entspricht der echten Stundenzahl.';
