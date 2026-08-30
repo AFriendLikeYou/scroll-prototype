@@ -1252,7 +1252,7 @@ body[data-breite=desktop-raster] .telefon::after{
       szenen.forEach(function(s){
         var r=s.getBoundingClientRect(), rr=rohr.getBoundingClientRect();
         if(r.top<rr.bottom-60&&r.bottom>rr.top+60){ s.classList.add('sichtbar');
-          if(s.id==='s-zeit') zaehle(); if(s.id==='s-thema') wolkeEin(); }
+          if(s.id==='s-zeit') zaehle(); if(s.id==='s-thema') wolkeEin(); if(s.id==='s-tag') sonnenuhr(); }
       });
     },60);
   }
@@ -1321,27 +1321,45 @@ body[data-breite=desktop-raster] .telefon::after{
     var dunkel=document.documentElement.getAttribute('data-theme')==='dark' || (document.documentElement.getAttribute('data-theme')!=='light' && matchMedia('(prefers-color-scheme:dark)').matches);
     var K=HIMMEL[dunkel?'dunkel':'hell']; for(var i=1;i<K.length;i++){ if(h<=K[i][0]){ var a=hex2(K[i-1][1]),b=hex2(K[i][1]),t=(h-K[i-1][0])/(K[i][0]-K[i-1][0]);
       return 'rgb('+a.map(function(v,j){return Math.round(v+(b[j]-v)*t);}).join(',')+')'; } } return K[K.length-1][1]; }
-  var suTop=null;
-  function sonnenuhr(sofort){
-    var uk=$('uhrkreis'); if(!uk || !uk.dataset.ziel || document.body.getAttribute('data-tagform')!=='uhr') return;
-    var sz=$('s-tag'), top=0, n=sz; while(n && n!==rohr){ top+=n.offsetTop; n=n.offsetParent; }
-    var sicht=rohr.clientHeight, p=(rohr.scrollTop+sicht-top-140)/(sz.offsetHeight*0.75);
-    p=Math.min(1,Math.max(0,p)); p=1-Math.pow(1-p,2);
-    var ziel=+uk.dataset.ziel, h=Math.min(ziel, 24*p);
-    if(sofort===true && rohr.scrollTop+sicht>top+sz.offsetHeight) h=ziel;
+  // Zwei Schichten: (1) Zielstunde aus der Lage der Grafik im Viewport — 0 Uhr, wenn sie unten hereinkommt,
+  // Ihre Lesezeit, wenn sie im oberen Drittel steht. (2) Die gezeichnete Stunde folgt dem Ziel weich nach
+  // (rAF-Schleife), sodass die Wanderung auch dann sichtbar ist, wenn man springt oder nur kurz scrollt.
+  var hCur=0, hZiel=0, suLoop=null;
+  function sonnenuhrZiel(){
+    var uk=$('uhrkreis'); if(!uk || !uk.dataset.ziel || document.body.getAttribute('data-tagform')!=='uhr') return null;
+    var r=uk.getBoundingClientRect(), rr=rohr.getBoundingClientRect();
+    var ein=rr.bottom - r.top;                      // wie weit die Grafik von unten hereingekommen ist
+    var weg=rr.height*0.62;                          // nach 62 % der Viewport-Höhe ist der Tag zu Ende
+    var p=Math.min(1,Math.max(0,ein/weg));
+    return Math.min(+uk.dataset.ziel, 24*p);
+  }
+  function sonnenuhrZeichne(h){
     var W=360, HZ=96, x=function(hh){ return 12+(W-24)*hh/24; };
-    var sonneY=function(hh){ return HZ-8-Math.max(-0.35,Math.sin(Math.PI*(hh-6)/12))*58; };   // über dem Horizont 6–18, sonst darunter
-    var mondY=function(hh){ var m=(hh+12)%24; /* Mond: Aufgang 18, Zenit 0, Untergang 6 */ return HZ-8-Math.max(-0.35,Math.sin(Math.PI*(m-6)/12))*58; };  // Mond: 18–6 oben
-    var so=$('hzSonne'), mo=$('hzMond'), st=$('hzSterne'), s0=$('hzS0'), s1=$('hzS1');
-    if(!so) return;
+    var sonneY=function(hh){ return HZ-8-Math.max(-0.35,Math.sin(Math.PI*(hh-6)/12))*58; };
+    var mondY=function(hh){ var m=(hh+12)%24; return HZ-8-Math.max(-0.35,Math.sin(Math.PI*(m-6)/12))*58; };
+    var so=$('hzSonne'), mo=$('hzMond'), st=$('hzSterne'), s0=$('hzS0'), s1=$('hzS1'); if(!so) return;
     so.setAttribute('transform','translate('+x(h).toFixed(1)+' '+sonneY(h).toFixed(1)+')');
     mo.setAttribute('transform','translate('+x(h).toFixed(1)+' '+mondY(h).toFixed(1)+')');
-    var nachtGrad=Math.max(0, Math.min(1, (h<5.5?1:(h<7?(7-h)/1.5:(h>21?Math.min(1,(h-21)/2):0)))));
+    var nachtGrad=h<5.5?1:(h<7?(7-h)/1.5:(h>21?Math.min(1,(h-21)/2):0));
     st.setAttribute('opacity',nachtGrad.toFixed(2));
     $('hzStrahl').setAttribute('opacity',(h>=7&&h<=17.5)?1:0);
     var f=himmelFarbe(h); s0.setAttribute('stop-color',f); s1.setAttribute('stop-color',f);
   }
-  rohr.addEventListener('scroll',function(){ if(suTop) return; suTop=requestAnimationFrame(function(){ suTop=null; sonnenuhr(); }); },{passive:true});
+  function sonnenuhrTick(){
+    suLoop=null;
+    var d=hZiel-hCur;
+    if(Math.abs(d)<0.02){ hCur=hZiel; sonnenuhrZeichne(hCur); return; }
+    hCur+=d*(reduziert?1:0.085);                     // weiches Nachlaufen, ~1 Sekunde für den halben Weg
+    sonnenuhrZeichne(hCur);
+    suLoop=requestAnimationFrame(sonnenuhrTick);
+  }
+  function sonnenuhr(neu){
+    var z=sonnenuhrZiel(); if(z===null) return;
+    if(neu===true){ hCur=0; }                        // Neuaufbau: vom Morgen los
+    hZiel=z;
+    if(!suLoop) suLoop=requestAnimationFrame(sonnenuhrTick);
+  }
+  rohr.addEventListener('scroll',function(){ sonnenuhr(); },{passive:true});
   addEventListener('resize',function(){ sonnenuhr(); });
   matchMedia('(prefers-color-scheme:dark)').addEventListener('change',function(){ sonnenuhr(); });
   rohr.addEventListener('scroll',function(){
