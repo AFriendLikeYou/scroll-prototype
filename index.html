@@ -181,9 +181,8 @@ body[data-tagform=uhr] .tag{display:none}
 .hz-tx.aktiv{fill:var(--marker);font-weight:700}
 .hz-fenster{stroke:var(--marker);stroke-width:4;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.2s var(--e) .2s}
 .szene.sichtbar .hz-fenster{stroke-dashoffset:0}
-.hz-koerper{transform:translateY(46px);transition:transform 1.6s cubic-bezier(.22,.8,.2,1) .3s}
-.szene.sichtbar .hz-koerper{transform:translateY(var(--dy,0px))}
-.hz-strahl{opacity:0;transform-origin:center;transform:scale(.6);transition:opacity .7s var(--e) 1.7s,transform .8s var(--e) 1.7s}
+.hz-koerper{will-change:transform}
+.hz-strahl{opacity:0;transform-origin:center;transform:scale(.6);transition:opacity .7s var(--e) .9s,transform .8s var(--e) .9s}
 .szene.sichtbar .hz-strahl{opacity:1;transform:none}
 .hz-stern{opacity:0;transition:opacity 1s var(--e)}
 .szene.sichtbar .hz-stern{opacity:1}
@@ -262,6 +261,26 @@ body[data-thema=kacheln] .wolke-fuss{display:none}
 .szene.sichtbar .ico-himmel .strahl{opacity:1}
 .ico-nachts .koerper{transform:translateY(10px) rotate(-12deg);transform-origin:16px 14px}
 body[data-breite^=desktop] .ico{width:36px;height:36px}
+
+/* ═══ Thema als Kreise (wie TIDE): Ihr Thema ist der große rote Kreis, die anderen Themenfelder umgeben ihn
+   als gleich große, blasse Kreise — sie zeigen die Vielfalt, behaupten aber keine Reihenfolge Ihrer Interessen. ═══ */
+.kreise{display:none;position:relative;height:230px;margin:10px 0 0}
+body[data-thema=kreise] .kreise{display:block}
+body[data-thema=kreise] .wolke-huelle,body[data-thema=kreise] .anteil,body[data-thema=kreise] .kacheln-fuss{display:none}
+.kreis{position:absolute;border-radius:50%;display:grid;place-items:center;text-align:center;
+  opacity:0;transform:translate(-50%,-50%) scale(.6);transition:opacity .7s var(--e),transform .9s cubic-bezier(.22,1,.36,1)}
+.szene.sichtbar .kreis{opacity:var(--o,1);transform:translate(-50%,-50%) scale(1)}
+.kreis.mein{width:150px;height:150px;background:var(--marker);color:#fff;z-index:2;padding:14px;
+  box-shadow:0 14px 34px -14px rgba(185,17,9,.5)}
+.kreis.mein b{display:block;font-size:15px;line-height:1.2;font-weight:700;text-wrap:balance;overflow-wrap:anywhere}
+.kreis.mein span{display:block;font-size:10.5px;margin-top:6px;opacity:.85;letter-spacing:.04em}
+.kreis.mein.neutral{background:var(--ink);color:var(--seite);box-shadow:0 14px 34px -14px rgba(0,0,0,.4)}
+.kreis.andere{width:64px;height:64px;background:var(--karte);border:1px solid var(--linie);color:var(--ink3);font-size:9.5px;line-height:1.2;padding:6px;overflow-wrap:anywhere;--o:.9}
+.kreise-fuss{display:none;font-size:11px;color:var(--ink3);margin:8px 0 0;text-align:center}
+body[data-thema=kreise] .kreise-fuss{display:block}
+body[data-breite^=desktop] .kreise{height:260px}
+body[data-breite^=desktop] .kreis.mein{width:170px;height:170px} body[data-breite^=desktop] .kreis.mein b{font-size:17px}
+body[data-breite^=desktop] .kreis.andere{width:72px;height:72px;font-size:10px}
 
 /* ═══ Thema als Rangliste: die sechs größten Themenfelder als Balken mit Anteil, Ihres in Rot ═══ */
 .rangliste{display:none;margin:14px 0 0;text-align:left}
@@ -669,7 +688,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <label>Thema der Woche</label>
     <div class="chips" id="themaform">
       <button type="button" data-t="wolke" aria-pressed="true">Wortwolke</button>
-      <button type="button" data-t="kacheln" aria-pressed="false">Band</button>
+      <button type="button" data-t="kreise" aria-pressed="false">Kreise</button>
       <button type="button" data-t="rang" aria-pressed="false">Rangliste</button>
     </div>
   </div>
@@ -825,7 +844,7 @@ body[data-breite=desktop-raster] .telefon::after{
       </section>
 
       <section class="szene" id="s-thema" data-nr="4 von 4">
-        <p class="augen an v1" id="themaAugen">Ihr Thema der Woche</p>
+        <p class="augen an v1" id="themaAugen">Was Sie am meisten interessiert hat</p>
         <div class="an v2">
           <div class="wolke-huelle">
             <div class="wolke" id="wolke"></div>
@@ -833,6 +852,7 @@ body[data-breite=desktop-raster] .telefon::after{
           </div>
           <div class="kacheln" id="kacheln"></div>
           <div class="rangliste" id="rangliste"></div>
+          <div class="kreise" id="kreise"></div>
           <div class="anteil" id="anteil"><div class="sp"><i></i></div>
             <div class="m"><span id="anteilLinks"></span><span>1.756 insgesamt</span></div></div>
         </div>
@@ -986,6 +1006,22 @@ body[data-breite=desktop-raster] .telefon::after{
     var f=el.parentNode.querySelector(".kacheln-fuss"); if(!f){ f=document.createElement("div"); f.className="kacheln-fuss"; el.parentNode.insertBefore(f, el.nextSibling); }
     f.textContent="Alle 40 Themenfelder — Ihres bleibt stehen.";
   }
+  function baueKreise(){
+    var el=$("kreise"); el.innerHTML="";
+    var st=stufe(dezil(Z.min,Z.kohorte),Z.kohorte);
+    var W=el.clientWidth||358, H=el.clientHeight||230, cx=W/2, cy=H/2;
+    var m=document.createElement("div"); m.className="kreis mein"+(st==="D"?" neutral":"");
+    m.style.left=cx+"px"; m.style.top=cy+"px";
+    m.innerHTML="<b>"+Z.thema+"</b><span>Ihr Thema</span>"; el.appendChild(m);
+    // Ring aus anderen Themenfeldern: gleich groß, gleich blass, gleicher Abstand — keine Rangfolge. Kurze Namen bevorzugt, sonst passt der Text nicht in den Kreis.
+    var andere=THEMEN.filter(function(t){return t[0]!==Z.thema && t[0].length<=22;}).sort(function(a,b){return b[1]-a[1];});
+    var n=Math.min(8,andere.length), rx=Math.min(cx-36, 150), ry=Math.min(cy-36, 92);
+    for(var i=0;i<n;i++){ var w=-Math.PI/2+i*(2*Math.PI/n)+0.2, d=document.createElement("div"); d.className="kreis andere";
+      d.style.left=(cx+rx*Math.cos(w))+"px"; d.style.top=(cy+ry*Math.sin(w))+"px"; d.style.transitionDelay=(0.25+i*0.05)+"s";
+      d.textContent=andere[i][0].replace(/, /g,", "); el.appendChild(d); }
+    var f=el.parentNode.querySelector(".kreise-fuss"); if(!f){ f=document.createElement("p"); f.className="kreise-fuss"; el.parentNode.insertBefore(f, el.nextSibling); }
+    f.textContent="Acht weitere Themenfelder von 40 — ohne Reihenfolge.";
+  }
   function baueRangliste(){
     var el=$("rangliste"); el.innerHTML="";
     var sortiert=THEMEN.slice().sort(function(a,b){return b[1]-a[1];}), mx=sortiert[0][1];
@@ -1000,7 +1036,7 @@ body[data-breite=desktop-raster] .telefon::after{
       d.innerHTML='<span class="nr">'+platz+'</span><div><div class="nm">'+t[0]+'</div><div class="bl"><i style="--w:'+Math.max(3,Math.round(100*t[1]/mx))+'%"></i></div></div><span class="pz">'+(pr<1?"<1":pr)+' %</span>';
       el.appendChild(d); });
     var f=document.createElement("p"); f.className="rang-fuss";
-    f.textContent = rang<=6 ? "Ihr Thema auf Platz "+rang+" von 40 — Anteil derer, die vor allem darüber lesen." : "Ihr Thema auf Platz "+rang+" von 40 — ein seltenes Themenfeld."; el.appendChild(f);
+    f.textContent = "So verbreitet ist Ihr Thema unter allen, die neu dabei sind: Platz "+rang+" von 40. Die Reihenfolge sagt nichts über Ihre weiteren Interessen — die kennen wir nicht."; el.appendChild(f);
   }
   function zielSetzen(){
     var ziel=null;
@@ -1041,7 +1077,10 @@ body[data-breite=desktop-raster] .telefon::after{
     var hoehe = nacht ? 34 : Math.max(0, Math.sin(Math.PI*(mitte-6)/12)); // 0 am Horizont, 1 im Zenit
     var cy = nacht ? 34 : HZ - 8 - hoehe*58;
     if(Z.tageszeit==='morgens') cy=HZ-2; if(Z.tageszeit==='abends') cy=HZ-2;  // halb aufgegangen / halb untergegangen
-    hz+='<g clip-path="url(#hz-clip)"><g class="hz-koerper" style="--dy:0px">';
+    var zielX=cx, zielY=cy;  // Endposition — die Sonnenuhr fährt dorthin
+    // Sonnenuhr-Bogen, gestrichelt, nur zur Orientierung
+    hz+='<path d="M'+x(6)+' '+HZ+' Q '+x(12)+' '+(HZ-2*66)+' '+x(18)+' '+HZ+'" fill="none" stroke="var(--bar)" stroke-width="1" stroke-dasharray="3 4"/>';
+    hz+='<g clip-path="url(#hz-clip)"><g class="hz-koerper" id="hzKoerper" data-ziel="'+mitte.toFixed(2)+'" data-nacht="'+(nacht?1:0)+'" style="--dy:0px">';
     if(nacht){ hz+='<path d="M'+(cx+4)+' '+(cy-11)+'a11 11 0 1 0 8 17.5A12 12 0 0 1 '+(cx+4)+' '+(cy-11)+'z" fill="var(--marker)"/>'; }
     else { hz+='<circle cx="'+cx+'" cy="'+cy+'" r="11" fill="var(--marker)"/>';
       if(Z.tageszeit!=='abends'){ hz+='<g class="hz-strahl" style="transform-origin:'+cx+'px '+cy+'px" stroke="var(--marker)" stroke-width="1.6" stroke-linecap="round">';
@@ -1054,6 +1093,9 @@ body[data-breite=desktop-raster] .telefon::after{
     var len=x(fensterEnde)-x(fensterStart);
     hz+='<line class="hz-fenster" style="--len:'+len.toFixed(1)+'" x1="'+x(fensterStart)+'" y1="'+HZ+'" x2="'+x(fensterEnde)+'" y2="'+HZ+'"/>';
     $('uhrkreis').innerHTML='<svg viewBox="0 0 '+W+' '+(HZ+30)+'" aria-hidden="true">'+hz+'</svg>';
+    // Sonnenuhr: Position auf dem Bogen als Funktion der Stunde; beim Scrollen von 6 Uhr (Aufgang) bis zur Zielstunde
+    var kb=$('hzKoerper'); if(kb){ kb.dataset.zx=zielX; kb.dataset.zy=zielY; }
+    sonnenuhr();
     $('tagTitel').textContent='Meist '+Z.tageszeit; if(typeof setzeIcon==='function') setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
     $('tagQuelle').textContent=Math.round(TAGE[Z.tageszeit][2])+' % der neuen Abonnentinnen und Abonnenten lesen auch '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
@@ -1166,10 +1208,10 @@ body[data-breite=desktop-raster] .telefon::after{
       : 'Alle, die genauso lange dabei sind wie Sie, in zehn gleich große Gruppen geteilt.';
 
     var t=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
-    $('themaAugen').textContent = st==='D'?'Ihr erstes Thema':'Ihr Thema der Woche';
+    $('themaAugen').textContent = st==='D'?'Ihr erstes Thema':'Was Sie am meisten interessiert hat';
     $('themaLead').textContent = st==='D'
       ? 'Hieraus kam Ihr erster Text. Was daraus wird, zeigt der nächste Rückblick.'
-      : 'Aus diesem Themenfeld kamen die meisten Ihrer gelesenen Texte.';
+      : 'Zu diesem Thema haben Sie in Ihrer ersten Woche am meisten gelesen.';
     $('anteil').querySelector('i').style.setProperty('--w',Math.max(2,Math.round(100*t[1]/1756))+'%');
     $('anteilLinks').textContent=t[1]+' von 1.756 lesen vor allem darüber';
     $('themaQuelle').textContent = t[1]>=80
@@ -1177,7 +1219,7 @@ body[data-breite=desktop-raster] .telefon::after{
       : 'Ein seltenes Themenfeld — nur '+t[1]+' der 1.756 lesen vor allem darüber. Sie gehören zu einer kleinen Gruppe.';
 
     zeigeBloecke();
-    baueEmpfehlung(); baueEntdecken(); baueWolke(); baueKacheln(); baueRangliste(); setTimeout(stapel,0);
+    baueEmpfehlung(); baueEntdecken(); baueWolke(); baueKacheln(); baueRangliste(); baueKreise(); setTimeout(stapel,0);
   }
 
   // ── Auslösezone im oberen Sichtbereich
@@ -1280,7 +1322,24 @@ body[data-breite=desktop-raster] .telefon::after{
       k.style.setProperty('--schleier',(e*0.58).toFixed(3));
     });
   }
+  // Sonnenuhr: Fortschritt = wie weit die Tageszeit-Karte in den Viewport gekommen ist (0 → 1 über 70 % ihrer Höhe)
+  function sonnenuhr(){
+    var kb=$('hzKoerper'); if(!kb || document.body.getAttribute('data-tagform')!=='uhr') return;
+    var sz=$('s-tag'), r=sz.getBoundingClientRect(), rr=rohr.getBoundingClientRect();
+    var p=Math.min(1, Math.max(0, (rr.bottom - r.top - 120) / (r.height*0.7)));
+    p=1-Math.pow(1-p,3);
+    var ziel=+kb.dataset.ziel, nacht=kb.dataset.nacht==='1';
+    var W=360, HZ=96, x=function(h){ return 12+(W-24)*h/24; };
+    var von=nacht?18:6, h=von+(ziel-von)*p;   // Mond kommt von 18 Uhr über Mitternacht (Stunden >24 umrechnen)
+    if(nacht){ var hh=ziel+24, h2=18+(hh-18)*p; var xx=x(h2>24?h2-24:h2); var yy=HZ-8-Math.max(0,Math.sin(Math.PI*(h2-18)/12))*58;
+      kb.style.transform='translate('+(xx-(+kb.dataset.zx)).toFixed(1)+'px,'+(yy-(+kb.dataset.zy)).toFixed(1)+'px)'; return; }
+    var px=x(h), py=HZ-8-Math.max(0,Math.sin(Math.PI*(h-6)/12))*58;
+    if(p>=1){ px=+kb.dataset.zx; py=+kb.dataset.zy; }
+    kb.style.transition='none';
+    kb.style.transform='translate('+(px-(+kb.dataset.zx)).toFixed(1)+'px,'+(py-(+kb.dataset.zy)).toFixed(1)+'px)';
+  }
   rohr.addEventListener('scroll',stapel,{passive:true});
+  rohr.addEventListener('scroll',sonnenuhr,{passive:true});
   rohr.addEventListener('scroll',function(){
     var p=rohr.scrollTop/Math.max(1,rohr.scrollHeight-rohr.clientHeight);
     $('fortschritt').style.width=(p*100).toFixed(1)+'%';
@@ -1332,10 +1391,10 @@ body[data-breite=desktop-raster] .telefon::after{
     document.body.setAttribute('data-vglform', b.dataset.f); rechne(); });
   $('tagform').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
-    document.body.setAttribute('data-tagform', b.dataset.f); });
+    document.body.setAttribute('data-tagform', b.dataset.f); setTimeout(sonnenuhr,30); });
   $('themaform').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
-    document.body.setAttribute('data-thema', b.dataset.t); setTimeout(function(){ baueWolke(); stapel(); },40); });
+    document.body.setAttribute('data-thema', b.dataset.t); setTimeout(function(){ baueWolke(); baueKreise(); stapel(); },40); });
   $('kfarbe').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
     document.body.classList.toggle('kfarbig', b.dataset.k==='farbig'); });
