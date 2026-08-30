@@ -155,10 +155,13 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 body[data-variante=karten] .band.punkte .sp i.ich,body[data-variante=ruhig] .band.punkte .sp i.ich{box-shadow:0 0 0 2px var(--flaeche)}
 .band.verteilung .s.offen{border-top:2px dashed var(--ink3);background-clip:padding-box}
 .band .s.offen.sie{border-top-color:var(--marker)}
+.median-marke{position:absolute;left:50%;top:-4px;bottom:-2px;width:1px;background:var(--ink3);opacity:0;transition:opacity .6s var(--e) 1s}
+.median-marke::after{content:"Mitte · " attr(data-min);position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:var(--ink3);font-weight:400}
+.szene.sichtbar .median-marke{opacity:.6}
 .sie-marke{position:absolute;top:-6px;transform:translate(-50%,-6px) scale(.8);font-size:10px;font-weight:700;letter-spacing:.1em;
   color:var(--marker);opacity:0;white-space:nowrap;transition:opacity .6s var(--e) 1.05s,transform .6s var(--e) 1.05s}
 .szene.sichtbar .sie-marke{opacity:1;transform:translate(-50%,0) scale(1)}
-.achse{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:10px 0 0}
+.achse{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:22px 0 0}
 .spur-huelle{position:relative;margin:24px 0 0}
 .spur{height:10px;border-radius:4px;background:var(--track);overflow:hidden}
 .spur i{display:block;height:100%;border-radius:4px;background:var(--ink);width:0;transition:width 1.4s var(--e) .3s}
@@ -839,6 +842,7 @@ body[data-breite=desktop-raster] .telefon::after{
         <div class="zahl an v2"><span class="gross" id="zaehler">0</span><span class="e" id="einheit">Min</span></div>
         <p class="lead an v3" id="zeitSatz"></p>
         <p class="protag an v3" id="proTag"></p>
+        <p class="protag an v3" id="median"></p>
         <div class="spur-huelle an v4" id="spurHuelle">
           <div class="spur" id="spur"><i></i></div>
           <div class="kerbe" id="kerbe" data-l="Mitte Ihrer Gruppe"></div>
@@ -851,7 +855,7 @@ body[data-breite=desktop-raster] .telefon::after{
         <p class="augen an v1" id="bandAugen">Ihr Platz im Vergleich</p>
         <h2 class="gross an v2" id="bandZahl">92 %</h2>
         <p class="lead an v3" id="bandSatz"></p>
-        <div class="band-huelle an v3"><div class="band" id="band"></div><span class="sie-marke" id="sieMarke">SIE</span></div>
+        <div class="band-huelle an v3"><div class="band" id="band"></div><span class="sie-marke" id="sieMarke">SIE</span><span class="median-marke" id="medianMarke" data-min=""></span></div>
         <div class="achse an v3"><span>wenig</span><span>viel</span></div>
         <p class="quelle bild an v4" id="bandQuelle"></p>
       </section>
@@ -1264,6 +1268,8 @@ body[data-breite=desktop-raster] .telefon::after{
     $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
     var tagK=+Z.kohorte, proTag=Math.round(Z.min/tagK);
     $('proTag').textContent = tagK>1 ? 'Das sind im Schnitt '+(proTag>=60?mt(proTag):proTag+' Minuten')+' pro Tag.' : '';
+    $('medianMarke').setAttribute('data-min', mt(k.g[4]));
+    $('median').textContent = 'Die Hälfte derer, die genauso lange dabei sind, liest weniger als '+mt(k.g[4])+'.';
     $('tagX').textContent = 'heute ist Tag '+tagK+' von 7';
     $('zeitSatz').textContent = st==='D'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
       : st==='C'?'haben Sie in Ihrer ersten Woche gelesen. Jeder Text war eine Entscheidung.'
