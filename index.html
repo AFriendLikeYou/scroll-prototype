@@ -451,8 +451,6 @@ body[data-breite^=desktop] .zahl .e{font-size:24px}
 body[data-breite^=desktop] .band{height:170px;gap:7px}
 body[data-breite^=desktop] .wolke{height:340px}
 body[data-breite^=desktop] .tag{gap:6px}
-body[data-breite^=desktop] .szene.sichtbar .tag .a i{height:28px}
-body[data-breite^=desktop] .szene.sichtbar .tag .a.aktiv i{height:72px}
 body[data-breite^=desktop] .tag .a span{font-size:12px}
 body[data-breite^=desktop] .spur{height:12px;border-radius:4px}
 body[data-breite^=desktop] .achse,
@@ -508,8 +506,6 @@ body[data-breite^=desktop] .einstieg .augen{font-size:14px;color:var(--marker)}
 body[data-breite^=desktop] .szene{min-height:0;padding:64px 0}
 body[data-breite^=desktop] .wolke{height:220px}
 body[data-breite^=desktop] .band{height:130px}
-body[data-breite^=desktop] .szene.sichtbar .tag .a i{height:24px}
-body[data-breite^=desktop] .szene.sichtbar .tag .a.aktiv i{height:60px}
 body[data-breite^=desktop] .artikel{flex:0 0 200px;aspect-ratio:200/282}
 body[data-breite^=desktop] .artikel .t{font-size:18px}
 body[data-breite^=desktop] .liste{gap:24px 32px}
@@ -635,6 +631,7 @@ body[data-breite^=desktop] .liste .eintrag .sub-s{font-size:15px}
 body[data-breite^=desktop] .liste .leerhinweis{grid-column:1/-1}
 body[data-breite^=desktop] #s-entdecken .quelle{max-width:none}
 
+body[data-breite^=desktop] .szene.sichtbar .tag .a i{height:calc(var(--ah,20px) * 1.4)}
 /* Rasterlineale, nur zum Prüfen */
 body[data-breite=desktop-raster] .telefon::after{
   content:"";position:absolute;inset:0;pointer-events:none;z-index:55;
