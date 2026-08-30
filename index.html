@@ -1126,8 +1126,8 @@ body[data-breite=desktop-raster] .telefon::after{
     var el=$('tag'); el.innerHTML='';
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
       d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
-      d.style.setProperty('--ah', Math.max(4,Math.round(50*a[2]/37.1))+'px');
-      d.innerHTML='<i></i><span>'+a[0]+(n===Z.tageszeit?' · '+Math.round(a[2])+' %':'')+'</span>'; el.appendChild(d); });
+      d.style.setProperty('--ah', n===Z.tageszeit?'44px':'14px');
+      d.innerHTML='<i></i><span>'+a[0]+(n===Z.tageszeit?' Uhr':'')+'</span>'; el.appendChild(d); });
     // Sonnenbahn wie im Wetter-Widget: eine Sinuskurve über 24 Stunden, über dem Horizont hell, darunter gedämpft.
     // Die zurückgelegte Strecke färbt sich rot, die Sonne (nachts: der Mond) sitzt am Ende der roten Spur.
     var W=360, HZ=100, A=62, x=function(h){ return 14+(W-28)*h/24; };
@@ -1169,7 +1169,7 @@ body[data-breite=desktop-raster] .telefon::after{
     sonnenuhr(true);
     $('tagTitel').textContent='Meist '+Z.tageszeit; if(typeof setzeIcon==='function') setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
     $('tagSatz').textContent=TAGE[Z.tageszeit][3];
-    $('tagQuelle').textContent=Math.round(TAGE[Z.tageszeit][2])+' % der neuen Abonnentinnen und Abonnenten lesen auch '+Z.tageszeit+'. Die Balkenbreite entspricht der echten Stundenzahl.';
+    $('tagQuelle').textContent='Das Zeitfenster, in dem Sie in Ihrer ersten Woche am häufigsten gelesen haben. Die Balkenbreite entspricht der echten Stundenzahl.';
   }
   function baueBand(d,rot){
     var el=$('band'); el.innerHTML='';
