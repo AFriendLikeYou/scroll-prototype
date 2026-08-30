@@ -165,8 +165,8 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
 .tag{display:flex;gap:4px;align-items:flex-end;margin:26px 0 0}
 .tag .a{display:flex;flex-direction:column;gap:8px;min-width:0}
 .tag .a i{display:block;background:var(--bar);border-radius:3px;height:6px;transition:height .95s var(--e),background-color .6s var(--e)}
-.szene.sichtbar .tag .a i{height:20px}
-.szene.sichtbar .tag .a.aktiv i{height:50px;background:var(--marker);transition-delay:.5s}
+.szene.sichtbar .tag .a i{height:var(--ah,20px)}
+.szene.sichtbar .tag .a.aktiv i{background:var(--marker);transition-delay:.5s}
 .tag .a span{font-size:10px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
 /* Horizont-Variante: der Tag als Landschaft. Sonne oder Mond stehen dort, wo Ihre Lesezeit liegt;
    die 24 Stunden laufen als Achse am Horizont, das aktive Fenster ist rot markiert. */
@@ -688,8 +688,8 @@ body[data-breite=desktop-raster] .telefon::after{
   <div class="feld">
     <label>Platz im Vergleich</label>
     <div class="chips" id="vglform">
-      <button type="button" data-f="treppe" aria-pressed="true">Treppe</button>
-      <button type="button" data-f="verteilung" aria-pressed="false">Verteilung</button>
+      <button type="button" data-f="treppe" aria-pressed="false">Treppe</button>
+      <button type="button" data-f="verteilung" aria-pressed="true">Verteilung</button>
     </div>
   </div>
 
@@ -1033,7 +1033,8 @@ body[data-breite=desktop-raster] .telefon::after{
     var m=document.createElement("div"); m.className="kreis mein"+(st==="D"?" neutral":"");
     m.style.width=m.style.height=(2*R)+"px"; m.style.left=cx+"px"; m.style.top=cy+"px";
     m.innerHTML="<span>Ihr Thema</span>"; el.appendChild(m);
-    var andere=THEMEN.filter(function(t){return t[0]!==Z.thema && t[0].length<=22;}).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+    var kurz=function(n){ var e=EMPF[n]; return (n.length>22 && e && e.benennung) ? e.benennung : n; };
+    var andere=THEMEN.filter(function(t){return t[0]!==Z.thema;}).sort(function(a,b){return b[1]-a[1];}).slice(0,5).map(function(t){return [kurz(t[0]),t[1]];});
     var platz=[{x:cx,y:cy,r:R}], schwer={x:cx-R*0.9,y:cy-R*0.7};
     function frei(x,y){ if(x-rk<2||y-rk<2||x+rk>W-2||y+rk>H-2) return false;
       for(var i=0;i<platz.length;i++){ var q=platz[i]; if(Math.hypot(x-q.x,y-q.y) < q.r+rk-0.5) return false; } return true; }
@@ -1048,7 +1049,7 @@ body[data-breite=desktop-raster] .telefon::after{
       d.style.left=best.x+"px"; d.style.top=best.y+"px"; d.style.transitionDelay=(0.22+i*0.06)+"s";
       d.textContent=t[0]; el.appendChild(d); });
     var f=el.parentNode.querySelector(".kreise-fuss"); if(!f){ f=document.createElement("p"); f.className="kreise-fuss"; el.parentNode.insertBefore(f, el.nextSibling); }
-    f.textContent=(platz.length-1)+" weitere Themenfelder von 40 — ohne Reihenfolge.";
+    f.textContent="Die fünf verbreitetsten anderen Themenfelder — ohne Reihenfolge.";
   }
   // C · Raster: alle 40 Themenfelder als gleiche Punkte im Wabenraster, Ihres dreifach groß und rot mittendrin.
   //     Die anderen tragen ihren Namen als Tooltip und zeigen ihn beim Tippen.
@@ -1115,7 +1116,8 @@ body[data-breite=desktop-raster] .telefon::after{
     var el=$('tag'); el.innerHTML='';
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
       d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
-      d.innerHTML=(n===Z.tageszeit?'<b>'+Math.round(a[2])+' %</b>':'<b>&nbsp;</b>')+'<i></i><span>'+a[0]+'</span>'; el.appendChild(d); });
+      d.style.setProperty('--ah', Math.max(4,Math.round(50*a[2]/37.1))+'px');
+      d.innerHTML='<i></i><span>'+a[0]+(n===Z.tageszeit?' · '+Math.round(a[2])+' %':'')+'</span>'; el.appendChild(d); });
     // Sonnenbahn wie im Wetter-Widget: eine Sinuskurve über 24 Stunden, über dem Horizont hell, darunter gedämpft.
     // Die zurückgelegte Strecke färbt sich rot, die Sonne (nachts: der Mond) sitzt am Ende der roten Spur.
     var W=360, HZ=100, A=62, x=function(h){ return 14+(W-28)*h/24; };
@@ -1236,7 +1238,7 @@ body[data-breite=desktop-raster] .telefon::after{
     $('einheit').textContent = Z.min<60?'Min':(Z.min%60?'Std '+(Z.min%60)+' Min':'Std');
     $('zaehler').dataset.ziel = Z.min<60?Z.min:Math.floor(Z.min/60);
     var ic=$('s-zeit').querySelector('.ico-uhr'); if(ic) ic.style.setProperty('--grad', Math.max(180, Math.round(Z.min/60*360))+'deg');
-    $('spurHuelle').style.display=(st==='A'||st==='B')?'block':'none';
+    $('spurHuelle').style.display='none';
     $('spur').style.setProperty('--w',perz+'%');
     $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
     $('spurRechts').textContent='Sie · '+mt(Z.min);
@@ -1264,7 +1266,7 @@ body[data-breite=desktop-raster] .telefon::after{
       : 'Hier wird sehr unterschiedlich viel gelesen. Ihre Woche hat gerade erst begonnen.';
     $('bandQuelle').textContent = klein
       ? 'Noch sind wenige genauso lange dabei wie Sie. Für einen Rangplatz ist das zu wenig — die Spannweite zeigen wir trotzdem.'
-      : 'Alle, die genauso lange dabei sind wie Sie, in zehn gleich große Gruppen geteilt.';
+      : (document.body.getAttribute('data-vglform')==='verteilung' ? 'Balkenhöhe = Spannweite des Zehntels in Minuten. Das oberste ist nach oben offen.' : 'Zehn gleich große Gruppen, sortiert nach Lesezeit. Die Treppe zeigt die Reihenfolge, nicht den Abstand.');
 
     var t=THEMEN.filter(function(x){return x[0]===Z.thema;})[0];
     $('themaAugen').textContent = st==='D'?'Ihr erstes Thema':'Was Sie am meisten interessiert hat';
@@ -1510,7 +1512,7 @@ body[data-breite=desktop-raster] .telefon::after{
   $('wieder').addEventListener('click',wiederhole);
   $('oben').addEventListener('click',function(){ rohr.scrollTo({top:0,behavior:'smooth'}); });
 
-  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','karten'); baueTag(); rechne(); }
+  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-vglform')) document.body.setAttribute('data-vglform','verteilung'); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','karten'); baueTag(); rechne(); }
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(los); else los();
   var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(baueWolke,250); });
 })();
