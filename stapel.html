@@ -14,11 +14,12 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body{background:#0b0b0b} }
 :root[data-theme="dark"] body{background:#0b0b0b}
 .aussen{display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 0 40px}
-.onboard{position:absolute;left:26px;right:26px;top:8px;bottom:50px;z-index:40;overflow:auto;
+.onboard{position:absolute;left:0;right:0;top:0;bottom:0;z-index:40;overflow:auto;
   display:flex;flex-direction:column;justify-content:center;
-  background:var(--karte,var(--seite));background:var(--seite);border:1px solid var(--linie);border-radius:4px;
-  padding:26px 22px;box-shadow:0 12px 28px -8px rgba(0,0,0,.22);
+  background:var(--seite);padding:0 16px;
   transition:opacity .5s var(--e),transform .5s var(--e)}
+.buehne:has(.onboard:not(.weg)) .punkte{display:none}
+.buehne:has(.onboard:not(.weg)) + .hinweis{visibility:hidden}
 .onboard.weg{opacity:0;transform:translateY(14px);pointer-events:none}
 .ob-kick{font-size:13px;font-weight:700;color:var(--marker);letter-spacing:.04em;text-transform:uppercase}
 .onboard h2{font-size:24px;line-height:1.15;margin-top:8px}
@@ -153,7 +154,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 </div>
 <aside class="debug"><b>Geschmacksprofil <em>Debug</em></b><div id="scores"></div>
   <div class="dbg-row"><span>Interessen-Abfrage beim Start</span>
-    <button type="button" class="switch klein" id="onboardToggle" role="switch" aria-checked="true"><i></i></button></div>
+    <button type="button" class="switch klein" id="onboardToggle" role="switch" aria-checked="false"><i></i></button></div>
   <p>Rechts-Swipe +1, Links-Swipe −1 auf das Ressort. Die Start-Auswahl zählt +2. „Neue Empfehlungen" sortiert den Nachschub nach Score.</p></aside>
 <div class="geraet">
   <div class="insel"></div>
@@ -170,7 +171,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     </div>
   </div>
   <div class="buehne" id="buehne">
-    <div class="onboard" id="onboard">
+    <div class="onboard weg" id="onboard">
       <p class="ob-kick">Ihre erste ZEIT</p>
       <h2>Worüber möchten Sie lesen?</h2>
       <p class="ob-sub">Wählen Sie Ihre Interessen — diese Seite stellt sich damit jeden Tag für Sie zusammen.</p>
