@@ -728,12 +728,12 @@ body[data-breite=desktop-split] .daten .sbuehne .lage{position:absolute;inset:36
   opacity:0;transform:scale(.96) translateY(14px);filter:blur(7px);
   transition:opacity .45s var(--e),transform .65s var(--e),filter .5s var(--e);pointer-events:none}
 body[data-breite=desktop-split] .daten .sbuehne .lage.aktiv{opacity:1;transform:none;filter:none;pointer-events:auto;transition-delay:.12s}
-body[data-breite=desktop-split] .daten .sbuehne .thema-still{display:block;margin:0 auto}
+body[data-breite=desktop-split] .daten .sbuehne .thema-still{margin:0 auto}
 body[data-breite=desktop-split] .daten .sbuehne{display:block!important}
 body[data-breite=desktop-split] #buehne{max-width:none!important;margin:0!important;width:auto}
-body[data-breite=desktop-split] .daten .sbuehne .lage .zahl{justify-content:center}
+
 body[data-breite=desktop-split] .daten .sbuehne .an{opacity:1;transform:none;filter:none}
-body[data-breite=desktop-split] .daten .sbuehne .zahl .gross{font-size:84px}
+.b-zahl{font-size:56px;font-weight:700;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums;text-wrap:balance;line-height:1.1}
 body[data-breite=desktop-split] .daten .szene:not(.sbuehne){grid-column:2;background:transparent;border:0;box-shadow:none;
   min-height:56cqh;padding:20px 0;margin:0;justify-content:center;align-items:flex-start;text-align:left;
   opacity:.32;transition:opacity .45s var(--e)}
@@ -770,7 +770,7 @@ body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante
 :root[data-theme="dark"] body.kfarbig[data-variante=ruhig] .szene:nth-child(2),body.kfarbig[data-variante=karten] .szene:nth-child(2){--linie:#263338;--track:#2d3d45;--bar:#394e57}
 :root[data-theme="dark"] body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante=karten] .szene:nth-child(3){--linie:#28332c;--track:#303f35;--bar:#3e4f43}
 /* Empfehlungsblock nach Figma: Trennzeile mit Überschrift, farbige Karte mit Bild + Knopf */
-.empf-kopf{display:flex;align-items:center;gap:12px;margin:32px 0 12px;padding-top:32px;border-top:1px solid var(--linie);font-size:14px;font-weight:400;color:var(--ink3);text-align:left;font-family:var(--ff)}
+.empf-kopf{display:flex;align-items:center;gap:12px;margin:32px 0 12px;font-size:14px;font-weight:400;color:var(--ink3);text-align:left;font-family:var(--ff)}
 .empf-kopf::before,.empf-kopf::after{content:"";height:1px;background:var(--linie);flex:1}
 .empf-kopf::before{max-width:24px}
 .karte[data-art]{position:relative;padding:16px;border-radius:2px;border:0}
@@ -1582,8 +1582,8 @@ body[data-breite=desktop-raster] .telefon::after{
     $('themaLead').textContent='Zu diesem Thema haben Sie in Ihrer ersten Woche am meisten gelesen.';
     $('themaQuelle').textContent='';
 
-    zeigeBloecke();
-    baueEmpfehlung(); baueEntdecken(); baueWolke(); baueKacheln(); baueRangliste(); baueKreise(); baueStill(); baueLesezeit(); setTimeout(stapel,0);
+    var bz2=document.getElementById('buehneZahl'); if(bz2) bz2.textContent=mt(Z.min);
+    zeigeBloecke(); baueEntdecken(); baueWolke(); baueKacheln(); baueRangliste(); baueKreise(); baueStill(); baueLesezeit(); setTimeout(stapel,0);
   }
 
   // ── Auslösezone im oberen Sichtbereich
@@ -1680,7 +1680,7 @@ body[data-breite=desktop-raster] .telefon::after{
       var sz=$(id), t=sz.querySelector('.textspalte'), g=sz.querySelector('.grafikspalte');
       [].slice.call(g.children).forEach(function(c){ if(c.classList.contains('karten')) t.appendChild(c); });
       var lage=document.createElement('div'); lage.className='lage'; lage.dataset.fuer=id;
-      if(id==='s-zeit'){ var z=t.querySelector('.zahl'); if(z) lage.appendChild(z); }
+      if(id==='s-zeit'){ var bz=document.createElement('div'); bz.className='b-zahl'; bz.id='buehneZahl'; bz.textContent=mt(Z.min); lage.appendChild(bz); }
       if(id==='s-thema'){ var still=$('themaStill'); if(still) lage.appendChild(still); }
       lage.appendChild(g); rahmen.appendChild(lage);
       splitLagen.push({id:id,sz:sz,lage:lage});
@@ -1691,8 +1691,6 @@ body[data-breite=desktop-raster] .telefon::after{
     if(!splitLagen) return;
     splitLagen.forEach(function(o){
       var t=o.sz.querySelector('.textspalte'), g=o.lage.querySelector('.grafikspalte');
-      var z=o.lage.querySelector('.zahl');
-      if(z){ var aug=t.querySelector('.augen'); t.insertBefore(z, aug?aug.nextSibling:t.firstChild); }
       var still=o.lage.querySelector('.thema-still');
       if(still){ var ts=o.sz.querySelector('.thema-satz'); if(ts) ts.insertBefore(still, ts.querySelector('.quelle')); }
       o.sz.appendChild(g);
