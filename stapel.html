@@ -103,6 +103,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .25s var(--e)}
 .switch[aria-checked="true"]{background:var(--marker)}
 .switch[aria-checked="true"] i{left:23px}
+.weiter[hidden]{display:none}
 .weiter{display:flex;align-items:center;gap:14px;margin-top:16px;padding:12px 14px;border:1px solid var(--linie);border-radius:4px}
 .weiter .w-info{flex:1;min-width:0}
 .weiter p{font-size:11px;color:var(--ink3)}
@@ -113,7 +114,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .karte .kzeile{display:flex;align-items:center;gap:8px}
 .karte .folgemini{font-family:var(--ff);font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.2);border:0;border-radius:3px;padding:3px 8px;cursor:pointer}
 .karte .folgemini.an{background:rgba(255,255,255,.9);color:#252525}
-.karte .kmenue{position:absolute;top:18px;right:16px;width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:16px;line-height:1;cursor:pointer}
+.karte .kmenue{position:absolute;top:16px;right:14px;width:26px;height:26px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);display:grid;place-items:center;cursor:pointer;padding:0}
 .karte .ksheet{position:absolute;right:14px;top:52px;background:var(--seite);border:1px solid var(--linie);border-radius:4px;
   box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:5;display:none;min-width:190px}
 .karte .ksheet.offen{display:block}
@@ -226,13 +227,11 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <div class="dbg-log" id="dbgLog"></div>
   <p class="dbg-titel">Hebel</p>
   <div class="dbg-row h1r"><span>Redaktions-Slot <small>Karte 1 kuratiert</small></span>
-    <button type="button" class="switch klein" id="hybridToggle" role="switch" aria-checked="false"><i></i></button></div>
-  <div class="dbg-row h1r"><span>Folgen am Kicker</span>
-    <button type="button" class="switch klein" id="folgenToggle" role="switch" aria-checked="false"><i></i></button></div>
+    <button type="button" class="switch klein" id="hybridToggle" role="switch" aria-checked="true"><i></i></button></div>
   <div class="dbg-row h1r"><span>Weiterlesen-Slot</span>
     <button type="button" class="switch klein" id="weiterToggle" role="switch" aria-checked="false"><i></i></button></div>
   <div class="dbg-row h1r"><span>Karten-Menü (…) <small>weniger davon / warum</small></span>
-    <button type="button" class="switch klein" id="menueToggle" role="switch" aria-checked="false"><i></i></button></div>
+    <button type="button" class="switch klein" id="menueToggle" role="switch" aria-checked="true"><i></i></button></div>
   <div class="dbg-row h1r"><span>Formatmix <small>Audio, Rätsel, Rezept</small></span>
     <button type="button" class="switch klein" id="formatToggle" role="switch" aria-checked="false"><i></i></button></div>
   <div class="dbg-row h1r"><span>Tageszeit-Texte</span>
@@ -355,7 +354,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   var eta=1, eps=0.2;
   var gesehen={}, expl={}, merk=[], logbuch=[];
   var RATION=7, gezogen=0, divBoost=true, zuletzt=[];
-  var hybridAn=false, folgenAn=false, menueAn=false, formatAn=false, zeitModus='aus';
+  var hybridAn=true, folgenAn=false, menueAn=true, formatAn=false, zeitModus='auto';
   var gefolgt={}, redaktion={}, REDAKTIONSWAHL=[2,6,12];
   function match(i){ return POOL[i].tags.reduce(function(s,t){ return s+(profil[t]||0); },0); }
   function sortScore(i){
@@ -420,9 +419,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   function karteEl(idx){
     var d=POOL[idx];
     var k=document.createElement('div'); k.className='karte'; k.style.background=d.f; k.dataset.idx=idx;
-    var kick='<div class="kzeile"><p class="kick">'+d.tags.join(' · ')+'</p>'
-      +(folgenAn?'<button type="button" class="folgemini'+(gefolgt[d.tags[0]]?' an':'')+'" data-tag="'+d.tags[0]+'">'+(gefolgt[d.tags[0]]?'✓ '+d.tags[0]:'+ Folgen')+'</button>':'')+'</div>';
-    var menue=menueAn?'<button type="button" class="kmenue" aria-label="Optionen">…</button>'
+    var kick='<p class="kick">'+d.tags.join(' · ')+'</p>';
+    var menue=menueAn?'<button type="button" class="kmenue" aria-label="Optionen"><svg viewBox="0 0 16 4" width="13" height="4"><circle cx="2" cy="2" r="1.6" fill="currentColor"/><circle cx="8" cy="2" r="1.6" fill="currentColor"/><circle cx="14" cy="2" r="1.6" fill="currentColor"/></svg></button>'
       +'<div class="ksheet"><button type="button" data-akt="weniger">Weniger zu '+d.tags.join(' & ')+'</button>'
       +'<button type="button" data-akt="stumm">'+(d.format?'Format seltener zeigen':'Autor:in seltener zeigen')+'</button>'
       +'<button type="button" data-akt="warum">Warum sehe ich das?</button></div>':'';
@@ -651,8 +649,6 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     var an=this.getAttribute('aria-checked')!=='true'; this.setAttribute('aria-checked',String(an)); fn(an); }); }
   function stapelNeu(){ stapel.forEach(function(o){ o.el.remove(); }); stapel=[]; gezogen=Math.max(0,gezogen); fuelle(); }
   bindeSchalter('hybridToggle',function(an){ hybridAn=an; redaktion={}; gezogen=0; historie=[]; gesehenReset(); stapelNeu(); });
-  bindeSchalter('folgenToggle',function(an){ folgenAn=an; stapel.forEach(function(o){ var kz=o.el.querySelector('.kzeile');
-    if(kz) kz.innerHTML='<p class="kick">'+POOL[o.idx].tags.join(' · ')+'</p>'+(an?'<button type="button" class="folgemini'+(gefolgt[POOL[o.idx].tags[0]]?' an':'')+'" data-tag="'+POOL[o.idx].tags[0]+'">'+(gefolgt[POOL[o.idx].tags[0]]?'✓ '+POOL[o.idx].tags[0]:'+ Folgen')+'</button>':''); }); });
   bindeSchalter('weiterToggle',function(an){ document.getElementById('weiterSlot').hidden=!an; });
   bindeSchalter('menueToggle',function(an){ menueAn=an; stapelNeuAufbau(); });
   bindeSchalter('formatToggle',function(an){ formatAn=an; gezogen=0; historie=[]; gesehenReset(); stapelNeu(); });
@@ -672,6 +668,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       document.getElementById('grussSub').textContent='Aktuell ist viel los in der Welt. Hier sind sieben Empfehlungen der Redaktion für Ihren Tag — zum Durchblättern.'; }
     else { document.getElementById('gruss').innerHTML=GRUESSE[w][0]; document.getElementById('grussSub').textContent=GRUESSE[w][1]; }
   });
+  (function(){ var zw=document.getElementById('zeitWahl'); zw.value='auto'; zw.dispatchEvent(new Event('change')); })();
   document.getElementById('serieToggle').addEventListener('click',function(){
     serieAn=!serieAn; this.setAttribute('aria-checked',String(serieAn)); zeichneSerie();
   });
