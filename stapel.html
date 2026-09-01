@@ -178,6 +178,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .undo:disabled{opacity:.3;cursor:default}
 .buehne:has(.onboard:not(.weg)) .undo{display:none}
 .buehne:has(.ende-panel.zeigt) .undo{display:none}
+.buehne:has(.ende-panel.zeigt){height:auto;min-height:0}
+.ende-panel.zeigt{position:relative;inset:auto;overflow:visible;padding:22px 16px 6px}
 .buehne:has(.ende-panel.zeigt) .zaehler{display:none}
 .buehne:has(.ende-panel.zeigt) + .hinweis{visibility:hidden}
 .dbg-row span small{display:block;font-weight:400;color:var(--ink3);font-size:8.5px;line-height:1.3;margin-top:1px}
