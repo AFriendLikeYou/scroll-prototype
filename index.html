@@ -25,11 +25,11 @@
   --k-blau:#1c292e; --k-warm:#2c251b; --k-gruen:#1f2922;
 }}
 @media (prefers-color-scheme:dark){
- :root:not([data-theme="light"]) .band .s{background:#333333}
- :root:not([data-theme="light"]) .tag .a i{background:#333333}
+ :root:not([data-theme="light"]) .band .s:not(.sie){background:#333333}
+ :root:not([data-theme="light"]) .tag .a:not(.aktiv) i{background:#333333}
 }
-:root[data-theme="dark"] .band .s{background:#333333}
-:root[data-theme="dark"] .tag .a i{background:#333333}
+:root[data-theme="dark"] .band .s:not(.sie){background:#333333}
+:root[data-theme="dark"] .tag .a:not(.aktiv) i{background:#333333}
 :root[data-theme="dark"]{
   --seite:#121212; --flaeche:#2e2e2e; --track:#363636; --bar:#444444;
   --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
@@ -691,7 +691,7 @@ body[data-variante=ruhig] .band{height:110px}
 .sie-marke{letter-spacing:0;font-size:12px;font-weight:700;background:var(--marker);color:#fff!important;
   padding:4px 10px;border-radius:12px;top:-18px}
 .sie-marke::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:var(--marker)}
+  border:5px solid transparent;border-top-color:var(--bub,var(--marker))}
 .tag .a b{display:block;font-size:11px;font-weight:700;color:var(--marker);text-align:center;opacity:0;transform:translateY(4px);transition:opacity .5s var(--e) 1.1s,transform .5s var(--e) 1.1s;font-variant-numeric:tabular-nums}
 .szene.sichtbar .tag .a.aktiv b{opacity:1;transform:none}
 body[data-variante=ruhig] .karten{margin-top:20px}
@@ -1400,6 +1400,7 @@ body[data-breite=desktop-raster] .telefon::after{
       s.style.setProperty('--h',(verteilung?hoehen[i-1]:(12+i*8.5))+'px'); s.style.transitionDelay=(0.045*i)+'s'; el.appendChild(s); }
     var m=$('sieMarke'); m.style.left=((d-0.5)/10*100)+'%';
     m.textContent='Sie'; m.style.background=rot?'var(--marker)':'var(--ink)';
+    m.style.setProperty('color', rot?'#fff':'var(--seite)','important'); m.style.setProperty('--bub', rot?'var(--marker)':'var(--ink)');
   }
   function karte(ziel,art,werte,unten){
     var k=$(ziel); k.innerHTML='';
