@@ -832,8 +832,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <label>Darstellung der Daten</label>
     <div class="chips" id="variante">
       <button type="button" data-v="szenen" aria-pressed="false">Ohne Karten</button>
-      <button type="button" data-v="karten" aria-pressed="true">Karten, gestapelt</button>
-      <button type="button" data-v="ruhig" aria-pressed="false">Karten, ruhig</button>
+      <button type="button" data-v="ruhig" aria-pressed="true">Karten, ruhig</button>
     </div>
   </div>
 
@@ -1695,9 +1694,9 @@ body[data-breite=desktop-raster] .telefon::after{
     var desktop=b.dataset.w!=='handy';
     if(desktop) document.body.setAttribute('data-breite', b.dataset.w); else document.body.removeAttribute('data-breite');
     var akt=document.body.getAttribute('data-variante');
-    var wahl=desktop?(akt==='karten'?'ruhig':akt):(mobilWahl||'karten');
+    var wahl=desktop?(akt==='karten'?'ruhig':akt):(mobilWahl||'ruhig');
     document.body.setAttribute('data-variante', wahl);
-    $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===wahl)); x.disabled = desktop && x.dataset.v==='karten'; });
+    $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===wahl)); });
     setTimeout(function(){ baueWolke(); wiederhole(); },80);
     setTimeout(function(){ stapel(); rechne(); },40); });
 
@@ -1761,7 +1760,7 @@ body[data-breite=desktop-raster] .telefon::after{
   $('wieder').addEventListener('click',wiederhole);
   $('oben').addEventListener('click',function(){ rohr.scrollTo({top:0,behavior:'smooth'}); });
 
-  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-vglform')) document.body.setAttribute('data-vglform','treppe'); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','karten'); if(!document.body.getAttribute('data-thema')) document.body.setAttribute('data-thema','kreise'); baueTag(); rechne(); }
+  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-vglform')) document.body.setAttribute('data-vglform','treppe'); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','ruhig'); if(!document.body.getAttribute('data-thema')) document.body.setAttribute('data-thema','kreise'); baueTag(); rechne(); }
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(los); else los();
   var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(baueWolke,250); });
 })();
