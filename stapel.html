@@ -14,6 +14,27 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body{background:#0b0b0b} }
 :root[data-theme="dark"] body{background:#0b0b0b}
 .aussen{display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 0 40px}
+.onboard{position:absolute;inset:0;z-index:80;background:var(--seite);display:flex;align-items:center;
+  padding:0 28px;transition:opacity .5s var(--e),transform .5s var(--e)}
+.onboard.weg{opacity:0;transform:translateY(14px);pointer-events:none}
+.ob-kick{font-size:13px;font-weight:700;color:var(--marker);letter-spacing:.04em;text-transform:uppercase}
+.ob-inner h2{font-size:30px;line-height:1.12;margin-top:10px}
+.ob-sub{font-size:15px;line-height:1.55;color:var(--ink3);margin-top:12px}
+.ob-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.ob-chips button{font-family:var(--ff);font-size:15px;padding:11px 18px;border-radius:99px;cursor:pointer;
+  border:1px solid var(--linie);background:transparent;color:var(--ink);transition:all .2s var(--e)}
+.ob-chips button i{font-style:normal;margin-right:7px;color:var(--ink3)}
+.ob-chips button.an{background:var(--marker);border-color:var(--marker);color:#fff;font-weight:700}
+.ob-chips button.an i{color:#fff}
+.ob-los{display:block;width:100%;margin-top:28px;font-family:var(--ff);font-size:16px;font-weight:700;
+  color:var(--seite);background:var(--ink);border:0;border-radius:4px;padding:14px 16px;cursor:pointer}
+.ob-skip{display:block;margin:14px auto 0;font-family:var(--ff);font-size:13px;color:var(--ink3);
+  background:none;border:0;cursor:pointer;text-decoration:underline}
+.dbg-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;
+  padding-top:12px;border-top:1px solid var(--linie);font-size:12px;color:var(--ink2)}
+.switch.klein{width:38px;height:23px}
+.switch.klein i{width:17px;height:17px}
+.switch.klein[aria-checked="true"] i{left:18px}
 .debug{position:fixed;right:18px;top:96px;width:225px;background:var(--seite);border:1px solid var(--linie);
   border-radius:4px;padding:16px;z-index:50}
 .debug b{font-size:13px} .debug b em{font-style:normal;color:var(--marker);font-size:10px;vertical-align:2px;margin-left:4px}
@@ -127,11 +148,23 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <button type="button" data-v="kaskade" aria-pressed="false">Kaskade</button>
 </div>
 <aside class="debug"><b>Geschmacksprofil <em>Debug</em></b><div id="scores"></div>
-  <p>Rechts-Swipe +1, Links-Swipe −1 auf das Ressort. „Neue Empfehlungen" sortiert den Nachschub nach Score.</p></aside>
+  <div class="dbg-row"><span>Interessen-Abfrage beim Start</span>
+    <button type="button" class="switch klein" id="onboardToggle" role="switch" aria-checked="true"><i></i></button></div>
+  <p>Rechts-Swipe +1, Links-Swipe −1 auf das Ressort. Die Start-Auswahl zählt +2. „Neue Empfehlungen" sortiert den Nachschub nach Score.</p></aside>
 <div class="geraet">
   <div class="insel"></div>
   <div class="status"><span>13:37</span><span class="st-r"><i></i><i></i><i></i></span></div>
   <div class="toast" id="toast" role="status"></div>
+  <div class="onboard" id="onboard">
+    <div class="ob-inner">
+      <p class="ob-kick">Ihre erste ZEIT</p>
+      <h2>Worüber möchten Sie lesen?</h2>
+      <p class="ob-sub">Wählen Sie Ihre Interessen — diese Seite stellt sich damit jeden Tag für Sie zusammen.</p>
+      <div class="ob-chips" id="obChips"></div>
+      <button type="button" class="ob-los" id="obLos">Los geht's</button>
+      <button type="button" class="ob-skip" id="obSkip">Später auswählen</button>
+    </div>
+  </div>
   <div class="rohr">
 <div class="app">
   <div class="kopf">
@@ -154,25 +187,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <p class="hinweis">Karte zur Seite ziehen oder antippen</p>
   <div class="sektion">
     <div class="s-kopf"><h3>Weitere Empfehlungen</h3><p>Basierend auf Ihren Aktivitäten</p></div>
-    <div class="reihe">
-      <div class="teaser" style="--f:#2f4b3a">
-        <p class="t-kick">Serie: Die ZEIT erklärt</p>
-        <h4>Die Macht der fünf Minuten: So funktioniert Longevity für Faule</h4>
-        <p class="t-copy">Länger gesund leben – das klingt nach Disziplin, Verzicht und Aufwand. Doch schon mit kleinen Hebeln lässt sich erstaunlich viel erreichen.</p>
-        <p class="t-by">Von Rose Tremlett</p>
-      </div>
-      <div class="teaser" style="--f:#8e2a49">
-        <p class="t-kick">Ungelesen</p>
-        <h4>Bis ans Ende der Welt</h4>
-        <p class="t-copy">Nach der Trennung wagt unsere Autorin den Neuanfang — und findet unterwegs mehr als ein Zuhause.</p>
-        <p class="t-by">Von Anna Mayr</p>
-      </div>
-      <div class="teaser" style="--f:#1c3fa3">
-        <p class="t-kick">Thema: Iran</p>
-        <h4>So weit reicht das neue Ego des Iran</h4>
-        <p class="t-copy">Wie die Führung in Teheran ihre Rolle in der Region neu vermisst — und was das für Europa bedeutet.</p>
-        <p class="t-by">Von Quentin Lichtblau</p>
-      </div>
+    <div class="reihe" id="teaserReihe"></div>
     </div>
   </div>
   <div class="sektion ausgabe">
@@ -213,12 +228,21 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   var INTERESSEN=['Politik','Wissen','Kultur','Reise','Wissenschaft'];
   var scores={}; INTERESSEN.forEach(function(n){ scores[n]=0; });
   var gesehen=[], satz=[];
+  function zeichneTeaser(){
+    var el=document.getElementById('teaserReihe'); if(!el) return;
+    var beste=POOL.map(function(a,i){return i;}).sort(function(a,b){
+      return (scores[POOL[b].k]-scores[POOL[a].k]) || (a-b); }).slice(0,3);
+    el.innerHTML=beste.map(function(i){ var a=POOL[i];
+      return '<div class="teaser" style="--f:'+a.f+'"><p class="t-kick">'+a.k+'</p><h4>'+a.t+'</h4><p class="t-by">'+a.b+'</p></div>';
+    }).join('');
+  }
   function zeichneScores(){
     var el=document.getElementById('scores'); if(!el) return;
     el.innerHTML=INTERESSEN.map(function(n){
       var v=scores[n], w=Math.max(4, 50+v*16);
       return '<div class="sc-row"><span>'+n+'</span><i style="width:'+Math.min(120,w)+'px;background:'+(v<0?'#c6c6c6':'var(--marker)')+'"></i><b>'+(v>0?'+':'')+v+'</b></div>';
     }).join('');
+    zeichneTeaser();
   }
   function naechsterSatz(){
     var frei=POOL.map(function(a,i){return i;}).filter(function(i){ return gesehen.indexOf(i)<0; });
@@ -340,5 +364,32 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') weiter(1,true); if(e.key==='ArrowLeft') weiter(-1,true); });
   baueStapel(naechsterSatz());
   zeichneScores();
+  // ── Interessen-Abfrage beim Erstbesuch
+  var obWahl={};
+  var obChips=document.getElementById('obChips');
+  INTERESSEN.forEach(function(n){
+    var b=document.createElement('button'); b.type='button'; b.innerHTML='<i>+</i>'+n;
+    b.addEventListener('click',function(){ obWahl[n]=!obWahl[n]; b.classList.toggle('an',obWahl[n]);
+      b.querySelector('i').textContent=obWahl[n]?'✓':'+';
+      var z=INTERESSEN.filter(function(x){return obWahl[x];}).length;
+      document.getElementById('obLos').textContent=z?'Für mich zusammenstellen ('+z+')':'Los geht\'s';
+    });
+    obChips.appendChild(b);
+  });
+  function obZu(){ document.getElementById('onboard').classList.add('weg'); }
+  document.getElementById('obLos').addEventListener('click',function(){
+    var welche=INTERESSEN.filter(function(n){return obWahl[n];});
+    welche.forEach(function(n){ scores[n]+=2; });
+    zeichneScores();
+    if(welche.length){ gesehen=[]; merk=[]; baueStapel(naechsterSatz());
+      toast('Ihre Auswahl fließt in Ihr Interessensprofil'); }
+    obZu();
+  });
+  document.getElementById('obSkip').addEventListener('click',obZu);
+  document.getElementById('onboardToggle').addEventListener('click',function(){
+    var an=this.getAttribute('aria-checked')!=='true';
+    this.setAttribute('aria-checked',String(an));
+    document.getElementById('onboard').classList.toggle('weg',!an);
+  });
 })();
 </script>
