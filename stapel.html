@@ -23,15 +23,15 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 .status .st-r{display:flex;gap:5px;align-items:center}
 .status .st-r i{width:16px;height:10px;border-radius:2px;background:var(--ink);opacity:.9}
 .status .st-r i:first-child{width:18px;border-radius:1px}
-.rohr{height:100%;overflow-y:auto;scrollbar-width:none}
+.rohr{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;overscroll-behavior-x:none}
 .rohr::-webkit-scrollbar{width:0}
 .app{width:100%;padding:72px 0 120px}
 .kopf{padding:0 16px}
 h1{font-size:32px;line-height:1.15;font-weight:700}
 .sub{margin-top:10px;font-size:15px;line-height:1.55;color:var(--ink3);max-width:370px}
-.buehne{position:relative;height:520px;margin-top:8px;touch-action:pan-y}
+.buehne{position:relative;height:520px;margin-top:8px;touch-action:pan-y;overflow:visible}
 .karte{position:absolute;left:50%;top:44%;width:280px;height:392px;margin:-196px 0 0 -140px;border-radius:12px;
-  color:#fff;padding:28px 24px;user-select:none;-webkit-user-select:none;cursor:grab;
+  color:#fff;padding:28px 24px;user-select:none;-webkit-user-select:none;cursor:grab;touch-action:none;
   box-shadow:0 12px 28px -8px rgba(0,0,0,.28);
   transition:transform .5s var(--e),opacity .4s var(--e);will-change:transform}
 .karte.greift{transition:none;cursor:grabbing}
@@ -52,22 +52,24 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   box-shadow:0 12px 28px rgba(0,0,0,.3);transform:scale(.4)}
 .stmp.links{color:#b91109}
 .stmp.rechts{color:#252525}
-.ende-panel{position:absolute;left:50%;top:44%;width:300px;transform:translate(-50%,-50%) scale(.94);
-  background:var(--seite);border:1px solid var(--linie);border-radius:12px;padding:28px 24px;
+.ende-panel{position:absolute;left:26px;right:26px;top:8px;bottom:50px;overflow:hidden;
+  display:flex;flex-direction:column;transform:scale(.96);
+  background:var(--seite);border:1px solid var(--linie);border-radius:12px;padding:26px 24px;
   box-shadow:0 12px 28px -8px rgba(0,0,0,.22);opacity:0;pointer-events:none;
   transition:opacity .45s var(--e) .25s,transform .45s var(--e) .25s;z-index:30}
-.ende-panel.zeigt{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
+.ende-panel.zeigt{opacity:1;transform:none;pointer-events:auto}
+.ende-panel .merk{flex:1}
 .ende-panel h3{font-size:22px;line-height:1.15}
 .ende-panel p{font-size:14px;line-height:1.5;color:var(--ink3);margin-top:8px}
-.ende-panel .merk{margin-top:16px}
+.ende-panel .merk{margin-top:14px;overflow-y:auto;min-height:0;scrollbar-width:thin}
 .ende-panel .m-titel{font-size:12px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
 .ende-panel .m-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--linie);font-size:14px;font-weight:700;color:var(--ink);cursor:pointer}
 .ende-panel .m-row:last-child{border-bottom:0}
 .ende-panel .m-row i{flex:none;width:26px;height:26px;border-radius:4px}
 .ende-panel .m-row b{margin-left:auto;color:var(--ink3);font-weight:400}
 .ende-panel .m-leer{font-size:13px;color:var(--ink3)}
-.ende-panel #nochmal{margin-top:18px;font-family:var(--ff);font-size:14px;font-weight:700;color:var(--ink);
-  background:var(--linie);border:0;border-radius:4px;padding:11px 16px;cursor:pointer}
+.ende-panel #nochmal{flex:none;margin-top:16px;width:100%;font-family:var(--ff);font-size:15px;font-weight:700;
+  color:var(--seite);background:var(--ink);border:0;border-radius:4px;padding:12px 16px;cursor:pointer}
 .toast{position:absolute;left:50%;bottom:88px;transform:translateX(-50%) translateY(8px);z-index:9;
   background:var(--ink);color:var(--seite);font-size:13px;font-weight:700;padding:10px 16px;border-radius:4px;
   opacity:0;transition:opacity .3s var(--e),transform .3s var(--e);pointer-events:none;white-space:nowrap;max-width:90%}
@@ -126,7 +128,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       <h3>Das war's für heute!</h3>
       <p>Sie haben alle Empfehlungen gesehen — und Ihr Leseprofil weiter verfeinert.</p>
       <div class="merk" id="merkListe"></div>
-      <button type="button" id="nochmal">Noch einmal ansehen</button>
+      <button type="button" id="nochmal">Noch einmal von vorn</button>
     </div>
     <div class="punkte" id="punkte"></div>
   </div>
@@ -270,7 +272,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     zieht=true; startX=e.clientX; startY=e.clientY; dx=0;
     aktiv.classList.add('greift'); aktiv.setPointerCapture&&buehne.setPointerCapture(e.pointerId);
   });
-  buehne.addEventListener('pointermove',function(e){
+  buehne.addEventListener('pointermove',function(e){ if(zieht) e.preventDefault();
     if(!zieht||!aktiv) return; dx=e.clientX-startX;
     aktiv.style.transform='translate('+dx+'px,'+(e.clientY-startY)*0.3+'px) rotate('+(dx*0.06)+'deg)';
     stempel(aktiv,dx);
