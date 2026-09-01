@@ -14,6 +14,15 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body{background:#0b0b0b} }
 :root[data-theme="dark"] body{background:#0b0b0b}
 .aussen{display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 0 40px}
+.debug{position:fixed;right:18px;top:96px;width:225px;background:var(--seite);border:1px solid var(--linie);
+  border-radius:4px;padding:16px;z-index:50}
+.debug b{font-size:13px} .debug b em{font-style:normal;color:var(--marker);font-size:10px;vertical-align:2px;margin-left:4px}
+.debug p{font-size:11px;line-height:1.45;color:var(--ink3);margin-top:12px}
+.sc-row{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px}
+.sc-row span{width:78px;flex:none;color:var(--ink2)}
+.sc-row i{height:8px;border-radius:4px;transition:width .35s var(--e),background-color .35s var(--e)}
+.sc-row b{margin-left:auto;font-variant-numeric:tabular-nums}
+@media (max-width:900px){.debug{display:none}}
 .geraet{position:relative;width:402px;max-width:calc(100vw - 24px);height:min(874px,90dvh);border-radius:48px;
   border:10px solid #1c1c1e;background:var(--seite);overflow:hidden;
   box-shadow:0 24px 60px -24px rgba(0,0,0,.45)}
@@ -40,7 +49,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .switch[aria-checked="true"]{background:var(--marker)}
 .switch[aria-checked="true"] i{left:23px}
 .buehne{position:relative;height:520px;margin-top:8px;touch-action:pan-y;overflow:visible}
-.karte{position:absolute;left:50%;top:44%;width:280px;height:392px;margin:-196px 0 0 -140px;border-radius:12px;
+.karte{position:absolute;left:50%;top:44%;width:280px;height:392px;margin:-196px 0 0 -140px;border-radius:4px;
   color:#fff;padding:28px 24px;user-select:none;-webkit-user-select:none;cursor:grab;touch-action:none;
   box-shadow:0 12px 28px -8px rgba(0,0,0,.28);
   transition:transform .5s var(--e),opacity .4s var(--e);will-change:transform}
@@ -48,8 +57,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .karte .kick{font-size:13px;opacity:.8}
 .karte h2{font-size:26px;line-height:1.15;margin-top:6px;text-wrap:balance}
 .karte .by{position:absolute;left:24px;bottom:78px;font-size:13px;opacity:.75}
-.karte .fuss{position:absolute;left:24px;right:24px;bottom:20px;display:flex;align-items:center;gap:8px}
-.karte .marke{font-size:14px;font-weight:700}
+.karte .fuss{position:absolute;left:24px;right:24px;bottom:20px;display:flex;align-items:center;justify-content:flex-end}
 .karte .lesen{margin-left:auto;background:#eeeeee;color:#252525;border-radius:4px;padding:10px 16px;font-size:14px;font-weight:700}
 .varianten{display:flex;gap:8px;justify-content:center;margin-top:20px}
 .varianten button{font-family:var(--ff);font-size:13px;padding:7px 14px;border-radius:99px;border:1px solid var(--linie);
@@ -62,7 +70,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .stmp.rechts{color:#252525}
 .ende-panel{position:absolute;left:26px;right:26px;top:8px;bottom:50px;overflow:hidden;
   display:flex;flex-direction:column;transform:scale(.96);
-  background:var(--seite);border:1px solid var(--linie);border-radius:12px;padding:26px 24px;
+  background:var(--seite);border:1px solid var(--linie);border-radius:4px;padding:26px 24px;
   box-shadow:0 12px 28px -8px rgba(0,0,0,.22);opacity:0;pointer-events:none;
   transition:opacity .45s var(--e) .25s,transform .45s var(--e) .25s;z-index:30}
 .ende-panel.zeigt{opacity:1;transform:none;pointer-events:auto}
@@ -118,6 +126,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <button type="button" data-v="stapel" aria-pressed="false">Stapel</button>
   <button type="button" data-v="kaskade" aria-pressed="false">Kaskade</button>
 </div>
+<aside class="debug"><b>Geschmacksprofil <em>Debug</em></b><div id="scores"></div>
+  <p>Rechts-Swipe +1, Links-Swipe −1 auf das Ressort. „Neue Empfehlungen" sortiert den Nachschub nach Score.</p></aside>
 <div class="geraet">
   <div class="insel"></div>
   <div class="status"><span>13:37</span><span class="st-r"><i></i><i></i><i></i></span></div>
@@ -137,7 +147,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       <h3>Das war's für heute!</h3>
       <p>Sie haben alle Empfehlungen gesehen — und Ihr Interessensprofil für heute weiter verbessert.</p>
       <div class="merk" id="merkListe"></div>
-      <button type="button" id="nochmal">Noch einmal von vorn</button>
+      <button type="button" id="nochmal">Neue Empfehlungen anzeigen</button>
     </div>
     <div class="punkte" id="punkte"></div>
   </div>
@@ -186,24 +196,53 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 </div></div></div>
 <script>
 (function(){
-  var DATEN=[
+  var POOL=[
     {f:'#1c3fa3',k:'Wissen',t:'Die Macht der fünf Minuten: Longevity für Faule',b:'Von Rose Tremlett'},
     {f:'#35634a',k:'Reise',t:'Bis ans Ende der Welt',b:'Von Anna Mayr'},
     {f:'#8e2a49',k:'Politik',t:'Hat Deutschland zu viel Zuwanderung?',b:'Von Paul Middelhoff'},
-    {f:'#0201c7',k:'Sprache',t:'»Ein Sprachverfall ist das auf keinen Fall«',b:'Von Caroline Rosales'},
-    {f:'#7a5c1e',k:'Wissenschaft',t:'Wem schlechte Forschung nützt',b:'Von Andreas Sentker'}
+    {f:'#5b2a86',k:'Kultur',t:'»Ein Sprachverfall ist das auf keinen Fall«',b:'Von Caroline Rosales'},
+    {f:'#7a5c1e',k:'Wissenschaft',t:'Wem schlechte Forschung nützt',b:'Von Andreas Sentker'},
+    {f:'#16407c',k:'Wissen',t:'Warum Schlaf Chefsache ist',b:'Von Jan Schweitzer'},
+    {f:'#6d1f38',k:'Politik',t:'Europas neue Mitte',b:'Von Mariam Lau'},
+    {f:'#2f5d50',k:'Reise',t:'Nachtzug nach Lissabon, Gleis 7',b:'Von Franz Sommerfeld'},
+    {f:'#4a2f74',k:'Kultur',t:'Das Comeback der Videothek',b:'Von Volker Weidermann'},
+    {f:'#8c6a1f',k:'Wissenschaft',t:'Was das Webb-Teleskop wirklich sieht',b:'Von Maria Mast'},
+    {f:'#274a75',k:'Wissen',t:'Die Psychologie des Aufschiebens',b:'Von Sven Stockrahm'},
+    {f:'#7d2f2f',k:'Politik',t:'Koalition der Müdigkeit',b:'Von Bernd Ulrich'}
   ];
+  var INTERESSEN=['Politik','Wissen','Kultur','Reise','Wissenschaft'];
+  var scores={}; INTERESSEN.forEach(function(n){ scores[n]=0; });
+  var gesehen=[], satz=[];
+  function zeichneScores(){
+    var el=document.getElementById('scores'); if(!el) return;
+    el.innerHTML=INTERESSEN.map(function(n){
+      var v=scores[n], w=Math.max(4, 50+v*16);
+      return '<div class="sc-row"><span>'+n+'</span><i style="width:'+Math.min(120,w)+'px;background:'+(v<0?'#c6c6c6':'var(--marker)')+'"></i><b>'+(v>0?'+':'')+v+'</b></div>';
+    }).join('');
+  }
+  function naechsterSatz(){
+    var frei=POOL.map(function(a,i){return i;}).filter(function(i){ return gesehen.indexOf(i)<0; });
+    if(frei.length<5){ gesehen=[]; frei=POOL.map(function(a,i){return i;}); }
+    frei.sort(function(a,b){ return (scores[POOL[b].k]-scores[POOL[a].k]) || (a-b); });
+    satz=frei.slice(0,5); satz.forEach(function(i){ gesehen.push(i); });
+    return satz.map(function(i){ return POOL[i]; });
+  }
   var buehne=document.getElementById('buehne'), punkte=document.getElementById('punkte');
-  var karten=[], reihe=[];
-  DATEN.forEach(function(d,i){
-    var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
-    k.innerHTML='<p class="kick">'+d.k+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
-      '<div class="fuss"><span class="marke">DIE ZEIT</span><span class="lesen">Lesen</span></div>'+
-      '<span class="stmp links"><svg viewBox="0 0 24 24" width="34" height="34"><g transform="rotate(180 12 12)"><path d="M7 10v10H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h3zm2 10V9.4L12.6 3a1.8 1.8 0 0 1 2.5 1.9L14.4 9h4.9a2.4 2.4 0 0 1 2.35 2.9l-1.3 5.9A2.4 2.4 0 0 1 18 20H9z" fill="currentColor"/></g></svg></span>'+
-      '<span class="stmp rechts"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M6 3h12v18l-6-4.6L6 21z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></span>';
-    buehne.insertBefore(k,punkte); karten.push(k); reihe.push(i);
-    var p=document.createElement('i'); punkte.appendChild(p);
-  });
+  var karten=[], reihe=[], DATEN=[];
+  function baueStapel(artikel){
+    karten.forEach(function(k){ k.remove(); });
+    karten=[]; reihe=[]; DATEN=artikel; punkte.innerHTML='';
+    DATEN.forEach(function(d,i){
+      var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
+      k.innerHTML='<p class="kick">'+d.k+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
+        '<div class="fuss"><span class="lesen">Lesen</span></div>'+
+        '<span class="stmp links"><svg viewBox="0 0 24 24" width="34" height="34"><g transform="rotate(180 12 12)"><path d="M7 10v10H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h3zm2 10V9.4L12.6 3a1.8 1.8 0 0 1 2.5 1.9L14.4 9h4.9a2.4 2.4 0 0 1 2.35 2.9l-1.3 5.9A2.4 2.4 0 0 1 18 20H9z" fill="currentColor"/></g></svg></span>'+
+        '<span class="stmp rechts"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M6 3h12v18l-6-4.6L6 21z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></span>';
+      buehne.insertBefore(k,punkte); karten.push(k); reihe.push(i);
+      var pd=document.createElement('i'); punkte.appendChild(pd);
+    });
+    lege();
+  }
   var VARIANTEN={
     dezent:[{x:0,y:0,r:0,s:1,o:1},{x:-12,y:5,r:-2.5,s:.97,o:1},{x:12,y:8,r:2,s:.94,o:1},{x:0,y:10,r:0,s:.92,o:0}],
     faecher:[{x:0,y:0,r:0,s:1,o:1},{x:-22,y:6,r:-5,s:.965,o:1},{x:22,y:8,r:4,s:.93,o:1},{x:0,y:10,r:-2,s:.9,o:0}],
@@ -231,7 +270,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     k.style.transform='translate('+(richtung*160)+'px,-10px) rotate('+(richtung*9)+'deg) scale(.96)';
     setTimeout(function(){
       if(profil){
-        if(wertet&&richtung>0&&merk.indexOf(idx)<0) merk.push(idx);
+        if(wertet){ var kck=DATEN[idx].k; scores[kck]=(scores[kck]||0)+(richtung>0?1:-1); zeichneScores(); }
+        if(wertet&&richtung>0&&merk.indexOf(DATEN[idx])<0) merk.push(DATEN[idx]);
         reihe.shift();
         k.style.opacity='0'; k.style.pointerEvents='none';
         if(!reihe.length){ zeigeEnde(); } else lege();
@@ -246,17 +286,15 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   function zeigeEnde(){
     var m=document.getElementById('merkListe');
     m.innerHTML = merk.length
-      ? '<p class="m-titel">Für später gemerkt</p>'+merk.map(function(i){
-          return '<a class="m-row"><i style="background:'+DATEN[i].f+'"></i><span>'+DATEN[i].t+'</span><b>›</b></a>'; }).join('')
+      ? '<p class="m-titel">Für später gemerkt</p>'+merk.map(function(a){
+          return '<a class="m-row"><i style="background:'+a.f+'"></i><span>'+a.t+'</span><b>›</b></a>'; }).join('')
       : '<p class="m-leer">Heute nichts für später gemerkt.</p>';
     document.getElementById('endePanel').classList.add('zeigt');
     [].forEach.call(punkte.children,function(d){ d.classList.remove('an'); });
   }
   document.getElementById('nochmal').addEventListener('click',function(){
     document.getElementById('endePanel').classList.remove('zeigt');
-    merk=[]; reihe=DATEN.map(function(_,i){return i;});
-    karten.forEach(function(k){ k.style.opacity='1'; });
-    lege();
+    merk=[]; baueStapel(naechsterSatz());
   });
   // Geschmacksprofil-Modus
   var profil=false, toastTimer=null;
@@ -300,6 +338,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   buehne.addEventListener('pointerup',loslassen);
   buehne.addEventListener('pointercancel',loslassen);
   document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') weiter(1,true); if(e.key==='ArrowLeft') weiter(-1,true); });
-  lege();
+  baueStapel(naechsterSatz());
+  zeichneScores();
 })();
 </script>
