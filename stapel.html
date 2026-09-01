@@ -25,7 +25,7 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 .status .st-r i:first-child{width:18px;border-radius:1px}
 .rohr{height:100%;overflow-y:auto;scrollbar-width:none}
 .rohr::-webkit-scrollbar{width:0}
-.app{width:100%;padding:72px 0 64px}
+.app{width:100%;padding:72px 0 120px}
 .kopf{padding:0 16px}
 h1{font-size:32px;line-height:1.15;font-weight:700}
 .sub{margin-top:10px;font-size:15px;line-height:1.55;color:var(--ink3);max-width:370px}
@@ -45,13 +45,43 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .varianten button{font-family:var(--ff);font-size:13px;padding:7px 14px;border-radius:99px;border:1px solid var(--linie);
   background:transparent;color:var(--ink3);cursor:pointer}
 .varianten button[aria-pressed="true"]{background:var(--marker);border-color:var(--marker);color:#fff;font-weight:700}
+.moduszeile{margin-top:-6px}
+.moduszeile button{font-size:12px;padding:6px 12px}
+.stmp{position:absolute;top:26px;padding:8px 12px;display:inline-flex;align-items:center;gap:7px;border:2px solid #fff;border-radius:4px;
+  font-size:14px;font-weight:700;color:#fff;opacity:0;pointer-events:none;background:rgba(0,0,0,.18)}
+.stmp.links{right:20px;transform:rotate(7deg)}
+.stmp.rechts{left:20px;transform:rotate(-7deg)}
+.toast{position:absolute;left:50%;bottom:88px;transform:translateX(-50%) translateY(8px);z-index:9;
+  background:var(--ink);color:var(--seite);font-size:13px;font-weight:700;padding:10px 16px;border-radius:4px;
+  opacity:0;transition:opacity .3s var(--e),transform .3s var(--e);pointer-events:none;white-space:nowrap;max-width:90%}
+.toast.zeigt{opacity:1;transform:translateX(-50%) translateY(0)}
 .punkte{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;gap:8px}
 .punkte i{width:6px;height:6px;border-radius:99px;background:var(--dot);transition:all .35s var(--e)}
 .punkte i.an{width:20px;background:var(--marker)}
 .hinweis{text-align:center;font-size:13px;color:var(--ink3);margin-top:4px}
-.folgt{margin:36px 16px 0;padding-top:24px;border-top:1px solid var(--linie)}
-.folgt h3{font-size:22px;font-weight:700}
-.folgt p{font-size:14px;color:var(--ink3);margin-top:4px}
+.sektion{margin:36px 0 0;padding:24px 16px 0;border-top:1px solid var(--linie)}
+.s-kopf h3{font-size:22px;font-weight:700}
+.s-kopf p{font-size:14px;color:var(--ink3);margin-top:4px}
+.reihe{display:flex;gap:12px;overflow-x:auto;margin:16px -16px 0 0;padding:0 16px 6px 0;scrollbar-width:none}
+.reihe::-webkit-scrollbar{height:0}
+.teaser{flex:0 0 250px;min-height:360px;border-radius:4px;background:var(--f);color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:flex-end}
+.teaser .t-kick{font-size:12px;opacity:.8}
+.teaser h4{font-size:20px;line-height:1.15;margin-top:4px;text-wrap:balance}
+.teaser .t-copy{font-size:13px;line-height:1.45;opacity:.85;margin-top:8px}
+.teaser .t-by{font-size:12px;opacity:.7;margin-top:10px}
+.sektion.ausgabe{display:flex;align-items:center;gap:16px;justify-content:space-between}
+.sektion.ausgabe h3{font-size:20px;font-weight:700}
+.sektion.ausgabe p{font-size:14px;color:var(--ink3);margin-top:4px}
+.sektion.ausgabe .pf{color:var(--ink3);font-weight:400}
+.a-cover{flex:none;width:84px;height:58px;background:#1a2a52;border-radius:3px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em}
+.liste-mi{margin-top:8px}
+.liste-mi a{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--linie);font-size:15px;color:var(--ink)}
+.liste-mi a span{color:var(--ink3)}
+.liste-mi a:last-child{border-bottom:0}
+.tabbar{position:absolute;left:16px;right:16px;bottom:14px;height:60px;border-radius:20px;z-index:6;
+  display:flex;align-items:center;justify-content:space-around;
+  background:rgba(24,24,24,.86);backdrop-filter:blur(10px);color:#bbb;font-size:11.5px;font-weight:700}
+.tabbar .an{background:#3a3a3a;color:#fff;padding:9px 14px;border-radius:14px}
 @media (prefers-reduced-motion:reduce){ .karte,.punkte i{transition-duration:.01ms} }
 </style>
 <div class="aussen">
@@ -59,10 +89,15 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <button type="button" data-v="dezent" aria-pressed="true">Dezent</button>
   <button type="button" data-v="faecher" aria-pressed="false">Fächer</button>
   <button type="button" data-v="stapel" aria-pressed="false">Stapel</button>
+  <button type="button" data-v="kaskade" aria-pressed="false">Kaskade</button>
+</div>
+<div class="varianten moduszeile">
+  <button type="button" id="profilToggle" aria-pressed="false">Swipe-Feedback: aus</button>
 </div>
 <div class="geraet">
   <div class="insel"></div>
   <div class="status"><span>13:37</span><span class="st-r"><i></i><i></i><i></i></span></div>
+  <div class="toast" id="toast" role="status"></div>
   <div class="rohr">
 <div class="app">
   <div class="kopf">
@@ -73,10 +108,46 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     <div class="punkte" id="punkte"></div>
   </div>
   <p class="hinweis">Karte zur Seite ziehen oder antippen</p>
-  <div class="folgt">
-    <h3>Ihre heutigen Empfehlungen</h3>
-    <p>Serie: Die ZEIT erklärt &nbsp;·&nbsp; Ungelesen aus Ihrer Merkliste</p>
+  <div class="sektion">
+    <div class="s-kopf"><h3>Weitere Empfehlungen</h3><p>Basierend auf Ihren Aktivitäten</p></div>
+    <div class="reihe">
+      <div class="teaser" style="--f:#2f4b3a">
+        <p class="t-kick">Serie: Die ZEIT erklärt</p>
+        <h4>Die Macht der fünf Minuten: So funktioniert Longevity für Faule</h4>
+        <p class="t-copy">Länger gesund leben – das klingt nach Disziplin, Verzicht und Aufwand. Doch schon mit kleinen Hebeln lässt sich erstaunlich viel erreichen.</p>
+        <p class="t-by">Von Rose Tremlett</p>
+      </div>
+      <div class="teaser" style="--f:#8e2a49">
+        <p class="t-kick">Ungelesen</p>
+        <h4>Bis ans Ende der Welt</h4>
+        <p class="t-copy">Nach der Trennung wagt unsere Autorin den Neuanfang — und findet unterwegs mehr als ein Zuhause.</p>
+        <p class="t-by">Von Anna Mayr</p>
+      </div>
+      <div class="teaser" style="--f:#1c3fa3">
+        <p class="t-kick">Thema: Iran</p>
+        <h4>So weit reicht das neue Ego des Iran</h4>
+        <p class="t-copy">Wie die Führung in Teheran ihre Rolle in der Region neu vermisst — und was das für Europa bedeutet.</p>
+        <p class="t-by">Von Quentin Lichtblau</p>
+      </div>
+    </div>
   </div>
+  <div class="sektion ausgabe">
+    <div class="a-text"><h3>Neue ZEIT Ausgabe <span class="pf">›</span></h3><p>Vom 19. August 2026 ist da. Jetzt lesen</p></div>
+    <div class="a-cover"><span>DIE&nbsp;ZEIT</span></div>
+  </div>
+  <div class="sektion">
+    <div class="s-kopf"><h3>Meine Inhalte</h3></div>
+    <div class="liste-mi">
+      <a>Gefolgte Inhalte<span>›</span></a>
+      <a>Merkliste<span>›</span></a>
+      <a>Lese- und Hör-Chronik<span>›</span></a>
+      <a>Verfasste Kommentare<span>›</span></a>
+      <a>Meine Audio-Downloads<span>›</span></a>
+    </div>
+  </div>
+  <nav class="tabbar" aria-hidden="true">
+    <span>Start</span><span>Audio</span><span class="an">Meine Zeit</span><span>Ausgabe</span><span>Spiele</span>
+  </nav>
 </div>
 </div></div></div>
 <script>
@@ -93,14 +164,16 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   DATEN.forEach(function(d,i){
     var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
     k.innerHTML='<p class="kick">'+d.k+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
-      '<div class="fuss"><span class="marke">DIE ZEIT</span><span class="lesen">Lesen</span></div>';
+      '<div class="fuss"><span class="marke">DIE ZEIT</span><span class="lesen">Lesen</span></div>'+
+      '<span class="stmp links"><svg viewBox="0 0 14 14" width="12" height="12"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Dislike</span><span class="stmp rechts"><svg viewBox="0 0 14 16" width="12" height="14"><path d="M2.5 1.5h9v13l-4.5-3.4-4.5 3.4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Später lesen</span>';
     buehne.insertBefore(k,punkte); karten.push(k); reihe.push(i);
     var p=document.createElement('i'); punkte.appendChild(p);
   });
   var VARIANTEN={
     dezent:[{x:0,y:0,r:0,s:1,o:1},{x:-12,y:5,r:-2.5,s:.97,o:1},{x:12,y:8,r:2,s:.94,o:1},{x:0,y:10,r:0,s:.92,o:0}],
     faecher:[{x:0,y:0,r:0,s:1,o:1},{x:-22,y:6,r:-5,s:.965,o:1},{x:22,y:8,r:4,s:.93,o:1},{x:0,y:10,r:-2,s:.9,o:0}],
-    stapel:[{x:0,y:0,r:0,s:1,o:1},{x:0,y:-16,r:0,s:.955,o:1},{x:0,y:-30,r:0,s:.91,o:1},{x:0,y:-40,r:0,s:.88,o:0}]
+    stapel:[{x:0,y:0,r:0,s:1,o:1},{x:0,y:-16,r:0,s:.955,o:1},{x:0,y:-30,r:0,s:.91,o:1},{x:0,y:-40,r:0,s:.88,o:0}],
+    kaskade:[{x:14,y:0,r:0,s:1,o:1},{x:-22,y:2,r:0,s:.93,o:1},{x:-52,y:4,r:0,s:.865,o:1},{x:-74,y:6,r:0,s:.82,o:0}]
   };
   var POS=VARIANTEN.dezent;
   document.getElementById('varianten').addEventListener('click',function(e){
@@ -130,6 +203,21 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       setTimeout(function(){ wechselt=false; },260);
     },200);
   }
+  // Geschmacksprofil-Modus
+  var profil=false, toastTimer=null;
+  document.getElementById('profilToggle').addEventListener('click',function(){
+    profil=!profil; this.setAttribute('aria-pressed',String(profil));
+    this.textContent='Swipe-Feedback: '+(profil?'an':'aus');
+  });
+  function toast(text){
+    var t=document.getElementById('toast'); t.textContent=text; t.classList.add('zeigt');
+    clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('zeigt'); },1700);
+  }
+  function stempel(k,wert){
+    var l=k.querySelector('.stmp.links'), re=k.querySelector('.stmp.rechts');
+    if(l) l.style.opacity=profil&&wert<0?Math.min(1,-wert/90):0;
+    if(re) re.style.opacity=profil&&wert>0?Math.min(1,wert/90):0;
+  }
   // Ziehen
   var startX=0,startY=0,dx=0,zieht=false,aktiv=null;
   buehne.addEventListener('pointerdown',function(e){
@@ -140,10 +228,15 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   buehne.addEventListener('pointermove',function(e){
     if(!zieht||!aktiv) return; dx=e.clientX-startX;
     aktiv.style.transform='translate('+dx+'px,'+(e.clientY-startY)*0.3+'px) rotate('+(dx*0.06)+'deg)';
+    stempel(aktiv,dx);
   });
   function loslassen(){
     if(!zieht||!aktiv) return; zieht=false; aktiv.classList.remove('greift');
-    if(Math.abs(dx)>90){ weiter(dx>0?1:-1); }
+    stempel(aktiv,0);
+    if(Math.abs(dx)>90){
+      if(profil) toast(dx>0?'Auf die Merkliste gelegt':'Vermerkt — Ihr Profil wird geschärft');
+      weiter(dx>0?1:-1);
+    }
     else if(Math.abs(dx)<6){ weiter(-1); } // Tap = nächste
     else lege();
     aktiv=null;
