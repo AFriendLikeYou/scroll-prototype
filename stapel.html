@@ -47,10 +47,27 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .varianten button[aria-pressed="true"]{background:var(--marker);border-color:var(--marker);color:#fff;font-weight:700}
 .moduszeile{margin-top:-6px}
 .moduszeile button{font-size:12px;padding:6px 12px}
-.stmp{position:absolute;top:26px;padding:8px 12px;display:inline-flex;align-items:center;gap:7px;border:2px solid #fff;border-radius:4px;
-  font-size:14px;font-weight:700;color:#fff;opacity:0;pointer-events:none;background:rgba(0,0,0,.18)}
-.stmp.links{right:20px;transform:rotate(7deg)}
-.stmp.rechts{left:20px;transform:rotate(-7deg)}
+.stmp{position:absolute;left:50%;top:40%;width:82px;height:82px;margin:-41px 0 0 -41px;border-radius:50%;
+  background:#fff;display:grid;place-items:center;opacity:0;pointer-events:none;
+  box-shadow:0 12px 28px rgba(0,0,0,.3);transform:scale(.4)}
+.stmp.links{color:#b91109}
+.stmp.rechts{color:#252525}
+.ende-panel{position:absolute;left:50%;top:44%;width:300px;transform:translate(-50%,-50%) scale(.94);
+  background:var(--seite);border:1px solid var(--linie);border-radius:12px;padding:28px 24px;
+  box-shadow:0 12px 28px -8px rgba(0,0,0,.22);opacity:0;pointer-events:none;
+  transition:opacity .45s var(--e) .25s,transform .45s var(--e) .25s;z-index:30}
+.ende-panel.zeigt{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
+.ende-panel h3{font-size:22px;line-height:1.15}
+.ende-panel p{font-size:14px;line-height:1.5;color:var(--ink3);margin-top:8px}
+.ende-panel .merk{margin-top:16px}
+.ende-panel .m-titel{font-size:12px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.ende-panel .m-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--linie);font-size:14px;font-weight:700;color:var(--ink);cursor:pointer}
+.ende-panel .m-row:last-child{border-bottom:0}
+.ende-panel .m-row i{flex:none;width:26px;height:26px;border-radius:4px}
+.ende-panel .m-row b{margin-left:auto;color:var(--ink3);font-weight:400}
+.ende-panel .m-leer{font-size:13px;color:var(--ink3)}
+.ende-panel #nochmal{margin-top:18px;font-family:var(--ff);font-size:14px;font-weight:700;color:var(--ink);
+  background:var(--linie);border:0;border-radius:4px;padding:11px 16px;cursor:pointer}
 .toast{position:absolute;left:50%;bottom:88px;transform:translateX(-50%) translateY(8px);z-index:9;
   background:var(--ink);color:var(--seite);font-size:13px;font-weight:700;padding:10px 16px;border-radius:4px;
   opacity:0;transition:opacity .3s var(--e),transform .3s var(--e);pointer-events:none;white-space:nowrap;max-width:90%}
@@ -105,6 +122,12 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     <p class="sub">Aktuell ist viel los in der Welt. Hier sind fünf Empfehlungen der Redaktion für Ihren Tag — zum Durchblättern.</p>
   </div>
   <div class="buehne" id="buehne">
+    <div class="ende-panel" id="endePanel">
+      <h3>Das war's für heute!</h3>
+      <p>Sie haben alle Empfehlungen gesehen — und Ihr Leseprofil weiter verfeinert.</p>
+      <div class="merk" id="merkListe"></div>
+      <button type="button" id="nochmal">Noch einmal ansehen</button>
+    </div>
     <div class="punkte" id="punkte"></div>
   </div>
   <p class="hinweis">Karte zur Seite ziehen oder antippen</p>
@@ -165,7 +188,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
     k.innerHTML='<p class="kick">'+d.k+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
       '<div class="fuss"><span class="marke">DIE ZEIT</span><span class="lesen">Lesen</span></div>'+
-      '<span class="stmp links"><svg viewBox="0 0 14 14" width="12" height="12"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Dislike</span><span class="stmp rechts"><svg viewBox="0 0 14 16" width="12" height="14"><path d="M2.5 1.5h9v13l-4.5-3.4-4.5 3.4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Später lesen</span>';
+      '<span class="stmp links"><svg viewBox="0 0 24 24" width="34" height="34"><g transform="rotate(180 12 12)"><path d="M7 10v10H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h3zm2 10V9.4L12.6 3a1.8 1.8 0 0 1 2.5 1.9L14.4 9h4.9a2.4 2.4 0 0 1 2.35 2.9l-1.3 5.9A2.4 2.4 0 0 1 18 20H9z" fill="currentColor"/></g></svg></span>'+
+      '<span class="stmp rechts"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M6 3h12v18l-6-4.6L6 21z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></span>';
     buehne.insertBefore(k,punkte); karten.push(k); reihe.push(i);
     var p=document.createElement('i'); punkte.appendChild(p);
   });
@@ -189,20 +213,40 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     });
     [].forEach.call(punkte.children,function(d,i){ d.classList.toggle('an', i===reihe[0]); });
   }
-  var wechselt=false;
-  function weiter(richtung){
-    if(wechselt) return; wechselt=true;
+  var wechselt=false, merk=[];
+  function weiter(richtung,wertet){
+    if(wechselt||!reihe.length) return; wechselt=true;
     var idx=reihe[0], k=karten[idx];
-    // Phase 1: leicht zur Seite kippen …
     k.style.transform='translate('+(richtung*160)+'px,-10px) rotate('+(richtung*9)+'deg) scale(.96)';
     setTimeout(function(){
-      // … Phase 2: hinter den Stapel gleiten und einsortieren
-      k.style.zIndex='1';
-      reihe.push(reihe.shift());
-      lege();
+      if(profil){
+        if(wertet&&richtung>0&&merk.indexOf(idx)<0) merk.push(idx);
+        reihe.shift();
+        k.style.opacity='0'; k.style.pointerEvents='none';
+        if(!reihe.length){ zeigeEnde(); } else lege();
+      } else {
+        k.style.zIndex='1';
+        reihe.push(reihe.shift());
+        lege();
+      }
       setTimeout(function(){ wechselt=false; },260);
     },200);
   }
+  function zeigeEnde(){
+    var m=document.getElementById('merkListe');
+    m.innerHTML = merk.length
+      ? '<p class="m-titel">Für später gemerkt</p>'+merk.map(function(i){
+          return '<a class="m-row"><i style="background:'+DATEN[i].f+'"></i><span>'+DATEN[i].t+'</span><b>›</b></a>'; }).join('')
+      : '<p class="m-leer">Heute nichts für später gemerkt.</p>';
+    document.getElementById('endePanel').classList.add('zeigt');
+    [].forEach.call(punkte.children,function(d){ d.classList.remove('an'); });
+  }
+  document.getElementById('nochmal').addEventListener('click',function(){
+    document.getElementById('endePanel').classList.remove('zeigt');
+    merk=[]; reihe=DATEN.map(function(_,i){return i;});
+    karten.forEach(function(k){ k.style.opacity='1'; });
+    lege();
+  });
   // Geschmacksprofil-Modus
   var profil=false, toastTimer=null;
   document.getElementById('profilToggle').addEventListener('click',function(){
@@ -215,8 +259,9 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   }
   function stempel(k,wert){
     var l=k.querySelector('.stmp.links'), re=k.querySelector('.stmp.rechts');
-    if(l) l.style.opacity=profil&&wert<0?Math.min(1,-wert/90):0;
-    if(re) re.style.opacity=profil&&wert>0?Math.min(1,wert/90):0;
+    var a=Math.min(1,Math.abs(wert)/85), gr=0.45+Math.min(0.75,Math.abs(wert)/130), dreh=wert*0.09;
+    if(l){ l.style.opacity=profil&&wert<0?a:0; l.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
+    if(re){ re.style.opacity=profil&&wert>0?a:0; re.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
   }
   // Ziehen
   var startX=0,startY=0,dx=0,zieht=false,aktiv=null;
@@ -234,16 +279,16 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     if(!zieht||!aktiv) return; zieht=false; aktiv.classList.remove('greift');
     stempel(aktiv,0);
     if(Math.abs(dx)>90){
-      if(profil) toast(dx>0?'Auf die Merkliste gelegt':'Vermerkt — Ihr Profil wird geschärft');
-      weiter(dx>0?1:-1);
+      if(profil) toast(dx>0?'Für später gemerkt':'Alles klar — davon zeigen wir weniger');
+      weiter(dx>0?1:-1,true);
     }
-    else if(Math.abs(dx)<6){ weiter(-1); } // Tap = nächste
+    else if(Math.abs(dx)<6){ weiter(-1,false); } // Tap = nächste, ohne Wertung
     else lege();
     aktiv=null;
   }
   buehne.addEventListener('pointerup',loslassen);
   buehne.addEventListener('pointercancel',loslassen);
-  document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') weiter(1); if(e.key==='ArrowLeft') weiter(-1); });
+  document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') weiter(1,true); if(e.key==='ArrowLeft') weiter(-1,true); });
   lege();
 })();
 </script>
