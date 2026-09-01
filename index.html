@@ -24,6 +24,7 @@
   --marker:#eb362e; --linie:#2e2e2e; --karte:#2e2e2e; --warn:#e8c61a;
   --k-blau:#1c292e; --k-warm:#2c251b; --k-gruen:#1f2922;
 }}
+:root[data-theme="dark"] .band .s{background:#2e2e2e}
 :root[data-theme="dark"]{
   --seite:#121212; --flaeche:#242424; --track:#363636; --bar:#444444;
   --ink:#ffffff; --ink2:#bababa; --ink3:#999999;
@@ -127,7 +128,7 @@ body[data-breite^=desktop] .farbwolken{height:1200px}
   text-align:center;padding:56px 0;border-bottom:1px solid var(--linie)}
 .szene:last-child{border-bottom:0}
 .szene > *,.textspalte > *,.grafikspalte > *{width:100%}
-.szene .augen{font-size:14px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--ink3);margin:0 0 12px}
+.szene .augen{font-size:14px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--ink3);margin:0 0 16px}
 /* Tiemann-Variante: Headlines und große Zahlen in Serif (Platzhalter Playfair Display — die echte Tiemann ist kein freier Webfont) */
 body[data-schrift=tiemann] .gross,body[data-schrift=tiemann] .mittel,body[data-schrift=tiemann] .h1,
 body[data-schrift=tiemann] .h2,body[data-schrift=tiemann] #themaTitel,body[data-schrift=tiemann] .zahl .e{
@@ -135,7 +136,7 @@ body[data-schrift=tiemann] .h2,body[data-schrift=tiemann] #themaTitel,body[data-
 body[data-schrift=tiemann] .gross{font-weight:500}
 .gross{font-size:42px;font-weight:700;line-height:1.2;margin:0;letter-spacing:0}
 .mittel{font-size:30px;font-weight:700;line-height:1.2;margin:0}
-.lead{font-family:var(--ff);font-size:16px;line-height:1.5;color:var(--ink2);margin:12px auto 0;max-width:36ch}
+.lead{font-family:var(--ff);font-size:16px;line-height:1.5;color:var(--ink2);margin:8px auto 0;max-width:38ch}
 .szene .quelle{max-width:38ch;margin-left:auto;margin-right:auto}
 .zahl{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap}
 .zahl .e{font-size:30px;font-weight:700;color:var(--ink)}
@@ -146,10 +147,10 @@ body[data-schrift=tiemann] .gross{font-weight:500}
 .szene.sichtbar .an.v1{transition-delay:.04s} .szene.sichtbar .an.v2{transition-delay:.15s}
 .szene.sichtbar .an.v3{transition-delay:.28s} .szene.sichtbar .an.v4{transition-delay:.44s}
 
-.band-huelle{position:relative;margin:26px 0 0}
+.band-huelle{position:relative;margin:32px 0 0}
 .band{display:flex;gap:5px;align-items:flex-end;height:118px;
   background:repeating-linear-gradient(to top,var(--linie) 0 1px,transparent 1px 25%);background-size:100% calc(100% - 1px);background-repeat:no-repeat}
-.band .s{flex:1;background:var(--track);border-radius:2px 2px 0 0;height:4px;transition:height 1.05s var(--e),background-color .5s var(--e),opacity .5s var(--e)}
+.band .s{flex:1;background:#eeeeee;border-radius:2px 2px 0 0;height:4px;transition:height 1.05s var(--e),background-color .5s var(--e),opacity .5s var(--e)}
 .szene.sichtbar .band .s{height:var(--h)}
 .band .s.sie{background:var(--marker)}
 .band.verteilung .s.offen{border-top:2px dashed var(--ink3);background-clip:padding-box}
@@ -190,9 +191,9 @@ body[data-lzform=ringe] .ringe{display:block;margin:18px auto 0;width:min(100%,2
 .szene.sichtbar .kerbe{opacity:.5}
 .spur-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:12px 0 0}
 .spur-meta em{font-style:normal;color:var(--marker);font-weight:700}
-.tag{display:flex;gap:4px;align-items:flex-end;margin:26px 0 0}
+.tag{display:flex;gap:4px;align-items:flex-end;margin:32px 0 0}
 .tag .a{display:flex;flex-direction:column;gap:8px;min-width:0}
-.tag .a i{display:block;background:var(--bar);border-radius:3px;height:6px;transition:height .95s var(--e),background-color .6s var(--e)}
+.tag .a i{display:block;background:#eeeeee;border-radius:3px;height:6px;transition:height .95s var(--e),background-color .6s var(--e)}
 .szene.sichtbar .tag .a i{height:var(--ah,20px)}
 .szene.sichtbar .tag .a.aktiv i{background:var(--marker);transition-delay:.5s}
 .tag .a span{font-size:12px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
@@ -315,7 +316,7 @@ body[data-thema=kacheln] .wolke-fuss{display:none}
 .reset,.reset *{transition:none!important;animation:none!important}
 
 /* ═══ Icons über den Kickern ═══ */
-.ico{display:grid;place-items:center;width:32px;height:32px;margin:0 auto 14px;color:var(--ink);overflow:visible;border:0;border-radius:50%;padding:6px;
+.ico{display:grid;place-items:center;width:32px;height:32px;margin:0 auto 12px;color:var(--ink);overflow:visible;border:0;border-radius:50%;padding:6px;
   opacity:0;transform:translateY(18px);filter:blur(5px);transition:opacity .8s var(--e),transform .9s var(--e),filter .8s var(--e)}
 #s-zeit .ico{background:#e5f7ff} #s-band .ico{background:#fff6e8} #s-tag .ico{background:#e9f7ed} #s-thema .ico{background:#ede6f4}
 :root[data-theme=dark] #s-zeit .ico{background:#1c292e} :root[data-theme=dark] #s-band .ico{background:#2c251b}
@@ -343,18 +344,18 @@ body[data-breite^=desktop] .ico{width:36px;height:36px}
 
 /* ═══ Thema als Kreise (wie TIDE): Ihr Thema ist der große rote Kreis, die anderen Themenfelder umgeben ihn
    als gleich große, blasse Kreise — sie zeigen die Vielfalt, behaupten aber keine Reihenfolge Ihrer Interessen. ═══ */
-.kreise{display:none;position:relative;height:210px;margin:6px 0 0}
+.kreise{display:none;position:relative;height:190px;margin:24px 0 0}
 body[data-thema=kreise] .kreise{display:block}
 body[data-thema=kreise] .wolke-huelle,body[data-thema=kreise] .anteil,body[data-thema=kreise] .kacheln-fuss{display:none}
 .kreis{position:absolute;border-radius:50%;display:grid;place-items:center;text-align:center;
   opacity:0;transform:translate(-50%,-50%) scale(.6);transition:opacity .7s var(--e),transform .9s cubic-bezier(.22,1,.36,1)}
 .szene.sichtbar .kreis{opacity:var(--o,1);transform:translate(-50%,-50%) scale(1)}
-.kreis.mein{width:150px;height:150px;background:var(--marker);color:#fff;z-index:2;padding:14px;
-  box-shadow:0 14px 34px -14px rgba(185,17,9,.5)}
-.kreis.mein b{display:block;font-size:15px;line-height:1.2;font-weight:700;text-wrap:balance;overflow-wrap:anywhere}
-.kreis.mein span{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.kreis.mein{width:144px;height:144px;background:var(--marker);color:#fff;z-index:2;padding:16px}
+.kreis.mein b{display:block;font-size:14px;line-height:1.15;font-weight:700;text-wrap:balance;overflow-wrap:anywhere}
+.kreis.mein span{display:none}
 .kreis.mein.neutral{background:var(--ink);color:var(--seite);box-shadow:0 14px 34px -14px rgba(0,0,0,.4)}
-.kreis.andere{width:64px;height:64px;background:var(--karte);border:1px solid var(--linie);color:var(--ink2);font-size:10.5px;line-height:1.2;padding:7px;overflow-wrap:anywhere;--o:.95}
+.kreis.andere{width:66px;height:66px;background:var(--karte);border:1px solid var(--linie);color:var(--ink3);font-size:9px;line-height:1.15;padding:5px;overflow-wrap:anywhere;--o:.95}
+.kreis.andere.klein2{width:48px;height:48px;font-size:8px;padding:4px}
 .kreise-fuss{display:none;font-size:11px;color:var(--ink3);margin:8px 0 0;text-align:center}
 body[data-thema=kreise] .kreise-fuss{display:block}
 body[data-breite^=desktop] .kreise{height:260px}
@@ -403,13 +404,13 @@ body[data-thema=rang] .wolke-huelle,body[data-thema=rang] .anteil,body[data-them
 .karte .art i{width:5px;height:5px;border-radius:3px;background:var(--marker);display:block}
 .karte h3{font-size:18px;font-weight:700;line-height:1.24;margin:0}
 .karte h3 + h3{margin-top:4px;font-size:15px;color:var(--ink2)}
-.karte p{font-family:var(--ff);margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--ink3)}
+.karte p{font-family:var(--ff);margin:12px 0 0;font-size:16px;line-height:1.5;color:var(--ink3)}
 .karte.leer{background:transparent;border:1px dashed var(--bar)}
 .karte.leer .art{color:var(--ink3)} .karte.leer .art i{background:var(--ink3)}
 .karte.leer h3{font-size:16px;color:var(--ink2)}
 
 /* ═══ Variante B · Karten, die sich beim Scrollen stapeln ═══ */
-body[data-variante=karten] .daten{padding:24px 14px 48px}
+body[data-variante=karten] .daten{padding:16px}
 body[data-variante=karten] .szene{
   position:sticky;background:var(--karte);border:1px solid var(--linie);border-radius:4px;
   padding:32px 24px 24px;margin-bottom:16px;border-bottom:1px solid var(--linie);justify-content:flex-start;
@@ -635,10 +636,11 @@ body[data-breite^=desktop][data-variante=karten] .gross{font-size:56px}
 /* ═══ Variante C · Karten, ruhig — nach dem Muster der ZEIT-Datenkarten (Steuerreform 07/2026):
    leicht abgesetzte Fläche, großer Radius, Titel zentriert, ein Satz, Grafik, Fußnote.
    Kein Kopf, keine Nummer, kein Schatten. Farbe nur auf dem einen Wert.                    */
-body[data-variante=ruhig] .daten{padding:8px 16px 48px}
+body[data-variante=ruhig] .daten{padding:16px}
 body[data-variante=ruhig] .szene{
   min-height:0;justify-content:flex-start;background:var(--karte);border:1px solid var(--linie);
   border-radius:4px;padding:32px 24px 24px;margin-bottom:16px;border-bottom:1px solid var(--linie)}
+body[data-variante=ruhig] #s-zeit,body[data-variante=ruhig] #s-band{padding-left:32px;padding-right:32px}
 body[data-variante=ruhig] .szene:last-child{margin-bottom:0}
 body[data-variante=ruhig] .szene .augen{font-size:14px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--ink3);margin:0 0 14px}
 body[data-variante=ruhig] .mittel{font-size:clamp(24px,6.6vw,30px)}
@@ -647,7 +649,7 @@ body[data-variante=ruhig] .szene .quelle{margin-top:18px;font-size:11px}
 body[data-variante=ruhig] .wolke{height:200px}
 body[data-variante=ruhig] .band{height:110px}
 .sie-marke{letter-spacing:0;font-size:12px;font-weight:700;background:var(--marker);color:#fff!important;
-  padding:4px 10px;border-radius:12px;top:-14px}
+  padding:4px 10px;border-radius:12px;top:-18px}
 .sie-marke::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
   border:5px solid transparent;border-top-color:var(--marker)}
 .tag .a b{display:block;font-size:11px;font-weight:700;color:var(--marker);text-align:center;opacity:0;transform:translateY(4px);transition:opacity .5s var(--e) 1.1s,transform .5s var(--e) 1.1s;font-variant-numeric:tabular-nums}
@@ -676,7 +678,7 @@ body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante
 :root[data-theme="dark"] body.kfarbig[data-variante=ruhig] .szene:nth-child(3),body.kfarbig[data-variante=karten] .szene:nth-child(3){--linie:#28332c;--track:#303f35;--bar:#3e4f43}
 body.kfarbig .karte[data-art]{border-color:transparent}
 /* Empfehlungsblock nach Figma: Trennzeile mit Überschrift, farbige Karte mit Bild + Knopf */
-.empf-kopf{display:flex;align-items:center;gap:12px;margin:26px 0 14px;font-size:13px;font-weight:700;color:var(--ink);text-align:left}
+.empf-kopf{display:flex;align-items:center;gap:12px;margin:32px 0 16px;padding-top:32px;border-top:1px solid var(--linie);font-size:13px;font-weight:700;color:var(--ink);text-align:left}
 .empf-kopf::before,.empf-kopf::after{content:"";height:1px;background:var(--linie);flex:1}
 .empf-kopf::before{max-width:24px}
 .karte[data-art]{position:relative;padding:16px 84px 16px 16px}
@@ -1157,58 +1159,34 @@ body[data-breite=desktop-raster] .telefon::after{
   function baueKreise(){
     var el=$("kreise"); el.innerHTML="";
     var st=stufe(dezil(Z.min,Z.kohorte),Z.kohorte);
-    var desktop=/^desktop/.test(document.body.getAttribute("data-breite")||"");
-    var W=el.clientWidth||358, H=el.clientHeight||210, R=desktop?64:58, rk=desktop?36:33;
-    var cx=W/2+(desktop?26:18), cy=H/2+6;                       // Ihr Kreis leicht rechts unten, der Klumpen wächst nach oben links
+    var W=el.clientWidth||326, H=el.clientHeight||190, R=72;
+    var cx=W/2+14, cy=H/2+8;
     var m=document.createElement("div"); m.className="kreis mein"+(st==="D"?" neutral":"");
     m.style.width=m.style.height=(2*R)+"px"; m.style.left=cx+"px"; m.style.top=cy+"px";
-    m.innerHTML="<span>Ihr Thema</span>"; el.appendChild(m);
+    m.innerHTML="<b>"+Z.thema+"</b>"; el.appendChild(m);
     var kurz=function(n){ var e=EMPF[n]; return (n.length>22 && e && e.benennung) ? e.benennung : n; };
-    var andere=THEMEN.filter(function(t){return t[0]!==Z.thema;}).sort(function(a,b){return b[1]-a[1];}).slice(0,5).map(function(t){return [kurz(t[0]),t[1]];});
-    var platz=[{x:cx,y:cy,r:R}], schwer={x:cx-R*0.9,y:cy-R*0.7};
-    function frei(x,y){ if(x-rk<2||y-rk<2||x+rk>W-2||y+rk>H-2) return false;
-      for(var i=0;i<platz.length;i++){ var q=platz[i]; if(Math.hypot(x-q.x,y-q.y) < q.r+rk-0.5) return false; } return true; }
+    var andere=THEMEN.filter(function(t){return t[0]!==Z.thema;}).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+    var platz=[{x:cx,y:cy,r:R}], schwer={x:cx-R*0.9,y:cy-R*0.55};
     andere.forEach(function(t,i){
-      var best=null, bd=1e9;
-      // Kandidaten: tangential an jedem schon gesetzten Kreis, alle 5°
+      var rk=i>=3?24:33, best=null, bd=1e9;
+      function frei(x,y){ if(x-rk<0||y-rk<0||x+rk>W||y+rk>H+20) return false;
+        for(var j=0;j<platz.length;j++){ var q=platz[j]; if(Math.hypot(x-q.x,y-q.y)<q.r+rk-0.5) return false; } return true; }
       platz.forEach(function(q){ for(var a=0;a<360;a+=5){ var w=a*Math.PI/180, x=q.x+(q.r+rk)*Math.cos(w), y=q.y+(q.r+rk)*Math.sin(w);
         if(!frei(x,y)) continue; var d=Math.hypot(x-schwer.x,y-schwer.y); if(d<bd){ bd=d; best={x:x,y:y}; } } });
       if(!best) return;
       platz.push({x:best.x,y:best.y,r:rk});
-      var d=document.createElement("div"); d.className="kreis andere"; d.style.width=d.style.height=(2*rk)+"px";
-      d.style.left=best.x+"px"; d.style.top=best.y+"px"; d.style.transitionDelay=(0.22+i*0.06)+"s";
-      d.textContent=t[0]; el.appendChild(d); });
-    var f=el.parentNode.querySelector(".kreise-fuss"); if(!f){ f=document.createElement("p"); f.className="kreise-fuss"; el.parentNode.insertBefore(f, el.nextSibling); }
-    f.textContent="Die fünf verbreitetsten anderen Themenfelder — ohne Reihenfolge.";
+      var d2=document.createElement("div"); d2.className="kreis andere"+(rk===24?" klein2":"");
+      d2.style.width=d2.style.height=(2*rk)+"px";
+      d2.style.left=best.x+"px"; d2.style.top=best.y+"px"; d2.style.transitionDelay=(0.22+i*0.06)+"s";
+      d2.textContent=kurz(t[0]); el.appendChild(d2); });
+    // Gruppe mittig ausrichten
+    var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+    platz.forEach(function(q){ x0=Math.min(x0,q.x-q.r); y0=Math.min(y0,q.y-q.r); x1=Math.max(x1,q.x+q.r); y1=Math.max(y1,q.y+q.r); });
+    var dx=(W-(x1-x0))/2-x0, dy=(H-(y1-y0))/2-y0;
+    [].forEach.call(el.children,function(c){ c.style.left=(parseFloat(c.style.left)+dx)+"px"; c.style.top=(parseFloat(c.style.top)+dy)+"px"; });
+    var f=el.parentNode.querySelector(".kreise-fuss"); if(f) f.textContent="";
   }
-  // C · Raster: alle 40 Themenfelder als gleiche Punkte im Wabenraster, Ihres dreifach groß und rot mittendrin.
-  //     Die anderen tragen ihren Namen als Tooltip und zeigen ihn beim Tippen.
-  function baueRaster(){
-    var el=$("raster"); el.innerHTML="";
-    var st=stufe(dezil(Z.min,Z.kohorte),Z.kohorte);
-    var W=el.clientWidth||358, rk=13, dx=2*rk+6, dy=dx*0.87;
-    var cols=Math.floor((W-8)/dx), R=44;
-    var andere=THEMEN.filter(function(t){return t[0]!==Z.thema;}).sort(function(a,b){return b[1]-a[1];});
-    var rows=Math.ceil((andere.length+9)/cols)+1, H=rows*dy+2*rk+8; el.style.height=H+"px";
-    var cx=W/2, cy=H/2;
-    var m=document.createElement("div"); m.className="kreis mein klein"+(st==="D"?" neutral":"");
-    m.style.width=m.style.height=(2*R)+"px"; m.style.left=cx+"px"; m.style.top=cy+"px";
-    m.innerHTML="<b>"+Z.thema+"</b>"; el.appendChild(m);
-    var k=0, zellen=[];
-    for(var row=0;row<rows;row++){ for(var col=0;col<cols;col++){
-      var x=8+rk+col*dx+(row%2?dx/2:0), y=rk+4+row*dy; if(x+rk>W-4) continue;
-      var dist=Math.hypot(x-cx,y-cy); if(dist<R+rk+2) continue;                  // Zellen unter Ihrem Kreis fallen weg
-      zellen.push({x:x,y:y,d:dist}); } }
-    zellen.sort(function(a,b){return a.d-b.d;});                                 // von innen nach außen füllen
-    zellen.slice(0,andere.length).forEach(function(z,i){ var t=andere[i], d=document.createElement("button"); d.type="button"; d.className="kreis punkt";
-      d.style.width=d.style.height=(2*rk)+"px"; d.style.left=z.x+"px"; d.style.top=z.y+"px"; d.style.transitionDelay=(0.1+z.d/900)+"s";
-      d.title=t[0]; d.setAttribute("aria-label",t[0]); d.dataset.name=t[0];
-      d.addEventListener("click",function(){ el.querySelectorAll(".punkt.offen").forEach(function(o){ if(o!==d) o.classList.remove("offen"); }); d.classList.toggle("offen"); });
-      el.appendChild(d); });
-    var f=el.parentNode.querySelector(".raster-fuss"); if(!f){ f=document.createElement("p"); f.className="raster-fuss"; el.parentNode.insertBefore(f, el.nextSibling); }
-    f.textContent="Alle 40 Themenfelder. Tippen zeigt den Namen.";
-  }
-  function baueRangliste(){
+    function baueRangliste(){
     var el=$("rangliste"); el.innerHTML="";
     var sortiert=THEMEN.slice().sort(function(a,b){return b[1]-a[1];}), mx=sortiert[0][1];
     var rang=sortiert.findIndex(function(t){return t[0]===Z.thema;})+1;
@@ -1246,7 +1224,7 @@ body[data-breite=desktop-raster] .telefon::after{
     var el=$('tag'); el.innerHTML='';
     Object.keys(TAGE).forEach(function(n){ var a=TAGE[n],d=document.createElement('div');
       d.className='a'+(n===Z.tageszeit?' aktiv':''); d.style.flex=a[1];
-      d.style.setProperty('--ah', n===Z.tageszeit?'44px':'14px');
+      d.style.setProperty('--ah', n===Z.tageszeit?'56px':'14px');
       d.innerHTML='<i></i><span>'+a[0]+(n===Z.tageszeit?' Uhr':'')+'</span>'; el.appendChild(d); });
     // Sonnenbahn wie im Wetter-Widget: eine Sinuskurve über 24 Stunden, über dem Horizont hell, darunter gedämpft.
     // Die zurückgelegte Strecke färbt sich rot, die Sonne (nachts: der Mond) sitzt am Ende der roten Spur.
