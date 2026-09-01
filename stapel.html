@@ -14,21 +14,24 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body{background:#0b0b0b} }
 :root[data-theme="dark"] body{background:#0b0b0b}
 .aussen{display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 0 40px}
-.onboard{position:absolute;inset:0;z-index:80;background:var(--seite);display:flex;align-items:center;
-  padding:0 28px;transition:opacity .5s var(--e),transform .5s var(--e)}
+.onboard{position:absolute;left:26px;right:26px;top:8px;bottom:50px;z-index:40;overflow:auto;
+  display:flex;flex-direction:column;justify-content:center;
+  background:var(--karte,var(--seite));background:var(--seite);border:1px solid var(--linie);border-radius:4px;
+  padding:26px 22px;box-shadow:0 12px 28px -8px rgba(0,0,0,.22);
+  transition:opacity .5s var(--e),transform .5s var(--e)}
 .onboard.weg{opacity:0;transform:translateY(14px);pointer-events:none}
 .ob-kick{font-size:13px;font-weight:700;color:var(--marker);letter-spacing:.04em;text-transform:uppercase}
-.ob-inner h2{font-size:30px;line-height:1.12;margin-top:10px}
-.ob-sub{font-size:15px;line-height:1.55;color:var(--ink3);margin-top:12px}
-.ob-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
-.ob-chips button{font-family:var(--ff);font-size:15px;padding:11px 18px;border-radius:99px;cursor:pointer;
+.onboard h2{font-size:24px;line-height:1.15;margin-top:8px}
+.ob-sub{font-size:13.5px;line-height:1.5;color:var(--ink3);margin-top:8px}
+.ob-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.ob-chips button{font-family:var(--ff);font-size:14px;padding:9px 14px;border-radius:99px;cursor:pointer;
   border:1px solid var(--linie);background:transparent;color:var(--ink);transition:all .2s var(--e)}
 .ob-chips button i{font-style:normal;margin-right:7px;color:var(--ink3)}
 .ob-chips button.an{background:var(--marker);border-color:var(--marker);color:#fff;font-weight:700}
 .ob-chips button.an i{color:#fff}
-.ob-los{display:block;width:100%;margin-top:28px;font-family:var(--ff);font-size:16px;font-weight:700;
+.ob-los{display:block;width:100%;margin-top:20px;font-family:var(--ff);font-size:16px;font-weight:700;
   color:var(--seite);background:var(--ink);border:0;border-radius:4px;padding:14px 16px;cursor:pointer}
-.ob-skip{display:block;margin:14px auto 0;font-family:var(--ff);font-size:13px;color:var(--ink3);
+.ob-skip{display:block;margin:12px auto 0;font-family:var(--ff);font-size:13px;color:var(--ink3);
   background:none;border:0;cursor:pointer;text-decoration:underline}
 .dbg-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;
   padding-top:12px;border-top:1px solid var(--linie);font-size:12px;color:var(--ink2)}
@@ -133,6 +136,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .liste-mi{margin-top:8px}
 .liste-mi a{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--linie);font-size:15px;color:var(--ink)}
 .liste-mi a span{color:var(--ink3)}
+.liste-mi a b{font-weight:700}
 .liste-mi a:last-child{border-bottom:0}
 .tabbar{position:absolute;left:16px;right:16px;bottom:14px;height:60px;border-radius:20px;z-index:6;
   display:flex;align-items:center;justify-content:space-around;
@@ -155,16 +159,6 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <div class="insel"></div>
   <div class="status"><span>13:37</span><span class="st-r"><i></i><i></i><i></i></span></div>
   <div class="toast" id="toast" role="status"></div>
-  <div class="onboard" id="onboard">
-    <div class="ob-inner">
-      <p class="ob-kick">Ihre erste ZEIT</p>
-      <h2>Worüber möchten Sie lesen?</h2>
-      <p class="ob-sub">Wählen Sie Ihre Interessen — diese Seite stellt sich damit jeden Tag für Sie zusammen.</p>
-      <div class="ob-chips" id="obChips"></div>
-      <button type="button" class="ob-los" id="obLos">Los geht's</button>
-      <button type="button" class="ob-skip" id="obSkip">Später auswählen</button>
-    </div>
-  </div>
   <div class="rohr">
 <div class="app">
   <div class="kopf">
@@ -176,6 +170,14 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     </div>
   </div>
   <div class="buehne" id="buehne">
+    <div class="onboard" id="onboard">
+      <p class="ob-kick">Ihre erste ZEIT</p>
+      <h2>Worüber möchten Sie lesen?</h2>
+      <p class="ob-sub">Wählen Sie Ihre Interessen — diese Seite stellt sich damit jeden Tag für Sie zusammen.</p>
+      <div class="ob-chips" id="obChips"></div>
+      <button type="button" class="ob-los" id="obLos">Los geht's</button>
+      <button type="button" class="ob-skip" id="obSkip">Später auswählen</button>
+    </div>
     <div class="ende-panel" id="endePanel">
       <h3>Das war's für heute!</h3>
       <p>Sie haben alle Empfehlungen gesehen — und Ihr Interessensprofil für heute weiter verbessert.</p>
@@ -197,6 +199,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <div class="sektion">
     <div class="s-kopf"><h3>Meine Inhalte</h3></div>
     <div class="liste-mi">
+      <a id="interessenLink"><b>Meine Interessen</b><span>›</span></a>
       <a>Gefolgte Inhalte<span>›</span></a>
       <a>Merkliste<span>›</span></a>
       <a>Lese- und Hör-Chronik<span>›</span></a>
@@ -377,15 +380,27 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     obChips.appendChild(b);
   });
   function obZu(){ document.getElementById('onboard').classList.add('weg'); }
+  var prevWahl={};
   document.getElementById('obLos').addEventListener('click',function(){
-    var welche=INTERESSEN.filter(function(n){return obWahl[n];});
-    welche.forEach(function(n){ scores[n]+=2; });
+    var geaendert=false;
+    INTERESSEN.forEach(function(n){
+      var delta=(obWahl[n]?1:0)-(prevWahl[n]?1:0);
+      if(delta){ scores[n]+=delta*2; geaendert=true; }
+      prevWahl[n]=!!obWahl[n];
+    });
     zeichneScores();
-    if(welche.length){ gesehen=[]; merk=[]; baueStapel(naechsterSatz());
-      toast('Ihre Auswahl fließt in Ihr Interessensprofil'); }
+    if(geaendert){ gesehen=[]; merk=[];
+      document.getElementById('endePanel').classList.remove('zeigt');
+      baueStapel(naechsterSatz());
+      toast('Ihre Interessen fließen in Ihr Profil'); }
     obZu();
   });
   document.getElementById('obSkip').addEventListener('click',obZu);
+  document.getElementById('interessenLink').addEventListener('click',function(){
+    document.getElementById('onboard').classList.remove('weg');
+    document.getElementById('onboardToggle').setAttribute('aria-checked','true');
+    document.querySelector('.rohr').scrollTo({top:0,behavior:'smooth'});
+  });
   document.getElementById('onboardToggle').addEventListener('click',function(){
     var an=this.getAttribute('aria-checked')!=='true';
     this.setAttribute('aria-checked',String(an));
