@@ -708,19 +708,7 @@ body[data-breite=desktop-split] .daten{display:grid;grid-template-columns:440px 
 body[data-breite=desktop-split] .daten .sbuehne{grid-column:1;grid-row:1/span 4;align-self:stretch;display:block;
   position:static;background:transparent;border:0;box-shadow:none;padding:0;margin:0;min-height:0}
 body[data-breite=desktop-split] .daten .sbuehne .rahmen{position:sticky;top:calc((100cqh - 520px)/2);height:520px;
-  background:var(--flaeche);border-radius:4px;overflow:hidden;transition:background-color .7s var(--e)}
-#buehneRahmen[data-aktiv=s-zeit]{background:#e5f7ff} #buehneRahmen[data-aktiv=s-band]{background:#fff6e8}
-#buehneRahmen[data-aktiv=s-tag]{background:#e9f7ed} #buehneRahmen[data-aktiv=s-thema]{background:#ede6f4}
-@media (prefers-color-scheme:dark){
- :root:not([data-theme="light"]) #buehneRahmen[data-aktiv=s-zeit]{background:#1c292e}
- :root:not([data-theme="light"]) #buehneRahmen[data-aktiv=s-band]{background:#2c251b}
- :root:not([data-theme="light"]) #buehneRahmen[data-aktiv=s-tag]{background:#1f2922}
- :root:not([data-theme="light"]) #buehneRahmen[data-aktiv=s-thema]{background:#2c2632}
-}
-:root[data-theme="dark"] #buehneRahmen[data-aktiv=s-zeit]{background:#1c292e}
-:root[data-theme="dark"] #buehneRahmen[data-aktiv=s-band]{background:#2c251b}
-:root[data-theme="dark"] #buehneRahmen[data-aktiv=s-tag]{background:#1f2922}
-:root[data-theme="dark"] #buehneRahmen[data-aktiv=s-thema]{background:#2c2632}
+  background:var(--karte);border:1px solid var(--linie);border-radius:4px;overflow:hidden}
 .b-dots{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:8px;z-index:2}
 .b-dots i{width:6px;height:6px;border-radius:99px;background:var(--bar);transition:width .45s var(--e),background-color .45s var(--e)}
 .b-dots i.an2{width:20px;background:var(--marker)}
@@ -734,6 +722,9 @@ body[data-breite=desktop-split] #buehne{max-width:none!important;margin:0!import
 
 body[data-breite=desktop-split] .daten .sbuehne .an{opacity:1;transform:none;filter:none}
 .b-zahl{font-size:56px;font-weight:700;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums;text-wrap:balance;line-height:1.1}
+.nur-split{display:none}
+body[data-breite=desktop-split] .nur-split{display:inline}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .zahl{display:none}
 body[data-breite=desktop-split] .daten .szene:not(.sbuehne){grid-column:2;background:transparent;border:0;box-shadow:none;
   min-height:56cqh;padding:20px 0;margin:0;justify-content:center;align-items:flex-start;text-align:left;
   opacity:.32;transition:opacity .45s var(--e)}
@@ -1555,12 +1546,13 @@ body[data-breite=desktop-raster] .telefon::after{
     $('median').textContent='';
     $('medianMarke').setAttribute('data-min', mt(k.g[4]));
     var schnitt=(proTag>=60?mt(proTag):proTag+' Min.');
-    $('zeitSatz').innerHTML = st==='F'?'Ihre Woche hat gerade erst begonnen — Zeit für Ihren ersten Artikel!'
+    var zs = st==='F'?'Ihre Woche hat gerade erst begonnen — Zeit für Ihren ersten Artikel!'
       : st==='E'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
       : st==='D'?'haben Sie in Ihrer ersten Woche gelesen. Ein guter Start! Machen Sie weiter so!'
       : st==='C'?'haben Sie in Ihrer ersten Woche gelesen. Im Schnitt '+schnitt+' pro Tag – Sie sind auf Kurs!'
       : st==='B'?'haben Sie diese Woche gelesen. Im Schnitt '+schnitt+' pro Tag – Sie gehören zur Spitze!'
       : 'haben Sie diese Woche gelesen. Im Schnitt '+schnitt+' pro Tag – <b>Beeindruckend!</b>';
+    $('zeitSatz').innerHTML = (zs.indexOf('haben Sie')===0?'<span class="nur-split">So viel </span>':'')+zs;
     $('zeitQuelle').textContent=(st==='E'||st==='F')?'Ihr Rückblick wächst mit jedem Lesetag.':'';
 
     baueBand(d, st==='A'||st==='B');
