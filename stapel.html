@@ -18,14 +18,14 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
   display:flex;flex-direction:column;justify-content:center;
   background:var(--seite);padding:0 16px;
   transition:opacity .5s var(--e),transform .5s var(--e)}
-.buehne:has(.onboard:not(.weg)) .punkte{display:none}
+.buehne:has(.onboard:not(.weg)) .zaehler{display:none}
 .buehne:has(.onboard:not(.weg)) + .hinweis{visibility:hidden}
 .onboard.weg{opacity:0;transform:translateY(14px);pointer-events:none}
 .ob-kick{font-size:13px;font-weight:700;color:var(--marker);letter-spacing:.04em;text-transform:uppercase}
 .onboard h2{font-size:24px;line-height:1.15;margin-top:8px}
 .ob-sub{font-size:13.5px;line-height:1.5;color:var(--ink3);margin-top:8px}
 .ob-liste{display:flex;flex-direction:column;margin-top:14px}
-.ob-row{display:flex;align-items:center;gap:12px;padding:11px 2px;background:none;border:0;
+.ob-row{display:flex;align-items:center;gap:12px;padding:8px 2px;background:none;border:0;
   border-bottom:1px solid var(--linie);font-family:var(--ff);font-size:15px;color:var(--ink);
   cursor:pointer;text-align:left;width:100%}
 .ob-row:last-child{border-bottom:0}
@@ -47,8 +47,17 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
   border-radius:4px;padding:16px;z-index:50}
 .debug b{font-size:13px} .debug b em{font-style:normal;color:var(--marker);font-size:10px;vertical-align:2px;margin-left:4px}
 .debug p{font-size:11px;line-height:1.45;color:var(--ink3);margin-top:12px}
-.sc-row{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px}
-.sc-row span{width:78px;flex:none;color:var(--ink2)}
+.sc-row{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:11.5px}
+.dbg-match{display:flex;justify-content:space-between;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--linie);font-size:11.5px;color:var(--ink2)}
+.dbg-match b{text-align:right;color:var(--ink);font-weight:700;max-width:130px}
+.dbg-slider{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11.5px}
+.dbg-slider span{width:44px;flex:none;font-weight:700}
+.dbg-slider input{flex:1;accent-color:var(--marker)}
+.dbg-slider small{width:74px;flex:none;color:var(--ink3);font-size:10px;line-height:1.3}
+.dbg-log{margin-top:12px;padding-top:10px;border-top:1px solid var(--linie);font-size:10.5px;color:var(--ink3);line-height:1.6}
+#resetProfil{margin-top:12px;width:100%;font-family:var(--ff);font-size:12px;font-weight:700;color:var(--ink);
+  background:var(--linie);border:0;border-radius:4px;padding:9px;cursor:pointer}
+.sc-row span{width:86px;flex:none;color:var(--ink2)}
 .sc-row i{height:8px;border-radius:4px;transition:width .35s var(--e),background-color .35s var(--e)}
 .sc-row b{margin-left:auto;font-variant-numeric:tabular-nums}
 @media (max-width:900px){.debug{display:none}}
@@ -83,6 +92,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   box-shadow:0 12px 28px -8px rgba(0,0,0,.28);
   transition:transform .5s var(--e),opacity .4s var(--e);will-change:transform}
 .karte.greift{transition:none;cursor:grabbing}
+.karte .grund{display:inline-block;font-size:11px;font-weight:700;background:rgba(255,255,255,.2);
+  border-radius:3px;padding:4px 8px;margin-bottom:10px}
 .karte .kick{font-size:13px;opacity:.8}
 .karte h2{font-size:26px;line-height:1.15;margin-top:6px;text-wrap:balance}
 .karte .by{position:absolute;left:24px;bottom:78px;font-size:13px;opacity:.75}
@@ -119,6 +130,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   background:var(--ink);color:var(--seite);font-size:13px;font-weight:700;padding:10px 16px;border-radius:4px;
   opacity:0;transition:opacity .3s var(--e),transform .3s var(--e);pointer-events:none;white-space:nowrap;max-width:90%}
 .toast.zeigt{opacity:1;transform:translateX(-50%) translateY(0)}
+.zaehler{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
 .punkte{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;gap:8px}
 .punkte i{width:6px;height:6px;border-radius:99px;background:var(--dot);transition:all .35s var(--e)}
 .punkte i.an{width:20px;background:var(--marker)}
@@ -156,10 +168,15 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <button type="button" data-v="stapel" aria-pressed="false">Stapel</button>
   <button type="button" data-v="kaskade" aria-pressed="false">Kaskade</button>
 </div>
-<aside class="debug"><b>Geschmacksprofil <em>Debug</em></b><div id="scores"></div>
+<aside class="debug"><b>Recommender-Sandbox <em>Debug</em></b><div id="scores"></div>
+  <div class="dbg-match"><span>Oberste Karte</span><b id="matchWert">—</b></div>
+  <div class="dbg-slider"><span id="etaWert">η 1</span><input type="range" id="etaSlider" min="0.5" max="2" step="0.5" value="1"><small>Lernrate je Swipe</small></div>
+  <div class="dbg-slider"><span id="epsWert">ε 20%</span><input type="range" id="epsSlider" min="0" max="0.5" step="0.05" value="0.2"><small>Anteil „Zum Entdecken"</small></div>
+  <div class="dbg-log" id="dbgLog"></div>
+  <button type="button" id="resetProfil">Profil zurücksetzen</button>
   <div class="dbg-row"><span>Interessen-Abfrage beim Start</span>
     <button type="button" class="switch klein" id="onboardToggle" role="switch" aria-checked="false"><i></i></button></div>
-  <p>Rechts-Swipe +1, Links-Swipe −1 auf das Ressort. Die Start-Auswahl zählt +2. „Neue Empfehlungen" sortiert den Nachschub nach Score.</p></aside>
+  <p>Rechts-Swipe +η, Links-Swipe −η auf beide Themen der Karte; Start-Auswahl ±2. Der Stapel zieht immer den Kandidaten mit dem höchsten Profil-Match nach — mit ε-Anteil bewusster Entdecker-Karten.</p></aside>
 <div class="geraet">
   <div class="insel"></div>
   <div class="status"><span>13:37</span><span class="st-r"><i></i><i></i><i></i></span></div>
@@ -189,7 +206,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       <div class="merk" id="merkListe"></div>
       <button type="button" id="nochmal">Neue Empfehlungen anzeigen</button>
     </div>
-    <div class="punkte" id="punkte"></div>
+    <div class="zaehler" id="zaehler"></div>
   </div>
   <p class="hinweis">Karte zur Seite ziehen oder antippen</p>
   <div class="sektion">
@@ -223,80 +240,70 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 </div></div></div>
 <script>
 (function(){
-  var POOL=[
-    {f:'#1c3fa3',k:'Wissen',t:'Die Macht der fünf Minuten: Longevity für Faule',b:'Von Rose Tremlett'},
-    {f:'#35634a',k:'Reise',t:'Bis ans Ende der Welt',b:'Von Anna Mayr'},
-    {f:'#8e2a49',k:'Politik',t:'Hat Deutschland zu viel Zuwanderung?',b:'Von Paul Middelhoff'},
-    {f:'#5b2a86',k:'Kultur',t:'»Ein Sprachverfall ist das auf keinen Fall«',b:'Von Caroline Rosales'},
-    {f:'#7a5c1e',k:'Wissenschaft',t:'Wem schlechte Forschung nützt',b:'Von Andreas Sentker'},
-    {f:'#16407c',k:'Wissen',t:'Warum Schlaf Chefsache ist',b:'Von Jan Schweitzer'},
-    {f:'#6d1f38',k:'Politik',t:'Europas neue Mitte',b:'Von Mariam Lau'},
-    {f:'#2f5d50',k:'Reise',t:'Nachtzug nach Lissabon, Gleis 7',b:'Von Franz Sommerfeld'},
-    {f:'#4a2f74',k:'Kultur',t:'Das Comeback der Videothek',b:'Von Volker Weidermann'},
-    {f:'#8c6a1f',k:'Wissenschaft',t:'Was das Webb-Teleskop wirklich sieht',b:'Von Maria Mast'},
-    {f:'#274a75',k:'Wissen',t:'Die Psychologie des Aufschiebens',b:'Von Sven Stockrahm'},
-    {f:'#7d2f2f',k:'Politik',t:'Koalition der Müdigkeit',b:'Von Bernd Ulrich'}
+  // ── Themenraum & Artikel-Pool (24 Artikel, je 2 Themen-Tags)
+  var THEMEN=['Politik','Wirtschaft','Wissen','Gesundheit','Kultur','Reise','Wissenschaft','Digital','Klima','Gesellschaft'];
+  var ICONS={Politik:'🏛️',Wirtschaft:'📈',Wissen:'💡',Gesundheit:'🫀',Kultur:'🎭',Reise:'✈️',Wissenschaft:'🔬',Digital:'💻',Klima:'🌍',Gesellschaft:'👥'};
+  var FARBEN=['#1c3fa3','#35634a','#8e2a49','#5b2a86','#7a5c1e','#16407c','#6d1f38','#2f5d50','#4a2f74','#8c6a1f','#274a75','#7d2f2f'];
+  var ROH=[
+    ['Die Macht der fünf Minuten: Longevity für Faule','Rose Tremlett',['Wissen','Gesundheit']],
+    ['Bis ans Ende der Welt','Anna Mayr',['Reise','Gesellschaft']],
+    ['Hat Deutschland zu viel Zuwanderung?','Paul Middelhoff',['Politik','Gesellschaft']],
+    ['»Ein Sprachverfall ist das auf keinen Fall«','Caroline Rosales',['Kultur','Gesellschaft']],
+    ['Wem schlechte Forschung nützt','Andreas Sentker',['Wissenschaft','Politik']],
+    ['Warum Schlaf Chefsache ist','Jan Schweitzer',['Gesundheit','Wirtschaft']],
+    ['Europas neue Mitte','Mariam Lau',['Politik']],
+    ['Nachtzug nach Lissabon, Gleis 7','Franz Sommerfeld',['Reise','Kultur']],
+    ['Das Comeback der Videothek','Volker Weidermann',['Kultur','Digital']],
+    ['Was das Webb-Teleskop wirklich sieht','Maria Mast',['Wissenschaft','Wissen']],
+    ['Die Psychologie des Aufschiebens','Sven Stockrahm',['Wissen','Gesundheit']],
+    ['Koalition der Müdigkeit','Bernd Ulrich',['Politik']],
+    ['Der Preis des billigen Geldes','Mark Schieritz',['Wirtschaft','Politik']],
+    ['Vier Tage arbeiten, besser leben?','David Gutensohn',['Wirtschaft','Gesellschaft']],
+    ['Die stille Rückkehr der Wölfe','Fritz Habekuß',['Klima','Wissen']],
+    ['Wie KI unsere Sprache verändert','Jakob von Lindern',['Digital','Kultur']],
+    ['Das Ende des Passworts','Eva Wolfangel',['Digital','Wissenschaft']],
+    ['Warum Wandern das neue Reisen ist','Karin Ceballos Betancur',['Reise','Gesundheit']],
+    ['Hitzesommer: Was Städte jetzt lernen','Petra Pinzler',['Klima','Politik']],
+    ['Die neue Lust am Kochen','Elisabeth Raether',['Kultur','Gesundheit']],
+    ['Aktien für Anfängerinnen','Marilena Piesker',['Wirtschaft','Wissen']],
+    ['Was der Ozean noch verträgt','Stefan Schmitt',['Klima','Wissenschaft']],
+    ['Einsamkeit, die neue Volkskrankheit','Harro Albrecht',['Gesellschaft','Gesundheit']],
+    ['Streaming: Wer gewinnt den Plattformkrieg?','Lisa Hegemann',['Digital','Wirtschaft']]
   ];
-  var INTERESSEN=['Politik','Wissen','Kultur','Reise','Wissenschaft'];
-  var scores={}; INTERESSEN.forEach(function(n){ scores[n]=0; });
-  var gesehen=[], satz=[];
-  function teaserHtml(i){ var a=POOL[i];
-    return '<div class="teaser" style="--f:'+a.f+'"><p class="t-kick">'+a.k+'</p><h4>'+a.t+'</h4><p class="t-by">'+a.b+'</p></div>'; }
-  function zeichneTeaser(){
-    var reihe=document.getElementById('teaserReihe'); if(!reihe) return;
-    var sortiert=POOL.map(function(a,i){return i;}).sort(function(a,b){
-      return (scores[POOL[b].k]-scores[POOL[a].k]) || (a-b); });
-    var top3=sortiert.slice(0,3);
-    reihe.innerHTML=top3.map(teaserHtml).join('');
-    // Sub-Zeile benennt die stärksten Interessen
-    var starke=INTERESSEN.filter(function(n){return scores[n]>0;})
-      .sort(function(a,b){return scores[b]-scores[a];});
-    var sub=document.getElementById('empfSub');
-    if(sub) sub.textContent = starke.length
-      ? 'Weil Sie sich für '+(starke.length>1?starke[0]+' und '+starke[1]:starke[0])+' interessieren'
-      : 'Basierend auf Ihren Aktivitäten';
-    // Eigene Sektion fürs stärkste Ressort
-    var sek=document.getElementById('ressortSektion'); if(!sek) return;
-    if(!starke.length){ sek.hidden=true; return; }
-    var topK=starke[0];
-    var rest=POOL.map(function(a,i){return i;})
-      .filter(function(i){ return POOL[i].k===topK && top3.indexOf(i)<0; }).slice(0,3);
-    if(!rest.length){ sek.hidden=true; return; }
-    sek.hidden=false;
-    document.getElementById('ressortTitel').textContent='Ihr Ressort: '+topK;
-    document.getElementById('ressortReihe').innerHTML=rest.map(teaserHtml).join('');
+  var POOL=ROH.map(function(r,i){ return {t:r[0],b:'Von '+r[1],tags:r[2],f:FARBEN[i%FARBEN.length]}; });
+
+  // ── Profil & Recommender
+  var profil={}; THEMEN.forEach(function(n){ profil[n]=0; });
+  var eta=1, eps=0.2;
+  var gesehen={}, expl={}, merk=[], logbuch=[];
+  function match(i){ return POOL[i].tags.reduce(function(s,t){ return s+(profil[t]||0); },0); }
+  function kandidaten(){
+    return POOL.map(function(_,i){return i;}).filter(function(i){return !gesehen[i];})
+      .sort(function(a,b){ return match(b)-match(a) || a-b; });
   }
-  function zeichneScores(){
-    var el=document.getElementById('scores'); if(!el) return;
-    el.innerHTML=INTERESSEN.map(function(n){
-      var v=scores[n], w=Math.max(4, 50+v*16);
-      return '<div class="sc-row"><span>'+n+'</span><i style="width:'+Math.min(120,w)+'px;background:'+(v<0?'#c6c6c6':'var(--marker)')+'"></i><b>'+(v>0?'+':'')+v+'</b></div>';
-    }).join('');
-    zeichneTeaser();
+  function waehle(){
+    var ks=kandidaten(); if(!ks.length) return -1;
+    if(Math.random()<eps && ks.length>3){
+      var i=ks[3+Math.floor(Math.random()*(ks.length-3))]; expl[i]=true; return i;
+    }
+    return ks[0];
   }
-  function naechsterSatz(){
-    var frei=POOL.map(function(a,i){return i;}).filter(function(i){ return gesehen.indexOf(i)<0; });
-    if(frei.length<5){ gesehen=[]; frei=POOL.map(function(a,i){return i;}); }
-    frei.sort(function(a,b){ return (scores[POOL[b].k]-scores[POOL[a].k]) || (a-b); });
-    satz=frei.slice(0,5); satz.forEach(function(i){ gesehen.push(i); });
-    return satz.map(function(i){ return POOL[i]; });
+  function grund(i){
+    if(expl[i]) return 'Zum Entdecken';
+    var best=null,bv=0;
+    POOL[i].tags.forEach(function(t){ if((profil[t]||0)>bv){ bv=profil[t]; best=t; } });
+    return best?('Weil Sie sich für '+best+' interessieren'):'Für Ihren Einstieg';
   }
-  var buehne=document.getElementById('buehne'), punkte=document.getElementById('punkte');
-  var karten=[], reihe=[], DATEN=[];
-  function baueStapel(artikel){
-    karten.forEach(function(k){ k.remove(); });
-    karten=[]; reihe=[]; DATEN=artikel; punkte.innerHTML='';
-    DATEN.forEach(function(d,i){
-      var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
-      k.innerHTML='<p class="kick">'+d.k+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
-        '<div class="fuss"><span class="lesen">Lesen</span></div>'+
-        '<span class="stmp links"><svg viewBox="0 0 24 24" width="34" height="34"><g transform="rotate(180 12 12)"><path d="M7 10v10H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h3zm2 10V9.4L12.6 3a1.8 1.8 0 0 1 2.5 1.9L14.4 9h4.9a2.4 2.4 0 0 1 2.35 2.9l-1.3 5.9A2.4 2.4 0 0 1 18 20H9z" fill="currentColor"/></g></svg></span>'+
-        '<span class="stmp rechts"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M6 3h12v18l-6-4.6L6 21z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></span>';
-      buehne.insertBefore(k,punkte); karten.push(k); reihe.push(i);
-      var pd=document.createElement('i'); punkte.appendChild(pd);
-    });
-    lege();
+  function bewerte(idx,dir){
+    POOL[idx].tags.forEach(function(t){ profil[t]=Math.round((profil[t]+dir*eta)*10)/10; });
+    logbuch.unshift((dir>0?'+':'−')+eta+' auf '+POOL[idx].tags.join(' & ')+' · „'+POOL[idx].t.slice(0,26)+'…"');
+    logbuch=logbuch.slice(0,4);
+    if(dir>0) merk.push(POOL[idx]);
   }
+
+  // ── Stapel (hält 4 Karten, zieht nach)
+  var buehne=document.getElementById('buehne'), zaehler=document.getElementById('zaehler');
+  var stapel=[]; // [{el,idx}] — [0] ist vorn
   var VARIANTEN={
     dezent:[{x:0,y:0,r:0,s:1,o:1},{x:-12,y:5,r:-2.5,s:.97,o:1},{x:12,y:8,r:2,s:.94,o:1},{x:0,y:10,r:0,s:.92,o:0}],
     faecher:[{x:0,y:0,r:0,s:1,o:1},{x:-22,y:6,r:-5,s:.965,o:1},{x:22,y:8,r:4,s:.93,o:1},{x:0,y:10,r:-2,s:.9,o:0}],
@@ -309,32 +316,53 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
     POS=VARIANTEN[b.dataset.v]||VARIANTEN.dezent; lege();
   });
-  function lege(){
-    reihe.forEach(function(idx,pos){
-      var p=POS[Math.min(pos,3)], k=karten[idx];
-      k.style.transform='translate('+p.x+'px,'+p.y+'px) rotate('+p.r+'deg) scale('+p.s+')';
-      k.style.opacity=p.o; k.style.zIndex=String(20-pos); k.style.pointerEvents=pos===0?'auto':'none';
-    });
-    [].forEach.call(punkte.children,function(d,i){ d.classList.toggle('an', i===reihe[0]); });
+  function karteEl(idx){
+    var d=POOL[idx];
+    var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
+    k.innerHTML='<p class="grund">'+grund(idx)+'</p><p class="kick">'+d.tags.join(' · ')+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
+      '<div class="fuss"><span class="lesen">Lesen</span></div>'+
+      '<span class="stmp links"><svg viewBox="0 0 24 24" width="34" height="34"><g transform="rotate(180 12 12)"><path d="M7 10v10H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h3zm2 10V9.4L12.6 3a1.8 1.8 0 0 1 2.5 1.9L14.4 9h4.9a2.4 2.4 0 0 1 2.35 2.9l-1.3 5.9A2.4 2.4 0 0 1 18 20H9z" fill="currentColor"/></g></svg></span>'+
+      '<span class="stmp rechts"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M6 3h12v18l-6-4.6L6 21z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></span>';
+    return k;
   }
-  var wechselt=false, merk=[];
+  function fuelle(){
+    while(stapel.length<4){
+      var i=waehle(); if(i<0) break;
+      gesehen[i]=true;
+      var el=karteEl(i);
+      buehne.insertBefore(el,zaehler);
+      stapel.push({el:el,idx:i});
+    }
+    if(!stapel.length){ zeigeEnde(); return; }
+    lege();
+  }
+  function lege(){
+    stapel.forEach(function(o,pos){
+      var p=POS[Math.min(pos,3)];
+      o.el.style.transform='translate('+p.x+'px,'+p.y+'px) rotate('+p.r+'deg) scale('+p.s+')';
+      o.el.style.opacity=p.o; o.el.style.zIndex=String(20-pos);
+      o.el.style.pointerEvents=pos===0?'auto':'none';
+    });
+    var n=Object.keys(gesehen).length;
+    zaehler.textContent='Karte '+Math.min(n, n-stapel.length+1)+' von '+POOL.length;
+    zeichneScores();
+  }
+
+  // ── Übergang: nach hinten sortieren, dann nachziehen
+  var wechselt=false;
   function weiter(richtung,wertet){
-    if(wechselt||!reihe.length) return; wechselt=true;
-    var idx=reihe[0], k=karten[idx];
-    k.style.transform='translate('+(richtung*160)+'px,-10px) rotate('+(richtung*9)+'deg) scale(.96)';
+    if(wechselt||!stapel.length) return; wechselt=true;
+    var o=stapel[0];
+    o.el.style.transform='translate('+(richtung*160)+'px,-10px) rotate('+(richtung*9)+'deg) scale(.96)';
     setTimeout(function(){
-      if(profil){
-        if(wertet){ var kck=DATEN[idx].k; scores[kck]=(scores[kck]||0)+(richtung>0?1:-1); zeichneScores(); }
-        if(wertet&&richtung>0&&merk.indexOf(DATEN[idx])<0) merk.push(DATEN[idx]);
-        reihe.shift();
-        k.style.opacity='0'; k.style.pointerEvents='none';
-        if(!reihe.length){ zeigeEnde(); } else lege();
-      } else {
-        k.style.zIndex='1';
-        reihe.push(reihe.shift());
-        lege();
-      }
-      setTimeout(function(){ wechselt=false; },260);
+      if(profil_an&&wertet) bewerte(o.idx,richtung>0?1:-1);
+      stapel.shift();
+      o.el.style.opacity='0'; o.el.style.pointerEvents='none';
+      setTimeout(function(){ o.el.remove(); },450);
+      // Begründungen der wartenden Karten auffrischen (Profil hat sich geändert)
+      stapel.forEach(function(w){ var g=w.el.querySelector('.grund'); if(g) g.textContent=grund(w.idx); });
+      fuelle();
+      setTimeout(function(){ wechselt=false; },240);
     },200);
   }
   function zeigeEnde(){
@@ -344,17 +372,20 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
           return '<a class="m-row"><i style="background:'+a.f+'"></i><span>'+a.t+'</span><b>›</b></a>'; }).join('')
       : '<p class="m-leer">Heute nichts für später gemerkt.</p>';
     document.getElementById('endePanel').classList.add('zeigt');
-    [].forEach.call(punkte.children,function(d){ d.classList.remove('an'); });
+    zaehler.textContent='';
   }
   document.getElementById('nochmal').addEventListener('click',function(){
     document.getElementById('endePanel').classList.remove('zeigt');
-    merk=[]; baueStapel(naechsterSatz());
+    gesehen={}; expl={}; merk=[];
+    stapel.forEach(function(o){ o.el.remove(); }); stapel=[];
+    fuelle();
   });
-  // Geschmacksprofil-Modus
-  var profil=false, toastTimer=null;
+
+  // ── Ziehen / Tippen / Tasten
+  var profil_an=false, toastTimer=null;
   document.getElementById('profilToggle').addEventListener('click',function(){
-    profil=!profil; this.setAttribute('aria-checked',String(profil));
-    if(profil) toast('Ihre Swipes verbessern jetzt Ihr Interessensprofil');
+    profil_an=!profil_an; this.setAttribute('aria-checked',String(profil_an));
+    if(profil_an) toast('Ihre Swipes verbessern jetzt Ihr Interessensprofil');
   });
   function toast(text){
     var t=document.getElementById('toast'); t.textContent=text; t.classList.add('zeigt');
@@ -363,15 +394,15 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   function stempel(k,wert){
     var l=k.querySelector('.stmp.links'), re=k.querySelector('.stmp.rechts');
     var a=Math.min(1,Math.abs(wert)/85), gr=0.45+Math.min(0.75,Math.abs(wert)/130), dreh=wert*0.09;
-    if(l){ l.style.opacity=profil&&wert<0?a:0; l.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
-    if(re){ re.style.opacity=profil&&wert>0?a:0; re.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
+    if(l){ l.style.opacity=profil_an&&wert<0?a:0; l.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
+    if(re){ re.style.opacity=profil_an&&wert>0?a:0; re.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
   }
-  // Ziehen
   var startX=0,startY=0,dx=0,zieht=false,aktiv=null;
   buehne.addEventListener('pointerdown',function(e){
-    aktiv=karten[reihe[0]]; if(e.target.closest('.karte')!==aktiv) { aktiv=null; return; }
+    if(!stapel.length) return;
+    aktiv=stapel[0].el; if(e.target.closest('.karte')!==aktiv){ aktiv=null; return; }
     zieht=true; startX=e.clientX; startY=e.clientY; dx=0;
-    aktiv.classList.add('greift'); aktiv.setPointerCapture&&buehne.setPointerCapture(e.pointerId);
+    aktiv.classList.add('greift'); buehne.setPointerCapture&&buehne.setPointerCapture(e.pointerId);
   });
   buehne.addEventListener('pointermove',function(e){ if(zieht) e.preventDefault();
     if(!zieht||!aktiv) return; dx=e.clientX-startX;
@@ -382,46 +413,94 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     if(!zieht||!aktiv) return; zieht=false; aktiv.classList.remove('greift');
     stempel(aktiv,0);
     if(Math.abs(dx)>90){
-      if(profil) toast(dx>0?'Für später gemerkt':'Alles klar — davon zeigen wir weniger');
+      if(profil_an) toast(dx>0?'Für später gemerkt':'Alles klar — davon zeigen wir weniger');
       weiter(dx>0?1:-1,true);
     }
-    else if(Math.abs(dx)<6){ weiter(-1,false); } // Tap = nächste, ohne Wertung
+    else if(Math.abs(dx)<6){ weiter(-1,false); }
     else lege();
     aktiv=null;
   }
   buehne.addEventListener('pointerup',loslassen);
   buehne.addEventListener('pointercancel',loslassen);
   document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') weiter(1,true); if(e.key==='ArrowLeft') weiter(-1,true); });
-  baueStapel(naechsterSatz());
-  zeichneScores();
-  // ── Interessen-Abfrage beim Erstbesuch
-  var obWahl={};
+
+  // ── Content unterhalb folgt dem Profil
+  function teaserHtml(i){ var a=POOL[i];
+    return '<div class="teaser" style="--f:'+a.f+'"><p class="t-kick">'+a.tags.join(' · ')+'</p><h4>'+a.t+'</h4><p class="t-by">'+a.b+'</p></div>'; }
+  function zeichneTeaser(){
+    var reihe=document.getElementById('teaserReihe'); if(!reihe) return;
+    var sortiert=POOL.map(function(_,i){return i;}).sort(function(a,b){ return match(b)-match(a) || a-b; });
+    var top3=sortiert.slice(0,3);
+    reihe.innerHTML=top3.map(teaserHtml).join('');
+    var starke=THEMEN.filter(function(n){return profil[n]>0;}).sort(function(a,b){return profil[b]-profil[a];});
+    var sub=document.getElementById('empfSub');
+    if(sub) sub.textContent = starke.length
+      ? 'Weil Sie sich für '+(starke.length>1?starke[0]+' und '+starke[1]:starke[0])+' interessieren'
+      : 'Basierend auf Ihren Aktivitäten';
+    var sek=document.getElementById('ressortSektion'); if(!sek) return;
+    if(!starke.length){ sek.hidden=true; return; }
+    var topK=starke[0];
+    var rest=POOL.map(function(_,i){return i;})
+      .filter(function(i){ return POOL[i].tags.indexOf(topK)>=0 && top3.indexOf(i)<0; }).slice(0,3);
+    if(!rest.length){ sek.hidden=true; return; }
+    sek.hidden=false;
+    document.getElementById('ressortTitel').textContent='Ihr Thema: '+topK;
+    document.getElementById('ressortReihe').innerHTML=rest.map(teaserHtml).join('');
+  }
+
+  // ── Debug-Sandbox
+  function zeichneScores(){
+    var el=document.getElementById('scores'); if(!el) return;
+    el.innerHTML=THEMEN.map(function(n){
+      var v=profil[n], w=Math.max(3, 40+v*14);
+      return '<div class="sc-row"><span>'+n+'</span><i style="width:'+Math.min(105,w)+'px;background:'+(v<0?'#c6c6c6':'var(--marker)')+'"></i><b>'+(v>0?'+':'')+v+'</b></div>';
+    }).join('');
+    var mEl=document.getElementById('matchWert');
+    if(mEl) mEl.textContent = stapel.length ? ('„'+POOL[stapel[0].idx].t.slice(0,20)+'…" · Match '+match(stapel[0].idx)) : '—';
+    var lg=document.getElementById('dbgLog');
+    if(lg) lg.innerHTML = logbuch.length? logbuch.map(function(z){return '<div>'+z+'</div>';}).join('') : '<div>Noch keine Swipes gewertet.</div>';
+    zeichneTeaser();
+  }
+  document.getElementById('etaSlider').addEventListener('input',function(){
+    eta=+this.value; document.getElementById('etaWert').textContent='η '+eta; });
+  document.getElementById('epsSlider').addEventListener('input',function(){
+    eps=+this.value; document.getElementById('epsWert').textContent='ε '+Math.round(eps*100)+'%'; });
+  document.getElementById('resetProfil').addEventListener('click',function(){
+    THEMEN.forEach(function(n){ profil[n]=0; }); logbuch=[]; gesehen={}; expl={}; merk=[];
+    document.getElementById('endePanel').classList.remove('zeigt');
+    stapel.forEach(function(o){ o.el.remove(); }); stapel=[];
+    fuelle(); toast('Profil zurückgesetzt');
+  });
+
+  // ── Interessen-Abfrage (Erstbesuch, jederzeit anpassbar)
+  var obWahl={}, prevWahl={};
   var obChips=document.getElementById('obChips');
-  INTERESSEN.forEach(function(n){
-    var ICONS={Politik:'🏛️',Wissen:'💡',Kultur:'🎭',Reise:'✈️',Wissenschaft:'🔬'};
+  THEMEN.forEach(function(n){
     var b=document.createElement('button'); b.type='button'; b.className='ob-row';
     b.innerHTML='<em>'+(ICONS[n]||'')+'</em><span>'+n+'</span><i>+</i>';
     b.addEventListener('click',function(){ obWahl[n]=!obWahl[n]; b.classList.toggle('an',obWahl[n]);
       b.querySelector('i').textContent=obWahl[n]?'✓':'+';
-      var z=INTERESSEN.filter(function(x){return obWahl[x];}).length;
+      var z=THEMEN.filter(function(x){return obWahl[x];}).length;
       document.getElementById('obLos').textContent=z?'Für mich zusammenstellen ('+z+')':'Los geht\'s';
     });
     obChips.appendChild(b);
   });
   function obZu(){ document.getElementById('onboard').classList.add('weg'); }
-  var prevWahl={};
   document.getElementById('obLos').addEventListener('click',function(){
     var geaendert=false;
-    INTERESSEN.forEach(function(n){
+    THEMEN.forEach(function(n){
       var delta=(obWahl[n]?1:0)-(prevWahl[n]?1:0);
-      if(delta){ scores[n]+=delta*2; geaendert=true; }
+      if(delta){ profil[n]=Math.round((profil[n]+delta*2)*10)/10; geaendert=true; }
       prevWahl[n]=!!obWahl[n];
     });
-    zeichneScores();
-    if(geaendert){ gesehen=[]; merk=[];
+    if(geaendert){
+      logbuch.unshift('Start-Auswahl aktualisiert (±2 je Thema)'); logbuch=logbuch.slice(0,4);
+      gesehen={}; expl={}; merk=[];
       document.getElementById('endePanel').classList.remove('zeigt');
-      baueStapel(naechsterSatz());
-      toast('Ihre Interessen fließen in Ihr Profil'); }
+      stapel.forEach(function(o){ o.el.remove(); }); stapel=[];
+      fuelle();
+      toast('Ihre Interessen fließen in Ihr Profil');
+    } else zeichneScores();
     obZu();
   });
   document.getElementById('obSkip').addEventListener('click',obZu);
@@ -435,5 +514,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     this.setAttribute('aria-checked',String(an));
     document.getElementById('onboard').classList.toggle('weg',!an);
   });
+
+  fuelle();
 })();
 </script>
