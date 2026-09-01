@@ -945,7 +945,7 @@ body[data-breite=desktop-raster] .telefon::after{
     <section class="einstieg" id="s-intro">
       <p class="augen">Ihr persönlicher Rückblick</p>
       <h1 class="h1">Ihre erste Woche mit Z+</h1>
-      <p class="sub">Seit dem 21. August nutzen Sie Z+ — <span id="tagX">heute ist Tag 7 von 7</span>. Werfen wir gemeinsam einen letzten Blick zurück – auf das, was Sie bereits entdeckt haben, und das, was Sie noch alles entdecken können.</p>
+      <p class="sub">Seit dem 21. August nutzen Sie Z+. Werfen wir gemeinsam einen letzten Blick zurück – auf das, was Sie bereits entdeckt haben, und das, was Sie noch alles entdecken können.</p>
       <p class="hinunter">Scrollen Sie nach unten<i>↓</i></p>
     </section>
 
@@ -1070,8 +1070,8 @@ body[data-breite=desktop-raster] .telefon::after{
                ['Schwächen der Wissenschaft','Wem schlechte Forschung nützt'],
                ['Jugendwort des Jahres','»Ein Sprachverfall ist das auf keinen Fall«']];
   var ANGEBOTE={woma:['Wochenmarkt','Rezepte und Küchengeschichten unserer Autorinnen und Autoren.'],
-                spiele:['Spiele','Kreuzworträtsel, Sudoku und mehr — jeden Tag neu.'],
-                app:['DIE ZEIT-App','Alle Artikel offline lesen, hören und merken.']};
+                spiele:['Spiele','Jeden Tag neu – für die Pause zwischendurch'],
+                app:['DIE ZEIT-App','Alle Texte, überall, auch offline. Seien Sie immer informiert.']};
   var reduziert=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var Z={min:291,kohorte:'7',tageszeit:'abends',thema:'Innenpolitik Deutschland',
          entdeckt:{woma:false,spiele:false,app:true},
@@ -1374,7 +1374,7 @@ body[data-breite=desktop-raster] .telefon::after{
     var kopf='<div class="art"><i></i>'+art+'</div>';
     d.innerHTML = werte&&werte.length
       ? kopf+'<div class="bildchen"></div>'+werte.slice(0,1).map(function(w){return '<h3>'+w+'</h3>';}).join('')+'<p>'+unten+'</p>'+
-        '<p class="meta">'+(art==='Newsletter'?'täglich um 7 Uhr in Ihrem Postfach':'erscheint wöchentlich, freitags')+'</p>'+
+        (art==='Newsletter'?'':'<p class="meta">erscheint wöchentlich, freitags</p>')+
         '<span class="knopf-empf">'+(art==='Newsletter'?'Abonnieren':'Podcast folgen')+'</span>'
       : kopf+'<h3>'+leerTitel+'</h3><p>'+leerText+'</p>';
     k.appendChild(d);
@@ -1382,13 +1382,13 @@ body[data-breite=desktop-raster] .telefon::after{
   function baueEmpfehlung(){
     var e=EMPF[Z.thema];
     karte('kartenZeit','Newsletter', e?e.newsletter:null,
-      e?'Gehört zu Ihrem Themenfeld '+e.benennung+'.':'',
+      'Die Nachrichten des Tages, eingeordnet von unserer Redaktion. Was Sie wissen müssen, bevor der Tag beginnt – täglich um 7 Uhr in Ihrem Postfach.',
       'Hier ist noch Platz',
       e?'Für '+e.benennung+' gibt es noch keinen eigenen Newsletter.'
        :'Für dieses Themenfeld gibt es noch keine Zuordnung. Ihre Lektüre hilft uns, das zu ändern.');
     var pod=e&&e.podcasts.length?e.podcasts:null, ser=e&&e.serien.length?e.serien:null;
     var von=e&&e.autoren.length?' Von '+e.autoren.slice(0,2).join(' und ')+'.':'';
-    if(pod) karte('kartenThema','Podcast',pod,'Zum Hören unterwegs.'+von,'','');
+    if(pod) karte('kartenThema','Podcast',pod,'Einmal in der Woche sprechen wir über '+(e?e.benennung:'Ihr Thema')+' – was bewegt, was dahintersteckt, was daraus folgt.'+von,'','');
     else if(ser) karte('kartenThema','Serie',ser,'Mehrere Texte zum selben Faden.'+von,'','');
     else karte('kartenThema','Podcast',null,'','Hier ist noch Platz',
       e?'Für '+e.benennung+' gibt es noch keinen eigenen Podcast.'
@@ -1458,15 +1458,14 @@ body[data-breite=desktop-raster] .telefon::after{
     $('kerbe').setAttribute('data-l','Mitte Ihrer Gruppe · '+mt(k.g[4]));
     $('spurLinks').textContent='Die Hälfte liest weniger als '+mt(k.g[4]);
     var tagK=+Z.kohorte, proTag=Math.round(Z.min/tagK);
-    var st0=stufe(dezil(Z.min,Z.kohorte),Z.kohorte);
-    $('proTag').textContent = tagK>1 ? ('Im Schnitt '+(proTag>=60?mt(proTag):proTag+' Min.')+' pro Tag'+(st0==='A'?' — beeindruckend!':'.')) : '';
+    $('proTag').textContent='';
     $('median').textContent='';
     $('medianMarke').setAttribute('data-min', mt(k.g[4]));
     $('median').textContent = 'Die Hälfte derer, die genauso lange dabei sind, liest weniger als '+mt(k.g[4])+'.';
-    $('tagX').textContent = 'heute ist Tag '+tagK+' von 7';
-    $('zeitSatz').textContent = st==='D'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
+    var proSatz = tagK>1 ? ' Im Schnitt '+(proTag>=60?mt(proTag):proTag+' Min.')+' pro Tag' : '';
+    $('zeitSatz').innerHTML = st==='D'?'haben Sie in dieser Woche gelesen — der Anfang ist gemacht.'
       : st==='C'?'haben Sie in Ihrer ersten Woche gelesen. Jeder Text war eine Entscheidung.'
-      : 'haben Sie diese Woche gelesen.';
+      : ('haben Sie diese Woche gelesen.'+proSatz+(st==='A'?' – <b>Beeindruckend!</b>':'.'));
     $('zeitQuelle').textContent = st==='D'?'Ihr Rückblick wächst mit jedem Tag, an dem Sie lesen.'
       : st==='C'?'Ein Vergleich mit anderen sagt über eine erste Woche wenig. Was zählt, ist der Anfang.'
       : 'Verglichen mit allen, die genauso lange dabei sind wie Sie.';
