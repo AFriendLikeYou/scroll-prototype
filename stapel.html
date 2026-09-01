@@ -24,12 +24,16 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 .ob-kick{font-size:13px;font-weight:700;color:var(--marker);letter-spacing:.04em;text-transform:uppercase}
 .onboard h2{font-size:24px;line-height:1.15;margin-top:8px}
 .ob-sub{font-size:13.5px;line-height:1.5;color:var(--ink3);margin-top:8px}
-.ob-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.ob-chips button{font-family:var(--ff);font-size:14px;padding:9px 14px;border-radius:99px;cursor:pointer;
-  border:1px solid var(--linie);background:transparent;color:var(--ink);transition:all .2s var(--e)}
-.ob-chips button i{font-style:normal;margin-right:7px;color:var(--ink3)}
-.ob-chips button.an{background:var(--marker);border-color:var(--marker);color:#fff;font-weight:700}
-.ob-chips button.an i{color:#fff}
+.ob-liste{display:flex;flex-direction:column;margin-top:14px}
+.ob-row{display:flex;align-items:center;gap:12px;padding:11px 2px;background:none;border:0;
+  border-bottom:1px solid var(--linie);font-family:var(--ff);font-size:15px;color:var(--ink);
+  cursor:pointer;text-align:left;width:100%}
+.ob-row:last-child{border-bottom:0}
+.ob-row em{font-style:normal;font-size:18px;width:26px;text-align:center}
+.ob-row span{flex:1;font-weight:400}
+.ob-row i{font-style:normal;flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--linie);
+  display:grid;place-items:center;font-size:16px;color:var(--ink2);transition:all .2s var(--e)}
+.ob-row.an i{background:var(--marker);border-color:var(--marker);color:#fff}
 .ob-los{display:block;width:100%;margin-top:20px;font-family:var(--ff);font-size:16px;font-weight:700;
   color:var(--seite);background:var(--ink);border:0;border-radius:4px;padding:14px 16px;cursor:pointer}
 .ob-skip{display:block;margin:12px auto 0;font-family:var(--ff);font-size:13px;color:var(--ink3);
@@ -175,7 +179,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       <p class="ob-kick">Ihre erste ZEIT</p>
       <h2>Worüber möchten Sie lesen?</h2>
       <p class="ob-sub">Wählen Sie Ihre Interessen — diese Seite stellt sich damit jeden Tag für Sie zusammen.</p>
-      <div class="ob-chips" id="obChips"></div>
+      <div class="ob-liste" id="obChips"></div>
       <button type="button" class="ob-los" id="obLos">Los geht's</button>
       <button type="button" class="ob-skip" id="obSkip">Später auswählen</button>
     </div>
@@ -189,9 +193,13 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   </div>
   <p class="hinweis">Karte zur Seite ziehen oder antippen</p>
   <div class="sektion">
-    <div class="s-kopf"><h3>Weitere Empfehlungen</h3><p>Basierend auf Ihren Aktivitäten</p></div>
+    <div class="s-kopf"><h3>Weitere Empfehlungen</h3><p id="empfSub">Basierend auf Ihren Aktivitäten</p></div>
     <div class="reihe" id="teaserReihe"></div>
     </div>
+  </div>
+  <div class="sektion" id="ressortSektion" hidden>
+    <div class="s-kopf"><h3 id="ressortTitel"></h3><p id="ressortSub">Hier ist Ihr Interessensprofil gerade am stärksten</p></div>
+    <div class="reihe" id="ressortReihe"></div>
   </div>
   <div class="sektion ausgabe">
     <div class="a-text"><h3>Neue ZEIT Ausgabe <span class="pf">›</span></h3><p>Vom 19. August 2026 ist da. Jetzt lesen</p></div>
@@ -232,13 +240,31 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   var INTERESSEN=['Politik','Wissen','Kultur','Reise','Wissenschaft'];
   var scores={}; INTERESSEN.forEach(function(n){ scores[n]=0; });
   var gesehen=[], satz=[];
+  function teaserHtml(i){ var a=POOL[i];
+    return '<div class="teaser" style="--f:'+a.f+'"><p class="t-kick">'+a.k+'</p><h4>'+a.t+'</h4><p class="t-by">'+a.b+'</p></div>'; }
   function zeichneTeaser(){
-    var el=document.getElementById('teaserReihe'); if(!el) return;
-    var beste=POOL.map(function(a,i){return i;}).sort(function(a,b){
-      return (scores[POOL[b].k]-scores[POOL[a].k]) || (a-b); }).slice(0,3);
-    el.innerHTML=beste.map(function(i){ var a=POOL[i];
-      return '<div class="teaser" style="--f:'+a.f+'"><p class="t-kick">'+a.k+'</p><h4>'+a.t+'</h4><p class="t-by">'+a.b+'</p></div>';
-    }).join('');
+    var reihe=document.getElementById('teaserReihe'); if(!reihe) return;
+    var sortiert=POOL.map(function(a,i){return i;}).sort(function(a,b){
+      return (scores[POOL[b].k]-scores[POOL[a].k]) || (a-b); });
+    var top3=sortiert.slice(0,3);
+    reihe.innerHTML=top3.map(teaserHtml).join('');
+    // Sub-Zeile benennt die stärksten Interessen
+    var starke=INTERESSEN.filter(function(n){return scores[n]>0;})
+      .sort(function(a,b){return scores[b]-scores[a];});
+    var sub=document.getElementById('empfSub');
+    if(sub) sub.textContent = starke.length
+      ? 'Weil Sie sich für '+(starke.length>1?starke[0]+' und '+starke[1]:starke[0])+' interessieren'
+      : 'Basierend auf Ihren Aktivitäten';
+    // Eigene Sektion fürs stärkste Ressort
+    var sek=document.getElementById('ressortSektion'); if(!sek) return;
+    if(!starke.length){ sek.hidden=true; return; }
+    var topK=starke[0];
+    var rest=POOL.map(function(a,i){return i;})
+      .filter(function(i){ return POOL[i].k===topK && top3.indexOf(i)<0; }).slice(0,3);
+    if(!rest.length){ sek.hidden=true; return; }
+    sek.hidden=false;
+    document.getElementById('ressortTitel').textContent='Ihr Ressort: '+topK;
+    document.getElementById('ressortReihe').innerHTML=rest.map(teaserHtml).join('');
   }
   function zeichneScores(){
     var el=document.getElementById('scores'); if(!el) return;
@@ -372,7 +398,9 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   var obWahl={};
   var obChips=document.getElementById('obChips');
   INTERESSEN.forEach(function(n){
-    var b=document.createElement('button'); b.type='button'; b.innerHTML='<i>+</i>'+n;
+    var ICONS={Politik:'🏛️',Wissen:'💡',Kultur:'🎭',Reise:'✈️',Wissenschaft:'🔬'};
+    var b=document.createElement('button'); b.type='button'; b.className='ob-row';
+    b.innerHTML='<em>'+(ICONS[n]||'')+'</em><span>'+n+'</span><i>+</i>';
     b.addEventListener('click',function(){ obWahl[n]=!obWahl[n]; b.classList.toggle('an',obWahl[n]);
       b.querySelector('i').textContent=obWahl[n]?'✓':'+';
       var z=INTERESSEN.filter(function(x){return obWahl[x];}).length;
