@@ -10,8 +10,22 @@
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --seite:#121212; --ink:#ffffff; --ink2:#bababa; --ink3:#999999; --linie:#2e2e2e; --marker:#eb362e; --dot:#4a4a4a } }
 :root[data-theme="dark"]{ --seite:#121212; --ink:#ffffff; --ink2:#bababa; --ink3:#999999; --linie:#2e2e2e; --marker:#eb362e; --dot:#4a4a4a }
 *{box-sizing:border-box;margin:0}
-body{background:var(--seite);color:var(--ink);font-family:var(--ff);display:flex;justify-content:center;min-height:100dvh}
-.app{width:402px;max-width:100%;padding:56px 0 64px}
+body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;justify-content:center;min-height:100dvh}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) body{background:#0b0b0b} }
+:root[data-theme="dark"] body{background:#0b0b0b}
+.aussen{display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 0 40px}
+.geraet{position:relative;width:402px;max-width:calc(100vw - 24px);height:min(874px,90dvh);border-radius:48px;
+  border:10px solid #1c1c1e;background:var(--seite);overflow:hidden;
+  box-shadow:0 24px 60px -24px rgba(0,0,0,.45)}
+.insel{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:118px;height:30px;border-radius:16px;background:#000;z-index:5}
+.status{position:absolute;left:0;right:0;top:14px;display:flex;justify-content:space-between;padding:0 30px;z-index:4;
+  font-size:14px;font-weight:700;color:var(--ink)}
+.status .st-r{display:flex;gap:5px;align-items:center}
+.status .st-r i{width:16px;height:10px;border-radius:2px;background:var(--ink);opacity:.9}
+.status .st-r i:first-child{width:18px;border-radius:1px}
+.rohr{height:100%;overflow-y:auto;scrollbar-width:none}
+.rohr::-webkit-scrollbar{width:0}
+.app{width:100%;padding:72px 0 64px}
 .kopf{padding:0 16px}
 h1{font-size:32px;line-height:1.15;font-weight:700}
 .sub{margin-top:10px;font-size:15px;line-height:1.55;color:var(--ink3);max-width:370px}
@@ -25,9 +39,12 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .karte h2{font-size:26px;line-height:1.15;margin-top:6px;text-wrap:balance}
 .karte .by{position:absolute;left:24px;bottom:78px;font-size:13px;opacity:.75}
 .karte .fuss{position:absolute;left:24px;right:24px;bottom:20px;display:flex;align-items:center;gap:8px}
-.karte .zplus{background:#b91109;color:#fff;font-size:12px;font-weight:700;padding:3px 6px;border-radius:3px;line-height:1}
 .karte .marke{font-size:14px;font-weight:700}
-.karte .lesen{margin-left:auto;background:rgba(255,255,255,.22);border-radius:16px;padding:8px 16px;font-size:14px;font-weight:700}
+.karte .lesen{margin-left:auto;background:#eeeeee;color:#252525;border-radius:4px;padding:10px 16px;font-size:14px;font-weight:700}
+.varianten{display:flex;gap:8px;justify-content:center;margin-top:20px}
+.varianten button{font-family:var(--ff);font-size:13px;padding:7px 14px;border-radius:99px;border:1px solid var(--linie);
+  background:transparent;color:var(--ink3);cursor:pointer}
+.varianten button[aria-pressed="true"]{background:var(--marker);border-color:var(--marker);color:#fff;font-weight:700}
 .punkte{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;gap:8px}
 .punkte i{width:6px;height:6px;border-radius:99px;background:var(--dot);transition:all .35s var(--e)}
 .punkte i.an{width:20px;background:var(--marker)}
@@ -37,6 +54,16 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .folgt p{font-size:14px;color:var(--ink3);margin-top:4px}
 @media (prefers-reduced-motion:reduce){ .karte,.punkte i{transition-duration:.01ms} }
 </style>
+<div class="aussen">
+<div class="varianten" id="varianten">
+  <button type="button" data-v="dezent" aria-pressed="true">Dezent</button>
+  <button type="button" data-v="faecher" aria-pressed="false">Fächer</button>
+  <button type="button" data-v="stapel" aria-pressed="false">Stapel</button>
+</div>
+<div class="geraet">
+  <div class="insel"></div>
+  <div class="status"><span>13:37</span><span class="st-r"><i></i><i></i><i></i></span></div>
+  <div class="rohr">
 <div class="app">
   <div class="kopf">
     <h1>Guten Morgen,<br>Thomas</h1>
@@ -51,6 +78,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     <p>Serie: Die ZEIT erklärt &nbsp;·&nbsp; Ungelesen aus Ihrer Merkliste</p>
   </div>
 </div>
+</div></div></div>
 <script>
 (function(){
   var DATEN=[
@@ -65,11 +93,21 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   DATEN.forEach(function(d,i){
     var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
     k.innerHTML='<p class="kick">'+d.k+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
-      '<div class="fuss"><span class="zplus">Z+</span><span class="marke">DIE ZEIT</span><span class="lesen">Lesen</span></div>';
+      '<div class="fuss"><span class="marke">DIE ZEIT</span><span class="lesen">Lesen</span></div>';
     buehne.insertBefore(k,punkte); karten.push(k); reihe.push(i);
     var p=document.createElement('i'); punkte.appendChild(p);
   });
-  var POS=[{x:0,y:0,r:0,s:1,o:1},{x:-26,y:6,r:-7,s:.965,o:1},{x:26,y:8,r:5,s:.93,o:1},{x:0,y:10,r:-2,s:.9,o:0}];
+  var VARIANTEN={
+    dezent:[{x:0,y:0,r:0,s:1,o:1},{x:-12,y:5,r:-2.5,s:.97,o:1},{x:12,y:8,r:2,s:.94,o:1},{x:0,y:10,r:0,s:.92,o:0}],
+    faecher:[{x:0,y:0,r:0,s:1,o:1},{x:-22,y:6,r:-5,s:.965,o:1},{x:22,y:8,r:4,s:.93,o:1},{x:0,y:10,r:-2,s:.9,o:0}],
+    stapel:[{x:0,y:0,r:0,s:1,o:1},{x:0,y:-16,r:0,s:.955,o:1},{x:0,y:-30,r:0,s:.91,o:1},{x:0,y:-40,r:0,s:.88,o:0}]
+  };
+  var POS=VARIANTEN.dezent;
+  document.getElementById('varianten').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    POS=VARIANTEN[b.dataset.v]||VARIANTEN.dezent; lege();
+  });
   function lege(){
     reihe.forEach(function(idx,pos){
       var p=POS[Math.min(pos,3)], k=karten[idx];
@@ -78,11 +116,19 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     });
     [].forEach.call(punkte.children,function(d,i){ d.classList.toggle('an', i===reihe[0]); });
   }
+  var wechselt=false;
   function weiter(richtung){
+    if(wechselt) return; wechselt=true;
     var idx=reihe[0], k=karten[idx];
-    k.style.transform='translate('+(richtung*560)+'px,-30px) rotate('+(richtung*24)+'deg)';
-    k.style.opacity='0';
-    setTimeout(function(){ reihe.push(reihe.shift()); lege(); },220);
+    // Phase 1: leicht zur Seite kippen …
+    k.style.transform='translate('+(richtung*160)+'px,-10px) rotate('+(richtung*9)+'deg) scale(.96)';
+    setTimeout(function(){
+      // … Phase 2: hinter den Stapel gleiten und einsortieren
+      k.style.zIndex='1';
+      reihe.push(reihe.shift());
+      lege();
+      setTimeout(function(){ wechselt=false; },260);
+    },200);
   }
   // Ziehen
   var startX=0,startY=0,dx=0,zieht=false,aktiv=null;
