@@ -103,6 +103,27 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .25s var(--e)}
 .switch[aria-checked="true"]{background:var(--marker)}
 .switch[aria-checked="true"] i{left:23px}
+.weiter{display:flex;align-items:center;gap:14px;margin-top:16px;padding:12px 14px;border:1px solid var(--linie);border-radius:4px}
+.weiter .w-info{flex:1;min-width:0}
+.weiter p{font-size:11px;color:var(--ink3)}
+.weiter b{display:block;font-size:14px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.weiter .w-bar{display:block;height:3px;border-radius:2px;background:var(--linie);margin-top:8px}
+.weiter .w-bar u{display:block;height:3px;border-radius:2px;background:var(--marker)}
+.weiter .w-cta{flex:none;font-family:var(--ff);font-size:13px;font-weight:700;color:var(--ink);background:var(--linie);border:0;border-radius:4px;padding:9px 14px;cursor:pointer}
+.karte .kzeile{display:flex;align-items:center;gap:8px}
+.karte .folgemini{font-family:var(--ff);font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.2);border:0;border-radius:3px;padding:3px 8px;cursor:pointer}
+.karte .folgemini.an{background:rgba(255,255,255,.9);color:#252525}
+.karte .kmenue{position:absolute;top:18px;right:16px;width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:16px;line-height:1;cursor:pointer}
+.karte .ksheet{position:absolute;right:14px;top:52px;background:var(--seite);border:1px solid var(--linie);border-radius:4px;
+  box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:5;display:none;min-width:190px}
+.karte .ksheet.offen{display:block}
+.karte .ksheet button{display:block;width:100%;text-align:left;font-family:var(--ff);font-size:13px;color:var(--ink);
+  background:none;border:0;border-bottom:1px solid var(--linie);padding:11px 14px;cursor:pointer}
+.karte .ksheet button:last-child{border-bottom:0}
+.karte .fmt{font-size:12px;font-weight:700;opacity:.9;margin-right:auto}
+.dbg-titel{margin-top:12px;padding-top:9px;border-top:1px solid var(--linie);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.dbg-row.h1r{margin-top:6px;padding-top:0;border-top:0}
+#zeitWahl{font-family:var(--ff);font-size:10px;color:var(--ink);background:var(--seite);border:1px solid var(--linie);border-radius:4px;padding:3px 5px}
 .buehne{position:relative;height:520px;margin-top:8px;touch-action:pan-y;overflow:visible}
 .karte{position:absolute;left:50%;top:44%;width:280px;height:392px;margin:-196px 0 0 -140px;border-radius:4px;
   color:#fff;padding:28px 24px;user-select:none;-webkit-user-select:none;cursor:grab;touch-action:none;
@@ -202,6 +223,19 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <div class="dbg-row"><span>Diversitäts-Boost <small>gleiche Themen direkt hintereinander abwerten</small></span>
     <button type="button" class="switch klein" id="divToggle" role="switch" aria-checked="true"><i></i></button></div>
   <div class="dbg-log" id="dbgLog"></div>
+  <p class="dbg-titel">Hebel</p>
+  <div class="dbg-row h1r"><span>Redaktions-Slot <small>Karte 1 kuratiert</small></span>
+    <button type="button" class="switch klein" id="hybridToggle" role="switch" aria-checked="false"><i></i></button></div>
+  <div class="dbg-row h1r"><span>Folgen am Kicker</span>
+    <button type="button" class="switch klein" id="folgenToggle" role="switch" aria-checked="false"><i></i></button></div>
+  <div class="dbg-row h1r"><span>Weiterlesen-Slot</span>
+    <button type="button" class="switch klein" id="weiterToggle" role="switch" aria-checked="false"><i></i></button></div>
+  <div class="dbg-row h1r"><span>Karten-Menü (…) <small>weniger davon / warum</small></span>
+    <button type="button" class="switch klein" id="menueToggle" role="switch" aria-checked="false"><i></i></button></div>
+  <div class="dbg-row h1r"><span>Formatmix <small>Audio, Rätsel, Rezept</small></span>
+    <button type="button" class="switch klein" id="formatToggle" role="switch" aria-checked="false"><i></i></button></div>
+  <div class="dbg-row h1r"><span>Tageszeit-Texte</span>
+    <select id="zeitWahl"><option value="aus">aus</option><option value="auto">auto</option><option value="morgens">morgens</option><option value="mittags">mittags</option><option value="abends">abends</option></select></div>
   <div class="dbg-row"><span>Leseserie <small>Streak im End-Screen zeigen</small></span>
     <button type="button" class="switch klein" id="serieToggle" role="switch" aria-checked="false"><i></i></button></div>
   <button type="button" id="tagWeiter" class="dbg-btn">Nächster Tag ▸</button>
@@ -216,11 +250,15 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <div class="rohr">
 <div class="app">
   <div class="kopf">
-    <h1>Guten Morgen,<br>Thomas</h1>
-    <p class="sub">Aktuell ist viel los in der Welt. Hier sind fünf Empfehlungen der Redaktion für Ihren Tag — zum Durchblättern.</p>
+    <h1 id="gruss">Guten Morgen,<br>Thomas</h1>
+    <p class="sub" id="grussSub">Aktuell ist viel los in der Welt. Hier sind sieben Empfehlungen der Redaktion für Ihren Tag — zum Durchblättern.</p>
     <div class="profilzeile">
       <div class="pt"><b>Empfehlungen verbessern</b><span>Ihre Swipes verbessern Ihr Interessensprofil</span></div>
       <button type="button" class="switch" id="profilToggle" role="switch" aria-checked="false"><i></i></button>
+    </div>
+    <div class="weiter" id="weiterSlot" hidden>
+      <div class="w-info"><p>Weiterlesen · Sie waren bei 62 %</p><b>Die stille Rückkehr der Wölfe</b><i class="w-bar"><u style="width:62%"></u></i></div>
+      <button type="button" class="w-cta">Weiter</button>
     </div>
   </div>
   <div class="buehne" id="buehne">
@@ -304,13 +342,20 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     ['Einsamkeit, die neue Volkskrankheit','Harro Albrecht',['Gesellschaft','Gesundheit']],
     ['Streaming: Wer gewinnt den Plattformkrieg?','Lisa Hegemann',['Digital','Wirtschaft']]
   ];
-  var POOL=ROH.map(function(r,i){ return {t:r[0],b:'Von '+r[1],tags:r[2],f:FARBEN[i%FARBEN.length]}; });
+  var FORMATE=[
+    {t:'Hörstück: Die Stille nach dem Sturm',b:'Podcast · 12 Min.',tags:['Kultur','Gesellschaft'],format:'audio',f:'#31465f'},
+    {t:'Das Rätsel des Tages',b:'Spiele · 3 Min.',tags:['Wissen'],format:'spiel',f:'#274a35'},
+    {t:'Rezept: Pasta mit Salbeibutter',b:'ZEIT Wochenmarkt',tags:['Kultur','Gesundheit'],format:'rezept',f:'#5d4a22'}
+  ];
+  var POOL=ROH.map(function(r,i){ return {t:r[0],b:'Von '+r[1],tags:r[2],f:FARBEN[i%FARBEN.length]}; }).concat(FORMATE);
 
   // ── Profil & Recommender
   var profil={}; THEMEN.forEach(function(n){ profil[n]=0; });
   var eta=1, eps=0.2;
   var gesehen={}, expl={}, merk=[], logbuch=[];
   var RATION=7, gezogen=0, divBoost=true, zuletzt=[];
+  var hybridAn=false, folgenAn=false, menueAn=false, formatAn=false, zeitModus='aus';
+  var gefolgt={}, redaktion={}, REDAKTIONSWAHL=[2,6,12];
   function match(i){ return POOL[i].tags.reduce(function(s,t){ return s+(profil[t]||0); },0); }
   function sortScore(i){
     var m=match(i);
@@ -318,13 +363,18 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     return m;
   }
   function kandidaten(){
-    return POOL.map(function(_,i){return i;}).filter(function(i){return !gesehen[i];})
+    return POOL.map(function(_,i){return i;})
+      .filter(function(i){ return !gesehen[i] && (formatAn || !POOL[i].format); })
       .sort(function(a,b){ return sortScore(b)-sortScore(a) || a-b; });
   }
   function waehle(){
     if(gezogen>=RATION) return -1;
     var ks=kandidaten(); if(!ks.length) return -1;
     var i;
+    if(hybridAn && gezogen===0){
+      var red=REDAKTIONSWAHL.filter(function(x){ return ks.indexOf(x)>=0; })[0];
+      if(red!==undefined){ redaktion[red]=true; gezogen++; zuletzt=POOL[red].tags.concat(zuletzt).slice(0,4); return red; }
+    }
     if(Math.random()<eps && ks.length>3){ i=ks[3+Math.floor(Math.random()*(ks.length-3))]; expl[i]=true; }
     else i=ks[0];
     gezogen++;
@@ -332,7 +382,10 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     return i;
   }
   function grund(i){
+    if(redaktion[i]) return 'Ausgewählt von der Redaktion';
     if(expl[i]) return 'Zum Entdecken';
+    var gf=POOL[i].tags.filter(function(t){return gefolgt[t];})[0];
+    if(gf) return 'Weil Sie '+gf+' folgen';
     var best=null,bv=0;
     POOL[i].tags.forEach(function(t){ if((profil[t]||0)>bv){ bv=profil[t]; best=t; } });
     return best?('Weil Sie sich für '+best+' interessieren'):'Für Ihren Einstieg';
@@ -361,11 +414,19 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
     POS=VARIANTEN[b.dataset.v]||VARIANTEN.dezent; lege();
   });
+  var CTA={audio:'Hören',spiel:'Spielen',rezept:'Zum Rezept'};
+  var FMT={audio:'▶ Zum Hören',spiel:'✦ Zum Spielen',rezept:'◆ Zum Nachkochen'};
   function karteEl(idx){
     var d=POOL[idx];
-    var k=document.createElement('div'); k.className='karte'; k.style.background=d.f;
-    k.innerHTML='<p class="grund">'+grund(idx)+'</p><p class="kick">'+d.tags.join(' · ')+'</p><h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+
-      '<div class="fuss"><span class="lesen">Lesen</span></div>'+
+    var k=document.createElement('div'); k.className='karte'; k.style.background=d.f; k.dataset.idx=idx;
+    var kick='<div class="kzeile"><p class="kick">'+d.tags.join(' · ')+'</p>'
+      +(folgenAn?'<button type="button" class="folgemini'+(gefolgt[d.tags[0]]?' an':'')+'" data-tag="'+d.tags[0]+'">'+(gefolgt[d.tags[0]]?'✓ '+d.tags[0]:'+ Folgen')+'</button>':'')+'</div>';
+    var menue=menueAn?'<button type="button" class="kmenue" aria-label="Optionen">…</button>'
+      +'<div class="ksheet"><button type="button" data-akt="weniger">Weniger zu '+d.tags.join(' & ')+'</button>'
+      +'<button type="button" data-akt="stumm">'+(d.format?'Format seltener zeigen':'Autor:in seltener zeigen')+'</button>'
+      +'<button type="button" data-akt="warum">Warum sehe ich das?</button></div>':'';
+    k.innerHTML='<p class="grund">'+grund(idx)+'</p>'+kick+'<h2>'+d.t+'</h2><p class="by">'+d.b+'</p>'+menue+
+      '<div class="fuss">'+(d.format?'<span class="fmt">'+FMT[d.format]+'</span>':'')+'<span class="lesen">'+(CTA[d.format]||'Lesen')+'</span></div>'+
       '<span class="stmp links"><svg viewBox="0 0 24 24" width="34" height="34"><g transform="rotate(180 12 12)"><path d="M7 10v10H4a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1h3zm2 10V9.4L12.6 3a1.8 1.8 0 0 1 2.5 1.9L14.4 9h4.9a2.4 2.4 0 0 1 2.35 2.9l-1.3 5.9A2.4 2.4 0 0 1 18 20H9z" fill="currentColor"/></g></svg></span>'+
       '<span class="stmp rechts"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M6 3h12v18l-6-4.6L6 21z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></span>';
     return k;
@@ -464,10 +525,12 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     if(l){ l.style.opacity=profil_an&&wert<0?a:0; l.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
     if(re){ re.style.opacity=profil_an&&wert>0?a:0; re.style.transform='scale('+gr+') rotate('+dreh+'deg)'; }
   }
-  var startX=0,startY=0,dx=0,zieht=false,aktiv=null;
+  var startX=0,startY=0,dx=0,zieht=false,aktiv=null,startZiel=null;
   buehne.addEventListener('pointerdown',function(e){
     if(!stapel.length) return;
+    startZiel=e.target;
     aktiv=stapel[0].el; if(e.target.closest('.karte')!==aktiv){ aktiv=null; return; }
+    if(e.target.closest('.folgemini,.kmenue,.ksheet')){ aktiv=null; return; }
     zieht=true; startX=e.clientX; startY=e.clientY; dx=0;
     aktiv.classList.add('greift'); buehne.setPointerCapture&&buehne.setPointerCapture(e.pointerId);
   });
@@ -483,13 +546,34 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       if(profil_an) toast(dx>0?'Für später gemerkt':'Alles klar — davon zeigen wir weniger');
       weiter(dx>0?1:-1,true);
     }
-    else if(Math.abs(dx)<6){ weiter(-1,false); }
+    else if(Math.abs(dx)<6){ if(!(startZiel&&startZiel.closest('.folgemini,.kmenue,.ksheet,.lesen'))) weiter(-1,false); }
     else lege();
     aktiv=null;
   }
   buehne.addEventListener('pointerup',loslassen);
   buehne.addEventListener('pointercancel',loslassen);
   document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight') weiter(1,true); if(e.key==='ArrowLeft') weiter(-1,true); });
+  buehne.addEventListener('click',function(e){
+    var f=e.target.closest('.folgemini');
+    if(f){ var t=f.dataset.tag;
+      if(!gefolgt[t]){ gefolgt[t]=true; profil[t]=Math.round((profil[t]+2)*10)/10;
+        logbuch.unshift('+2 · Sie folgen jetzt '+t); logbuch=logbuch.slice(0,4);
+        f.classList.add('an'); f.textContent='✓ '+t; zeichneScores(); toast('Sie folgen jetzt '+t); }
+      return; }
+    var m=e.target.closest('.kmenue');
+    if(m){ var sh=m.parentElement.querySelector('.ksheet'); if(sh) sh.classList.toggle('offen'); return; }
+    var a=e.target.closest('.ksheet button');
+    if(a && stapel.length){
+      var idx=stapel[0].idx, d=POOL[idx];
+      a.parentElement.classList.remove('offen');
+      if(a.dataset.akt==='weniger'){
+        d.tags.forEach(function(t){ profil[t]=Math.round((profil[t]-1)*10)/10; });
+        logbuch.unshift('−1 · Weniger zu '+d.tags.join(' & ')); logbuch=logbuch.slice(0,4);
+        zeichneScores(); toast('Alles klar — davon zeigen wir weniger'); weiter(-1,false);
+      } else if(a.dataset.akt==='stumm'){ toast((d.format?'Format':'Autor:in')+' wird seltener gezeigt'); }
+      else { toast(grund(idx)+' — die Themen der Karte passen zu Ihrem Profil.'); }
+    }
+  });
 
   // ── Content unterhalb folgt dem Profil
   function teaserHtml(i){ var a=POOL[i];
@@ -562,6 +646,31 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       +'<div class="serie-woche">'+punkte+'</div>'
       +'<p class="serie-hint">Ein Aussetzer bricht die Serie nicht.</p>';
   }
+  function bindeSchalter(id,fn){ document.getElementById(id).addEventListener('click',function(){
+    var an=this.getAttribute('aria-checked')!=='true'; this.setAttribute('aria-checked',String(an)); fn(an); }); }
+  function stapelNeu(){ stapel.forEach(function(o){ o.el.remove(); }); stapel=[]; gezogen=Math.max(0,gezogen); fuelle(); }
+  bindeSchalter('hybridToggle',function(an){ hybridAn=an; redaktion={}; gezogen=0; historie=[]; gesehenReset(); stapelNeu(); });
+  bindeSchalter('folgenToggle',function(an){ folgenAn=an; stapel.forEach(function(o){ var kz=o.el.querySelector('.kzeile');
+    if(kz) kz.innerHTML='<p class="kick">'+POOL[o.idx].tags.join(' · ')+'</p>'+(an?'<button type="button" class="folgemini'+(gefolgt[POOL[o.idx].tags[0]]?' an':'')+'" data-tag="'+POOL[o.idx].tags[0]+'">'+(gefolgt[POOL[o.idx].tags[0]]?'✓ '+POOL[o.idx].tags[0]:'+ Folgen')+'</button>':''); }); });
+  bindeSchalter('weiterToggle',function(an){ document.getElementById('weiterSlot').hidden=!an; });
+  bindeSchalter('menueToggle',function(an){ menueAn=an; stapelNeuAufbau(); });
+  bindeSchalter('formatToggle',function(an){ formatAn=an; gezogen=0; historie=[]; gesehenReset(); stapelNeu(); });
+  function gesehenReset(){ gesehen={}; expl={}; merk=[]; document.getElementById('endePanel').classList.remove('zeigt'); document.getElementById('undoBtn').disabled=true; }
+  function stapelNeuAufbau(){ var idxe=stapel.map(function(o){return o.idx;});
+    stapel.forEach(function(o){ o.el.remove(); }); stapel=[];
+    idxe.forEach(function(i){ var el=karteEl(i); buehne.insertBefore(el,zaehler); stapel.push({el:el,idx:i}); });
+    lege(); }
+  document.querySelector('.w-cta').addEventListener('click',function(){ toast('Weiter im Text — bei 62 % geht es los'); });
+  var GRUESSE={morgens:['Guten Morgen,<br>Thomas','Bevor der Tag beginnt: Ihre sieben Empfehlungen — zum Durchblättern.'],
+    mittags:['Guten Tag,<br>Thomas','Für die Pause: sieben Empfehlungen der Redaktion — zum Durchblättern.'],
+    abends:['Guten Abend,<br>Thomas','Zum Ausklang: sieben Empfehlungen, auch etwas zum Zurücklehnen.']};
+  document.getElementById('zeitWahl').addEventListener('change',function(){
+    zeitModus=this.value;
+    var w=zeitModus==='auto'?(function(){var h=new Date().getHours(); return h<11?'morgens':h<17?'mittags':'abends';})():zeitModus;
+    if(zeitModus==='aus'){ document.getElementById('gruss').innerHTML='Guten Morgen,<br>Thomas';
+      document.getElementById('grussSub').textContent='Aktuell ist viel los in der Welt. Hier sind sieben Empfehlungen der Redaktion für Ihren Tag — zum Durchblättern.'; }
+    else { document.getElementById('gruss').innerHTML=GRUESSE[w][0]; document.getElementById('grussSub').textContent=GRUESSE[w][1]; }
+  });
   document.getElementById('serieToggle').addEventListener('click',function(){
     serieAn=!serieAn; this.setAttribute('aria-checked',String(serieAn)); zeichneSerie();
   });
