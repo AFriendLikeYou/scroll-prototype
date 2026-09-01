@@ -131,16 +131,22 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   opacity:0;transition:opacity .3s var(--e),transform .3s var(--e);pointer-events:none;white-space:nowrap;max-width:90%}
 .toast.zeigt{opacity:1;transform:translateX(-50%) translateY(0)}
 .zaehler{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.undo{position:absolute;left:22px;bottom:42px;width:36px;height:36px;border-radius:50%;border:1px solid var(--linie);
+  background:var(--seite);color:var(--ink2);display:grid;place-items:center;cursor:pointer;z-index:25;
+  transition:opacity .3s var(--e)}
+.undo:disabled{opacity:.3;cursor:default}
+.buehne:has(.onboard:not(.weg)) .undo{display:none}
+.dbg-row span small{display:block;font-weight:400;color:var(--ink3);font-size:10px;line-height:1.3;margin-top:2px}
 .punkte{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;gap:8px}
 .punkte i{width:6px;height:6px;border-radius:99px;background:var(--dot);transition:all .35s var(--e)}
 .punkte i.an{width:20px;background:var(--marker)}
 .hinweis{text-align:center;font-size:13px;color:var(--ink3);margin-top:4px}
-.sektion{margin:36px 0 0;padding:24px 16px 0;border-top:1px solid var(--linie)}
+.sektion{margin:26px 0 0;padding:18px 16px 0;border-top:1px solid var(--linie)}
 .s-kopf h3{font-size:22px;font-weight:700}
 .s-kopf p{font-size:14px;color:var(--ink3);margin-top:4px}
-.reihe{display:flex;gap:12px;overflow-x:auto;margin:16px -16px 0 0;padding:0 16px 6px 0;scrollbar-width:none}
+.reihe{display:flex;gap:12px;overflow-x:auto;margin:12px -16px 0 0;padding:0 16px 4px 0;scrollbar-width:none}
 .reihe::-webkit-scrollbar{height:0}
-.teaser{flex:0 0 250px;min-height:360px;border-radius:4px;background:var(--f);color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:flex-end}
+.teaser{flex:0 0 240px;min-height:330px;border-radius:4px;background:var(--f);color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:flex-end}
 .teaser .t-kick{font-size:12px;opacity:.8}
 .teaser h4{font-size:20px;line-height:1.15;margin-top:4px;text-wrap:balance}
 .teaser .t-copy{font-size:13px;line-height:1.45;opacity:.85;margin-top:8px}
@@ -150,8 +156,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 .sektion.ausgabe p{font-size:14px;color:var(--ink3);margin-top:4px}
 .sektion.ausgabe .pf{color:var(--ink3);font-weight:400}
 .a-cover{flex:none;width:84px;height:58px;background:#1a2a52;border-radius:3px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em}
-.liste-mi{margin-top:8px}
-.liste-mi a{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--linie);font-size:15px;color:var(--ink)}
+.liste-mi{margin-top:2px}
+.liste-mi a{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--linie);font-size:15px;color:var(--ink)}
 .liste-mi a span{color:var(--ink3)}
 .liste-mi a b{font-weight:700}
 .liste-mi a:last-child{border-bottom:0}
@@ -172,6 +178,8 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <div class="dbg-match"><span>Oberste Karte</span><b id="matchWert">—</b></div>
   <div class="dbg-slider"><span id="etaWert">η 1</span><input type="range" id="etaSlider" min="0.5" max="2" step="0.5" value="1"><small>Lernrate je Swipe</small></div>
   <div class="dbg-slider"><span id="epsWert">ε 20%</span><input type="range" id="epsSlider" min="0" max="0.5" step="0.05" value="0.2"><small>Anteil „Zum Entdecken"</small></div>
+  <div class="dbg-row"><span>Diversitäts-Boost <small>gleiche Themen direkt hintereinander abwerten</small></span>
+    <button type="button" class="switch klein" id="divToggle" role="switch" aria-checked="true"><i></i></button></div>
   <div class="dbg-log" id="dbgLog"></div>
   <button type="button" id="resetProfil">Profil zurücksetzen</button>
   <div class="dbg-row"><span>Interessen-Abfrage beim Start</span>
@@ -202,10 +210,11 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     </div>
     <div class="ende-panel" id="endePanel">
       <h3>Das war's für heute!</h3>
-      <p>Sie haben alle Empfehlungen gesehen — und Ihr Interessensprofil für heute weiter verbessert.</p>
+      <p>Das war Ihre Tagesration: 7 Karten, unter einer Minute — und Ihr Interessensprofil ist wieder etwas schärfer.</p>
       <div class="merk" id="merkListe"></div>
-      <button type="button" id="nochmal">Neue Empfehlungen anzeigen</button>
+      <button type="button" id="nochmal">Noch eine Runde (7 weitere)</button>
     </div>
+    <button type="button" class="undo" id="undoBtn" disabled aria-label="Letzten Swipe zurücknehmen"><svg viewBox="0 0 20 20" width="16" height="16"><path d="M8 4 3.5 8.5 8 13M4 8.5h8a4.5 4.5 0 0 1 0 9H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="zaehler" id="zaehler"></div>
   </div>
   <p class="hinweis">Karte zur Seite ziehen oder antippen</p>
@@ -276,17 +285,26 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   var profil={}; THEMEN.forEach(function(n){ profil[n]=0; });
   var eta=1, eps=0.2;
   var gesehen={}, expl={}, merk=[], logbuch=[];
+  var RATION=7, gezogen=0, divBoost=true, zuletzt=[];
   function match(i){ return POOL[i].tags.reduce(function(s,t){ return s+(profil[t]||0); },0); }
+  function sortScore(i){
+    var m=match(i);
+    if(divBoost){ var malus=0; POOL[i].tags.forEach(function(t){ if(zuletzt.indexOf(t)>=0) malus+=0.6; }); m-=malus; }
+    return m;
+  }
   function kandidaten(){
     return POOL.map(function(_,i){return i;}).filter(function(i){return !gesehen[i];})
-      .sort(function(a,b){ return match(b)-match(a) || a-b; });
+      .sort(function(a,b){ return sortScore(b)-sortScore(a) || a-b; });
   }
   function waehle(){
+    if(gezogen>=RATION) return -1;
     var ks=kandidaten(); if(!ks.length) return -1;
-    if(Math.random()<eps && ks.length>3){
-      var i=ks[3+Math.floor(Math.random()*(ks.length-3))]; expl[i]=true; return i;
-    }
-    return ks[0];
+    var i;
+    if(Math.random()<eps && ks.length>3){ i=ks[3+Math.floor(Math.random()*(ks.length-3))]; expl[i]=true; }
+    else i=ks[0];
+    gezogen++;
+    zuletzt=POOL[i].tags.concat(zuletzt).slice(0,4);
+    return i;
   }
   function grund(i){
     if(expl[i]) return 'Zum Entdecken';
@@ -295,10 +313,12 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     return best?('Weil Sie sich für '+best+' interessieren'):'Für Ihren Einstieg';
   }
   function bewerte(idx,dir){
-    POOL[idx].tags.forEach(function(t){ profil[t]=Math.round((profil[t]+dir*eta)*10)/10; });
-    logbuch.unshift((dir>0?'+':'−')+eta+' auf '+POOL[idx].tags.join(' & ')+' · „'+POOL[idx].t.slice(0,26)+'…"');
+    var w = dir>0 ? eta : -(Math.round(eta*0.5*10)/10); // Ablehnung wiegt halb so stark
+    POOL[idx].tags.forEach(function(t){ profil[t]=Math.round((profil[t]+w)*10)/10; });
+    logbuch.unshift((w>0?'+':'−')+Math.abs(w)+' auf '+POOL[idx].tags.join(' & ')+' · „'+POOL[idx].t.slice(0,24)+'…"');
     logbuch=logbuch.slice(0,4);
     if(dir>0) merk.push(POOL[idx]);
+    return w;
   }
 
   // ── Stapel (hält 4 Karten, zieht nach)
@@ -343,19 +363,21 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       o.el.style.opacity=p.o; o.el.style.zIndex=String(20-pos);
       o.el.style.pointerEvents=pos===0?'auto':'none';
     });
-    var n=Object.keys(gesehen).length;
-    zaehler.textContent='Karte '+Math.min(n, n-stapel.length+1)+' von '+POOL.length;
+    zaehler.textContent='Karte '+Math.min(RATION, gezogen-stapel.length+1)+' von '+RATION+' für heute';
     zeichneScores();
   }
 
   // ── Übergang: nach hinten sortieren, dann nachziehen
-  var wechselt=false;
+  var wechselt=false, historie=[];
   function weiter(richtung,wertet){
     if(wechselt||!stapel.length) return; wechselt=true;
     var o=stapel[0];
     o.el.style.transform='translate('+(richtung*160)+'px,-10px) rotate('+(richtung*9)+'deg) scale(.96)';
     setTimeout(function(){
-      if(profil_an&&wertet) bewerte(o.idx,richtung>0?1:-1);
+      var w=0, gemerkt=false;
+      if(profil_an&&wertet){ w=bewerte(o.idx,richtung>0?1:-1); gemerkt=richtung>0; }
+      historie.push({idx:o.idx,w:w,gemerkt:gemerkt});
+      var ub=document.getElementById('undoBtn'); if(ub) ub.disabled=false;
       stapel.shift();
       o.el.style.opacity='0'; o.el.style.pointerEvents='none';
       setTimeout(function(){ o.el.remove(); },450);
@@ -374,9 +396,26 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     document.getElementById('endePanel').classList.add('zeigt');
     zaehler.textContent='';
   }
+  function undo(){
+    if(wechselt||!historie.length) return;
+    var h=historie.pop();
+    if(h.w){ POOL[h.idx].tags.forEach(function(t){ profil[t]=Math.round((profil[t]-h.w)*10)/10; });
+      logbuch.unshift('↩ zurückgenommen · „'+POOL[h.idx].t.slice(0,24)+'…"'); logbuch=logbuch.slice(0,4); }
+    if(h.gemerkt) merk=merk.filter(function(a){ return a!==POOL[h.idx]; });
+    // jüngste nachgezogene Karte zurücklegen, bewertete Karte wieder nach vorn
+    if(stapel.length===4){ var letzte=stapel.pop(); letzte.el.remove(); delete gesehen[letzte.idx]; gezogen--; }
+    document.getElementById('endePanel').classList.remove('zeigt');
+    var el=karteEl(h.idx);
+    buehne.insertBefore(el,zaehler);
+    stapel.unshift({el:el,idx:h.idx});
+    if(!historie.length) document.getElementById('undoBtn').disabled=true;
+    lege();
+  }
+  document.getElementById('undoBtn').addEventListener('click',undo);
   document.getElementById('nochmal').addEventListener('click',function(){
     document.getElementById('endePanel').classList.remove('zeigt');
-    gesehen={}; expl={}; merk=[];
+    gezogen=0; merk=[]; historie=[]; document.getElementById('undoBtn').disabled=true;
+    if(kandidaten().length<RATION){ gesehen={}; expl={}; }
     stapel.forEach(function(o){ o.el.remove(); }); stapel=[];
     fuelle();
   });
@@ -456,7 +495,15 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
       return '<div class="sc-row"><span>'+n+'</span><i style="width:'+Math.min(105,w)+'px;background:'+(v<0?'#c6c6c6':'var(--marker)')+'"></i><b>'+(v>0?'+':'')+v+'</b></div>';
     }).join('');
     var mEl=document.getElementById('matchWert');
-    if(mEl) mEl.textContent = stapel.length ? ('„'+POOL[stapel[0].idx].t.slice(0,20)+'…" · Match '+match(stapel[0].idx)) : '—';
+    if(mEl){
+      if(!stapel.length) mEl.textContent='—';
+      else {
+        var pos=THEMEN.map(function(n){return profil[n];}).filter(function(v){return v>0;}).sort(function(a,b){return b-a;});
+        var maxM=(pos[0]||0)+(pos[1]||0);
+        var pct=maxM>0?Math.round(Math.max(0,match(stapel[0].idx))/maxM*100):null;
+        mEl.textContent='„'+POOL[stapel[0].idx].t.slice(0,18)+'…" · '+(pct===null?'noch kein Profil':'Match '+Math.min(100,pct)+' %');
+      }
+    }
     var lg=document.getElementById('dbgLog');
     if(lg) lg.innerHTML = logbuch.length? logbuch.map(function(z){return '<div>'+z+'</div>';}).join('') : '<div>Noch keine Swipes gewertet.</div>';
     zeichneTeaser();
@@ -465,8 +512,12 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
     eta=+this.value; document.getElementById('etaWert').textContent='η '+eta; });
   document.getElementById('epsSlider').addEventListener('input',function(){
     eps=+this.value; document.getElementById('epsWert').textContent='ε '+Math.round(eps*100)+'%'; });
+  document.getElementById('divToggle').addEventListener('click',function(){
+    divBoost=!divBoost; this.setAttribute('aria-checked',String(divBoost));
+    toast(divBoost?'Diversitäts-Boost an':'Diversitäts-Boost aus — Blase möglich');
+  });
   document.getElementById('resetProfil').addEventListener('click',function(){
-    THEMEN.forEach(function(n){ profil[n]=0; }); logbuch=[]; gesehen={}; expl={}; merk=[];
+    THEMEN.forEach(function(n){ profil[n]=0; }); logbuch=[]; gesehen={}; expl={}; merk=[]; gezogen=0; historie=[]; zuletzt=[]; document.getElementById('undoBtn').disabled=true;
     document.getElementById('endePanel').classList.remove('zeigt');
     stapel.forEach(function(o){ o.el.remove(); }); stapel=[];
     fuelle(); toast('Profil zurückgesetzt');
@@ -474,13 +525,14 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
 
   // ── Interessen-Abfrage (Erstbesuch, jederzeit anpassbar)
   var obWahl={}, prevWahl={};
+  var ONBOARD=['Politik','Wirtschaft','Wissen','Kultur','Reise','Wissenschaft'];
   var obChips=document.getElementById('obChips');
-  THEMEN.forEach(function(n){
+  ONBOARD.forEach(function(n){
     var b=document.createElement('button'); b.type='button'; b.className='ob-row';
     b.innerHTML='<em>'+(ICONS[n]||'')+'</em><span>'+n+'</span><i>+</i>';
     b.addEventListener('click',function(){ obWahl[n]=!obWahl[n]; b.classList.toggle('an',obWahl[n]);
       b.querySelector('i').textContent=obWahl[n]?'✓':'+';
-      var z=THEMEN.filter(function(x){return obWahl[x];}).length;
+      var z=ONBOARD.filter(function(x){return obWahl[x];}).length;
       document.getElementById('obLos').textContent=z?'Für mich zusammenstellen ('+z+')':'Los geht\'s';
     });
     obChips.appendChild(b);
