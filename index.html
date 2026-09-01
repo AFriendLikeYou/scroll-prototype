@@ -824,6 +824,8 @@ body[data-breite^=desktop] .artikel .t{font-size:17px}
 body[data-breite^=desktop] .artikel .k{font-size:13px}
 body[data-breite^=desktop] .punkte{display:flex}
 body[data-breite^=desktop] .liste{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;overflow:visible;margin:0;padding:0}
+body[data-breite^=desktop] .liste[data-n="2"]{grid-template-columns:repeat(2,1fr)}
+body[data-breite^=desktop] .liste[data-n="1"]{grid-template-columns:minmax(0,calc(50% - 7px))}
 body[data-breite^=desktop] .liste .kachel-e{flex:none;width:auto}
 body[data-breite^=desktop] .parkett--offen{padding-top:32px;padding-bottom:32px}
 body[data-breite^=desktop] .artikel{aspect-ratio:2/3}
@@ -1487,6 +1489,7 @@ body[data-breite=desktop-raster] .telefon::after{
       d.textContent='Sie haben schon alles entdeckt — Wochenmarkt, Spiele und die App. Schön, dass Sie so neugierig sind.';
       l.appendChild(d);
     }
+    l.dataset.n=offen.length;
     $('entdeckenSub').textContent = offen.length
       ? 'Alles in Ihrem Abo enthalten' : 'Alles schon dabei';
     $('aTeaser').textContent=offen.length+' von 3';
