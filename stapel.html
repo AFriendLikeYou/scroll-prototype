@@ -43,7 +43,7 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 .switch.klein{width:32px;height:19px}
 .switch.klein i{width:13px;height:13px}
 .switch.klein[aria-checked="true"] i{left:16px}
-.debug{position:fixed;right:14px;top:96px;width:198px;background:var(--seite);border:1px solid var(--linie);
+.debug{position:fixed;right:14px;top:14px;width:198px;max-height:calc(100dvh - 28px);overflow-y:auto;background:var(--seite);border:1px solid var(--linie);
   border-radius:4px;padding:11px 12px;z-index:50;opacity:.94}
 .debug b{font-size:11px;display:flex;align-items:center;color:var(--ink2)}
 .debug b em{font-style:normal;color:var(--marker);font-size:9px;vertical-align:1px;margin-left:4px}
@@ -77,7 +77,7 @@ body{background:#e9e6e0;color:var(--ink);font-family:var(--ff);display:flex;just
 .sc-row span{width:70px;flex:none}
 .sc-row i{height:4px;border-radius:2px;opacity:.8;transition:width .35s var(--e),background-color .35s var(--e)}
 .sc-row b{margin-left:auto;font-variant-numeric:tabular-nums}
-@media (max-width:900px){.debug{display:none}}
+
 .geraet{position:relative;width:402px;max-width:calc(100vw - 24px);height:min(874px,90dvh);border-radius:48px;
   border:10px solid #1c1c1e;background:var(--seite);overflow:hidden;
   box-shadow:0 24px 60px -24px rgba(0,0,0,.45)}
@@ -195,7 +195,7 @@ h1{font-size:32px;line-height:1.15;font-weight:700}
   <button type="button" data-v="stapel" aria-pressed="false">Stapel</button>
   <button type="button" data-v="kaskade" aria-pressed="false">Kaskade</button>
 </div>
-<aside class="debug"><b>Recommender-Sandbox <em>Debug</em><button type="button" id="dbgMin" aria-label="Einklappen">–</button></b><div id="scores"></div>
+<aside class="debug zu"><b>Recommender-Sandbox <em>Debug</em><button type="button" id="dbgMin" aria-label="Ausklappen">+</button></b><div id="scores"></div>
   <div class="dbg-match"><span>Oberste Karte</span><b id="matchWert">—</b></div>
   <div class="dbg-slider"><span id="etaWert">η 1</span><input type="range" id="etaSlider" min="0.5" max="2" step="0.5" value="1"><small>Lernrate je Swipe</small></div>
   <div class="dbg-slider"><span id="epsWert">ε 20%</span><input type="range" id="epsSlider" min="0" max="0.5" step="0.05" value="0.2"><small>Anteil „Zum Entdecken"</small></div>
