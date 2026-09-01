@@ -95,7 +95,7 @@ body[data-breite^=desktop] .webheader{display:none}
 .h3{font-size:22px;font-weight:700;line-height:1.18;margin:0}
 .h4{font-size:18px;font-weight:700;line-height:1.24;margin:0}
 .augen{font-size:14px;color:var(--ink3);margin:0 0 6px}
-.sub{font-family:var(--fs);font-size:18px;line-height:1.44;color:var(--ink2);margin:12px 0 0}
+.sub{font-family:var(--ff);font-size:18px;line-height:1.44;color:var(--ink2);margin:12px 0 0}
 .sub-s{font-size:14px;line-height:1.45;color:var(--ink3);margin:4px 0 0}
 .quelle{font-size:11.5px;line-height:1.55;color:var(--ink3);margin:16px 0 0}
 body.ohne-quellen .quelle{display:none}
@@ -133,12 +133,12 @@ body[data-schrift=tiemann] .gross,body[data-schrift=tiemann] .mittel,body[data-s
 body[data-schrift=tiemann] .h2,body[data-schrift=tiemann] #themaTitel,body[data-schrift=tiemann] .zahl .e{
   font-family:'Playfair Display',Georgia,serif;font-weight:600;letter-spacing:0}
 body[data-schrift=tiemann] .gross{font-weight:500}
-.gross{font-size:clamp(40px,13vw,58px);font-weight:700;line-height:1;margin:0;letter-spacing:-.02em}
-.mittel{font-size:clamp(26px,7.4vw,34px);font-weight:700;line-height:1.1;margin:0}
-.lead{font-family:var(--fs);font-size:17px;line-height:1.5;color:var(--ink2);margin:14px auto 0;max-width:32ch}
+.gross{font-size:42px;font-weight:700;line-height:1.2;margin:0;letter-spacing:0}
+.mittel{font-size:30px;font-weight:700;line-height:1.2;margin:0}
+.lead{font-family:var(--ff);font-size:16px;line-height:1.5;color:var(--ink2);margin:12px auto 0;max-width:36ch}
 .szene .quelle{max-width:38ch;margin-left:auto;margin-right:auto}
 .zahl{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap}
-.zahl .e{font-size:clamp(17px,4.6vw,21px);font-weight:700;color:var(--ink2)}
+.zahl .e{font-size:30px;font-weight:700;color:var(--ink)}
 #zaehler{font-variant-numeric:tabular-nums}
 
 .an{opacity:0;transform:translateY(18px);filter:blur(5px);transition:opacity .8s var(--e),transform .9s var(--e),filter .8s var(--e)}
@@ -160,13 +160,13 @@ body[data-schrift=tiemann] .gross{font-weight:500}
 .sie-marke{position:absolute;top:-6px;transform:translate(-50%,-6px) scale(.8);font-size:10px;font-weight:700;letter-spacing:.1em;
   color:var(--marker);opacity:0;white-space:nowrap;transition:opacity .6s var(--e) 1.05s,transform .6s var(--e) 1.05s}
 .szene.sichtbar .sie-marke{opacity:1;transform:translate(-50%,0) scale(1)}
-.achse{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin:22px 0 0}
+.achse{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin:22px 0 0}
 .spur-huelle{position:relative;margin:24px 0 0}
 .spur{height:10px;border-radius:4px;background:var(--track);overflow:hidden}
 .spur i{display:block;height:100%;border-radius:4px;background:var(--ink);width:0;transition:width 1.4s var(--e) .3s}
 .szene.sichtbar .spur i{width:var(--w)}
 .kerbe{position:absolute;top:-5px;left:50%;width:2px;height:20px;background:var(--ink3);opacity:0;transition:opacity .6s var(--e) .9s}
-.protag{font-size:13px;color:var(--ink3);margin:6px 0 0;font-variant-numeric:tabular-nums}
+.protag{font-size:16px;line-height:1.5;font-weight:400;color:var(--ink3);margin:6px 0 0;font-variant-numeric:tabular-nums}
 /* Lesezeit als Kacheln: 1 Kachel = 10 Minuten, 1 Reihe = 1 Stunde */
 .waffel,.ringe{display:none}
 body[data-lzform=waffel] .waffel{display:block;margin:22px auto 0;width:min(100%,260px)}
@@ -195,7 +195,7 @@ body[data-lzform=ringe] .ringe{display:block;margin:18px auto 0;width:min(100%,2
 .tag .a i{display:block;background:var(--bar);border-radius:3px;height:6px;transition:height .95s var(--e),background-color .6s var(--e)}
 .szene.sichtbar .tag .a i{height:var(--ah,20px)}
 .szene.sichtbar .tag .a.aktiv i{background:var(--marker);transition-delay:.5s}
-.tag .a span{font-size:10px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
+.tag .a span{font-size:12px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
 /* Sonnenstand: Sonnenuhr + Bogen. Tag-Version 5–18 Uhr mit Sonne, Nacht-Version 18–5 Uhr mit Mond.
    Ein Punkt je Stunde, die Stunden Ihres Fensters rot, der Körper in der Fenstermitte, das Fenster in der Mitte benannt. */
 .sonnenstand{display:none;margin:18px auto 0;width:min(100%,320px)}
@@ -317,8 +317,12 @@ body[data-thema=kacheln] .wolke-fuss{display:none}
 .reset,.reset *{transition:none!important;animation:none!important}
 
 /* ═══ Icons über den Kickern ═══ */
-.ico{display:grid;place-items:center;width:44px;height:44px;margin:0 auto 14px;color:var(--ink);overflow:visible;border:1px solid var(--linie);border-radius:50%;background:var(--karte);padding:6px;
+.ico{display:grid;place-items:center;width:32px;height:32px;margin:0 auto 14px;color:var(--ink);overflow:visible;border:0;border-radius:50%;padding:6px;
   opacity:0;transform:translateY(18px);filter:blur(5px);transition:opacity .8s var(--e),transform .9s var(--e),filter .8s var(--e)}
+#s-zeit .ico{background:#e5f7ff} #s-band .ico{background:#fff6e8} #s-tag .ico{background:#e9f7ed} #s-thema .ico{background:#ede6f4}
+:root[data-theme=dark] #s-zeit .ico{background:#1c292e} :root[data-theme=dark] #s-band .ico{background:#2c251b}
+:root[data-theme=dark] #s-tag .ico{background:#1f2922} :root[data-theme=dark] #s-thema .ico{background:#2a2430}
+.ico svg{width:20px;height:20px}
 .szene.sichtbar .ico{opacity:1;transform:none;filter:none}
 .szene .ico svg,.szene .ico{stroke-width:1.5}
 .szene .textspalte > .ico{width:32px}
@@ -401,7 +405,7 @@ body[data-thema=rang] .wolke-huelle,body[data-thema=rang] .anteil,body[data-them
 .karte .art i{width:5px;height:5px;border-radius:3px;background:var(--marker);display:block}
 .karte h3{font-size:18px;font-weight:700;line-height:1.24;margin:0}
 .karte h3 + h3{margin-top:4px;font-size:15px;color:var(--ink2)}
-.karte p{font-family:var(--fs);margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--ink3)}
+.karte p{font-family:var(--ff);margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--ink3)}
 .karte.leer{background:transparent;border:1px dashed var(--bar)}
 .karte.leer .art{color:var(--ink3)} .karte.leer .art i{background:var(--ink3)}
 .karte.leer h3{font-size:16px;color:var(--ink2)}
@@ -410,7 +414,7 @@ body[data-thema=rang] .wolke-huelle,body[data-thema=rang] .anteil,body[data-them
 body[data-variante=karten] .daten{padding:24px 14px 48px}
 body[data-variante=karten] .szene{
   position:sticky;background:var(--karte);border:1px solid var(--linie);border-radius:4px;
-  padding:56px 22px 40px;margin-bottom:18px;border-bottom:1px solid var(--linie);justify-content:flex-start;
+  padding:32px 24px 24px;margin-bottom:16px;border-bottom:1px solid var(--linie);justify-content:flex-start;
   min-height:0; /* so hoch wie der Inhalt */
   transform-origin:50% 0%;will-change:transform;
   box-shadow:0 1px 1px rgba(20,18,16,.04), 0 2px 6px rgba(20,18,16,.05), 0 18px 40px -18px rgba(20,18,16,.28)}
@@ -440,7 +444,11 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 
 /* ═══ Karussell ═══ */
 .parkett{padding:48px 16px;border-top:1px solid var(--linie)}
-.parkett-kopf{margin-bottom:24px}
+.parkett-kopf{margin-bottom:20px}
+.topics{display:flex;gap:8px;overflow-x:auto;margin:14px -16px 0;padding:0 16px}
+.topics::-webkit-scrollbar{height:0}
+.topics span{flex:none;height:34px;display:inline-flex;align-items:center;padding:0 14px;border-radius:99px;background:var(--flaeche);font-size:14px;color:var(--ink)}
+.knopf-folgen{display:inline-flex;align-items:center;height:40px;padding:0 16px;border-radius:4px;background:var(--flaeche);font-size:16px;font-weight:700;color:var(--ink);margin-top:12px}
 .karussell{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px}
 .karussell::-webkit-scrollbar{height:0}
 .artikel{flex:0 0 300px;scroll-snap-align:start;border-radius:4px;overflow:hidden;position:relative;
@@ -453,20 +461,21 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 .artikel .b{font-size:12px;margin:10px 0 0;opacity:.75}
 .punkte{display:flex;justify-content:flex-start;align-items:center;gap:6px;margin:16px 0 0}
 .punkte .pfeile{margin-left:auto;display:flex;gap:10px}
-.punkte .pfeile button{width:34px;height:34px;border-radius:50%;border:1px solid var(--bar);background:var(--karte);
-  color:var(--ink);font-size:15px;cursor:pointer;display:grid;place-items:center;padding:0}
-.punkte .pfeile button:last-child{background:var(--ink);color:var(--seite);border-color:var(--ink)}
-.punkte i{width:6px;height:6px;border-radius:3px;background:var(--track);display:block}
-.punkte i.an2{background:var(--ink3);width:18px}
+.punkte .pfeile button{width:30px;height:30px;border-radius:99px;border:0;background:var(--flaeche);color:var(--ink);font-size:14px;cursor:pointer;display:grid;place-items:center;padding:0}
+.punkte .pfeile button:last-child{background:var(--flaeche);color:var(--ink)}
+.punkte i{width:8px;height:8px;border-radius:6px;background:#dfdfe1;display:block}
+.punkte i.an2{background:var(--ink3);width:24px}
 
 /* ═══ Dynamische Ausspielfläche ═══ */
 .liste{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px}
 .liste::-webkit-scrollbar{height:0}
-.liste .kachel-e{flex:0 0 208px;scroll-snap-align:start}
-.liste .kachel-e .bild{width:100%;aspect-ratio:208/270;border-radius:4px;background:var(--track);margin-bottom:12px}
-.liste .kachel-e .kick{font-size:13px;color:var(--marker);margin:0 0 4px}
+.liste .kachel-e{flex:0 0 240px;scroll-snap-align:start}
+.liste .kachel-e .bild{position:relative;width:100%;aspect-ratio:240/300;border-radius:4px;background:var(--track);margin-bottom:12px}
+.liste .kachel-e .bild::after{content:"Z+";position:absolute;left:10px;top:10px;background:var(--marker);color:#fff;font-size:13px;font-weight:700;padding:3px 7px;border-radius:3px}
+.liste .kachel-e .kick{font-size:14px;color:var(--marker);margin:0 0 4px}
 .liste .kachel-e h4{margin:0 0 6px}
-.liste .kachel-e p{font-size:14px;line-height:1.45;color:var(--ink2);margin:0;font-family:var(--fs)}
+.liste .kachel-e p{font-size:16px;line-height:1.5;color:var(--ink2);margin:0;font-family:var(--ff)}
+.liste .kachel-e .metaz{display:flex;gap:14px;font-size:14px;color:var(--ink3);margin-top:10px}
 .eintrag{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:start}
 .eintrag .bild{width:64px;height:64px;border-radius:4px;background:var(--track)}
 .eintrag h4{margin:0}
@@ -622,11 +631,10 @@ body[data-breite^=desktop][data-variante=karten] .gross{font-size:56px}
    Kein Kopf, keine Nummer, kein Schatten. Farbe nur auf dem einen Wert.                    */
 body[data-variante=ruhig] .daten{padding:8px 16px 48px}
 body[data-variante=ruhig] .szene{
-  min-height:0;justify-content:flex-start;background:var(--flaeche);border:1px solid var(--linie);
-  border-radius:4px;padding:36px 20px 32px;margin-bottom:16px;border-bottom:1px solid var(--linie)}
+  min-height:0;justify-content:flex-start;background:var(--karte);border:1px solid var(--linie);
+  border-radius:4px;padding:32px 24px 24px;margin-bottom:16px;border-bottom:1px solid var(--linie)}
 body[data-variante=ruhig] .szene:last-child{margin-bottom:0}
 body[data-variante=ruhig] .szene .augen{font-size:14px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--ink3);margin:0 0 14px}
-body[data-variante=ruhig] .gross{font-size:clamp(36px,11vw,48px)}
 body[data-variante=ruhig] .mittel{font-size:clamp(24px,6.6vw,30px)}
 body[data-variante=ruhig] .lead{font-size:16px;margin-top:10px}
 body[data-variante=ruhig] .szene .quelle{margin-top:18px;font-size:11px}
@@ -1016,6 +1024,7 @@ body[data-breite=desktop-raster] .telefon::after{
       <div class="parkett-kopf">
         <h3 class="h3">Aktuell beliebte Artikel</h3>
         <p class="sub-s">Was andere gerade lesen</p>
+        <div class="topics"><span>Topic</span><span>Topic</span><span>Topic</span><span>Topic</span><span>Topic</span><span>Topic</span></div>
       </div>
       <div class="karussell" id="karussell"></div>
       <div class="punkte"><i class="an2"></i><i></i><i></i><i></i><span class="pfeile"><button type="button" aria-label="Zurück">←</button><button type="button" aria-label="Weiter">→</button></span></div>
@@ -1392,7 +1401,8 @@ body[data-breite=desktop-raster] .telefon::after{
     var offen=Object.keys(ANGEBOTE).filter(function(k){ return !Z.entdeckt[k]; });
     offen.forEach(function(k){ var a=ANGEBOTE[k];
       var d=document.createElement('div'); d.className='kachel-e';
-      d.innerHTML='<div class="bild"></div><p class="kick">'+(KICKER_E[k]||a[0])+'</p><h4 class="h4">'+(TITEL_E[k]||a[0])+'</h4><p>'+a[1]+'</p>';
+      d.innerHTML='<div class="bild"></div><p class="kick">'+(KICKER_E[k]||a[0])+'</p><h4 class="h4">'+(TITEL_E[k]||a[0])+'</h4><p>'+a[1]+'</p>'+
+        '<div class="metaz"><span>🎧 4 Min.</span><span>💬 120</span></div><span class="knopf-folgen">Folgen</span>';
       l.appendChild(d); });
     if(!offen.length){
       var d=document.createElement('p'); d.className='leerhinweis';
