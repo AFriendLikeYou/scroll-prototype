@@ -196,24 +196,22 @@ body[data-lzform=ringe] .ringe{display:block;margin:18px auto 0;width:min(100%,2
 .szene.sichtbar .tag .a i{height:var(--ah,20px)}
 .szene.sichtbar .tag .a.aktiv i{background:var(--marker);transition-delay:.5s}
 .tag .a span{font-size:12px;color:var(--ink3);white-space:nowrap;opacity:0;transition:opacity .55s var(--e) .35s}
-/* Sonnenstand: Sonnenuhr + Bogen. Tag-Version 5–18 Uhr mit Sonne, Nacht-Version 18–5 Uhr mit Mond.
-   Ein Punkt je Stunde, die Stunden Ihres Fensters rot, der Körper in der Fenstermitte, das Fenster in der Mitte benannt. */
-.sonnenstand{display:none;margin:18px auto 0;width:min(100%,320px)}
+/* Sonnenstand nach Figma-Komponente: rotes Band, weiße Punkte, Hof-Sonne */
+.sonnenstand{display:none;margin:18px auto 0;width:min(100%,308px)}
 body[data-tagform=sonnenstand] .sonnenstand{display:block}
 body[data-tagform=sonnenstand] .tag{display:none}
 .sonnenstand svg{display:block;width:100%;height:auto;overflow:visible}
-.ss-himmel{opacity:.9}
-.ss-punkt{fill:var(--bar);opacity:0;transition:opacity .4s var(--e)}
-.ss-punkt.aktiv{fill:var(--marker)}
-.szene.sichtbar .ss-punkt{opacity:1}
-.ss-koerper{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(.5);transition:opacity .7s var(--e) .6s,transform .9s cubic-bezier(.22,1,.36,1) .6s}
+.ss-band{fill:none;stroke:var(--marker);stroke-width:14;stroke-linecap:round;stroke-dasharray:520;stroke-dashoffset:520;transition:stroke-dashoffset 1.4s var(--e) .2s}
+.szene.sichtbar .ss-band{stroke-dashoffset:0}
+.ss-p{fill:#cccccc;opacity:0;transition:opacity .4s var(--e)}
+.ss-p.aktiv{fill:#ffffff}
+.szene.sichtbar .ss-p{opacity:1}
+.ss-koerper{opacity:0;transform:scale(.6);transform-box:fill-box;transform-origin:center;transition:opacity .7s var(--e) 1s,transform .9s cubic-bezier(.22,1,.36,1) 1s}
 .szene.sichtbar .ss-koerper{opacity:1;transform:none}
-.ss-strahl{stroke:var(--marker);stroke-width:1.5;stroke-linecap:round}
-.ss-mitte{font:700 18px var(--ff);fill:var(--ink);text-anchor:middle}
-.ss-mitte2{font:11px var(--ff);fill:var(--ink3);text-anchor:middle}
-.ss-tx{font:10px var(--ff);fill:var(--ink3);text-anchor:middle}
-.ss-tx.aktiv{fill:var(--marker);font-weight:700}
-.ss-linie{stroke:var(--linie);stroke-width:1}
+.ss-t{font:12px var(--ff);fill:var(--ink3)}
+.ss-f{font:700 20px var(--ff);fill:var(--ink)}
+body[data-schrift=tiemann] .ss-f{font-family:'Playfair Display',Georgia,serif;font-weight:600}
+
 /* Bogen: gestrichelter Halbkreis, die Sonne (nachts der Mond) steht dort, wo Ihre Lesezeit liegt */
 .sonnenbogen,.sonnenkurve{display:none;margin:18px 0 0;width:100%}
 body[data-tagform=bogen] .sonnenbogen{display:block}
@@ -443,8 +441,14 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 .bleibt .bedingung{font-size:11px;font-weight:700;color:var(--warn);margin:14px 0 0}
 
 /* ═══ Karussell ═══ */
-.parkett{padding:48px 16px;border-top:1px solid var(--linie)}
-.parkett-kopf{margin-bottom:20px}
+.parkett{padding:24px 16px 16px;border-top:1px solid var(--linie)}
+.parkett .aktionen-r{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.parkett .aktionen-r .icons{display:flex;gap:22px;color:var(--ink);font-size:16px}
+.parkett--offen{border-top:0;padding:32px 0 32px 16px}
+.parkett--offen .parkett-kopf{padding-right:16px;margin-bottom:24px}
+.parkett--offen .liste{margin:0;padding:0 16px 4px 0}
+.parkett--offen .parkett-kopf .h3{margin-bottom:4px}
+.parkett-kopf{margin-bottom:24px}
 .topics{display:flex;gap:8px;overflow-x:auto;margin:14px -16px 0;padding:0 16px}
 .topics::-webkit-scrollbar{height:0}
 .topics span{flex:none;height:34px;display:inline-flex;align-items:center;padding:0 14px;border-radius:99px;background:var(--flaeche);font-size:14px;color:var(--ink)}
@@ -459,7 +463,7 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 .artikel .t{font-size:21px;font-weight:700;line-height:1.22;margin:0}
 .artikel .c{font-size:14px;line-height:1.45;margin:8px 0 0;opacity:.92}
 .artikel .b{font-size:12px;margin:10px 0 0;opacity:.75}
-.punkte{display:flex;justify-content:flex-start;align-items:center;gap:6px;margin:16px 0 0}
+.punkte{display:flex;justify-content:flex-start;align-items:center;gap:6px;margin:16px 0 16px}
 .punkte .pfeile{margin-left:auto;display:flex;gap:10px}
 .punkte .pfeile button{width:30px;height:30px;border-radius:99px;border:0;background:var(--flaeche);color:var(--ink);font-size:14px;cursor:pointer;display:grid;place-items:center;padding:0}
 .punkte .pfeile button:last-child{background:var(--flaeche);color:var(--ink)}
@@ -482,7 +486,9 @@ body[data-variante=karten] .szene .quelle{margin-top:14px}
 .leerhinweis{font-family:var(--fs);font-size:15px;line-height:1.5;color:var(--ink3);margin:0}
 
 /* ═══ Abschluss ═══ */
-.ende{padding:48px 16px 56px;display:grid;gap:20px;border-top:1px solid var(--linie);text-align:left}
+.ende{padding:32px 16px;display:grid;gap:0;border-top:0;text-align:left}
+.ende .h2{margin-bottom:8px}
+.ende .inhalt{margin-bottom:16px}
 .ende .inhalt{display:grid;gap:16px}
 .ende .knoepfe{display:flex;gap:16px;flex-wrap:wrap}
 .knopf{appearance:none;border:0;height:40px;padding:0 16px;border-radius:4px;cursor:pointer;
@@ -796,16 +802,7 @@ body[data-breite=desktop-raster] .telefon::after{
     </div>
   </div>
 
-  <div class="feld">
-    <label>Ihre Lesezeit</label>
-    <div class="chips" id="lzform">
-      <button type="button" data-f="zahl" aria-pressed="true">Nur Zahl</button>
-      <button type="button" data-f="waffel" aria-pressed="false">Kacheln</button>
-      <button type="button" data-f="ringe" aria-pressed="false">Ringe</button>
-    </div>
-  </div>
-
-  <div class="feld">
+  <div class="feld" hidden>
     <label>Platz im Vergleich</label>
     <div class="chips" id="vglform">
       <button type="button" data-f="treppe" aria-pressed="false">Treppe</button>
@@ -817,9 +814,6 @@ body[data-breite=desktop-raster] .telefon::after{
     <label>Wann Sie lesen</label>
     <div class="chips" id="tagform">
       <button type="button" data-f="fenster" aria-pressed="true">Fünf Fenster</button>
-      <button type="button" data-f="uhr" aria-pressed="false">Horizont</button>
-      <button type="button" data-f="bogen" aria-pressed="false">Bogen</button>
-      <button type="button" data-f="kurve" aria-pressed="false">Kurve</button>
       <button type="button" data-f="sonnenstand" aria-pressed="false">Sonnenstand</button>
     </div>
   </div>
@@ -829,7 +823,6 @@ body[data-breite=desktop-raster] .telefon::after{
     <div class="chips" id="themaform">
       <button type="button" data-t="wolke" aria-pressed="true">Wortwolke</button>
       <button type="button" data-t="kreise" aria-pressed="false">Cluster</button>
-      <button type="button" data-t="rang" aria-pressed="false">Rangliste</button>
     </div>
   </div>
 
@@ -1028,10 +1021,11 @@ body[data-breite=desktop-raster] .telefon::after{
       </div>
       <div class="karussell" id="karussell"></div>
       <div class="punkte"><i class="an2"></i><i></i><i></i><i></i><span class="pfeile"><button type="button" aria-label="Zurück">←</button><button type="button" aria-label="Weiter">→</button></span></div>
+      <div class="aktionen-r"><span class="knopf-folgen" style="margin-top:0">Folgen</span><span class="icons">🔖</span></div>
     </section>
 
     <!-- Dynamische Ausspielfläche -->
-    <section class="parkett" id="s-entdecken">
+    <section class="parkett parkett--offen" id="s-entdecken">
       <div class="parkett-kopf">
         <h3 class="h3">Entdecken Sie weitere spannende Inhalte Ihres Abos</h3>
         <p class="sub-s" id="entdeckenSub"></p>
@@ -1301,27 +1295,44 @@ body[data-breite=desktop-raster] .telefon::after{
         '<text class="sb-tx" x="'+(cx-R)+'" y="'+(cy+18)+'">'+lab[0]+' Uhr</text><text class="sb-tx" x="'+cx+'" y="'+(cy-R-12)+'">'+lab[1]+' Uhr</text><text class="sb-tx" x="'+(cx+R)+'" y="'+(cy+18)+'">'+lab[2]+' Uhr</text>';
       $('sonnenbogen').innerHTML='<svg viewBox="0 -8 '+W+' '+(cy+30)+'" aria-hidden="true">'+sv+'</svg>';
     })();
-    // ── Sonnenstand (Tag 5–18 · Nacht 18–5) ──
-    (function(){ var W=320,R=124,cx=W/2,cy=150, fs_=0,fe=0,st=0;
-      Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1]; if(n===Z.tageszeit){ fs_=st; fe=st+h; } st+=h; });
+    // ── Sonnenstand — exakt wie die Figma-Komponente „Grafik Sonnenuhr" ──
+    (function(){
+      var W=308, cy=164, cx=W/2, R=133, H=196;
       var nacht=(Z.tageszeit==='abends'||Z.tageszeit==='nachts');
-      var von=nacht?18:5, bis=nacht?29:18, span=bis-von;              // Nacht: 18 → 29 (= 5 Uhr am nächsten Tag)
-      var norm=function(h){ return nacht&&h<12?h+24:h; };            // Nachtstunden 0–5 hinter Mitternacht einordnen
-      var pos=function(h){ var f=(norm(h)-von)/span; var a=Math.PI*(1-f); return [cx+R*Math.cos(a), cy-R*Math.sin(a)]; };
-      var f0=norm(fs_), f1=norm(fe); if(nacht&&fe===24) f1=24;       // abends: 18–24
-      var mitte=(f0+f1)/2, k=pos(mitte);
-      var himmel = nacht ? 'var(--track)' : (Z.tageszeit==='mittags'?'var(--k-blau)':'var(--k-warm)');
-      var sv='<defs><radialGradient id="ss-g" cx="50%" cy="100%" r="80%"><stop offset="0" stop-color="'+himmel+'"/><stop offset="1" stop-color="'+himmel+'" stop-opacity="0"/></radialGradient></defs>';
-      sv+='<path class="ss-himmel" d="M'+(cx-R)+' '+cy+' A'+R+' '+R+' 0 0 1 '+(cx+R)+' '+cy+' Z" fill="url(#ss-g)"/>';
-      for(var h=von;h<=bis;h++){ var q=pos(h>=24?h-24:h); var hh=h>=24?h-24:h; var akt = (norm(hh)>=f0 && norm(hh)<=f1) || (nacht&&fe===24&&hh<=24&&h>=f0&&h<=24);
-        sv+='<circle class="ss-punkt'+(akt?' aktiv':'')+'" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="'+(akt?3.2:2.4)+'" style="transition-delay:'+(0.04*(h-von))+'s"/>'; }
-      if(nacht){ sv+='<g class="ss-koerper"><path d="M'+(k[0]+4)+' '+(k[1]-12)+'a12 12 0 1 0 8.5 19A13 13 0 0 1 '+(k[0]+4)+' '+(k[1]-12)+'z" fill="var(--marker)"/></g>'; }
-      else { sv+='<g class="ss-koerper"><circle cx="'+k[0]+'" cy="'+k[1]+'" r="11" fill="var(--marker)"/>'+[0,1,2,3,4,5,6,7,8,9,10,11].map(function(i){var w=i*Math.PI/6,r1=15,r2=i%2?19:22;return '<line class="ss-strahl" x1="'+(k[0]+r1*Math.cos(w)).toFixed(1)+'" y1="'+(k[1]+r1*Math.sin(w)).toFixed(1)+'" x2="'+(k[0]+r2*Math.cos(w)).toFixed(1)+'" y2="'+(k[1]+r2*Math.sin(w)).toFixed(1)+'"/>';}).join('')+'</g>'; }
-      sv+='<line class="ss-linie" x1="'+(cx-R-10)+'" y1="'+cy+'" x2="'+(cx+R+10)+'" y2="'+cy+'"/>';
-      sv+='<text class="ss-mitte" x="'+cx+'" y="'+(cy-30)+'">'+fs_+' – '+(fe===24?'24':fe)+' Uhr</text><text class="ss-mitte2" x="'+cx+'" y="'+(cy-12)+'">'+(nacht?'Nacht':'Tag')+'</text>';
-      var labs = nacht ? [[18,'18'],[23.5,'0'],[29,'5 Uhr']] : [[5,'5'],[11.5,'12'],[18,'18 Uhr']];
-      labs.forEach(function(l){ var q=pos(l[0]>=24?l[0]-24:l[0]); var oben=Math.abs(q[0]-cx)<20; sv+='<text class="ss-tx" x="'+q[0].toFixed(1)+'" y="'+(oben?q[1]-12:cy+16)+'">'+l[1]+'</text>'; });
-      $('sonnenstand').innerHTML='<svg viewBox="0 -10 '+W+' '+(cy+30)+'" aria-hidden="true">'+sv+'</svg>';
+      var von=nacht?18:5, bis=nacht?29:18;
+      var norm=function(h){ return nacht&&h<12?h+24:h; };
+      var fs_=0,fe=0,st2=0; Object.keys(TAGE).forEach(function(n){ var h=TAGE[n][1]; if(n===Z.tageszeit){ fs_=st2; fe=st2+h; } st2+=h; });
+      var f0=norm(fs_), f1=(nacht&&fe===24)?24:norm(fe);
+      var pos=function(h){ var f=(norm(h)-von)/(bis-von), a=Math.PI*(1-f); return [cx+R*Math.cos(a), cy-R*Math.sin(a)]; };
+      var HIMMEL={morgens:'#ffe4c8',mittags:'#d9f0fd',nachmittags:'#ffedd2',abends:'#ffd9b8',nachts:'#dde3ec'};
+      var himmel=HIMMEL[Z.tageszeit];
+      var sv='<defs><radialGradient id="ss-g" cx="50%" cy="55%" r="60%">'+
+        '<stop offset="0" stop-color="'+himmel+'" stop-opacity=".95"/><stop offset=".55" stop-color="'+himmel+'" stop-opacity=".55"/><stop offset="1" stop-color="'+himmel+'" stop-opacity="0"/></radialGradient>'+
+        '<clipPath id="ss-c"><rect x="0" y="0" width="'+W+'" height="'+cy+'"/></clipPath></defs>';
+      sv+='<g clip-path="url(#ss-c)"><circle cx="'+cx+'" cy="'+cy+'" r="'+(R+20)+'" fill="url(#ss-g)"/></g>';
+      // rotes Band über das Fenster
+      var d=''; for(var h=f0;h<=f1+0.001;h+=0.1){ var q=pos(h<von?h+24:h>bis?h-24:h); d+=(d?' L ':'M ')+q[0].toFixed(1)+' '+q[1].toFixed(1); }
+      sv+='<path class="ss-band" d="'+d+'"/>';
+      // Punkte: aktiv weiß im Band, sonst grau
+      for(var h2=von;h2<=bis;h2++){ var q2=pos(h2), akt=h2>=f0&&h2<=f1;
+        sv+='<circle class="ss-p'+(akt?' aktiv':'')+'" cx="'+q2[0].toFixed(1)+'" cy="'+q2[1].toFixed(1)+'" r="2" style="transition-delay:'+(0.05*(h2-von))+'s"/>'; }
+      sv+='<line x1="13" y1="'+cy+'" x2="'+(W-13)+'" y2="'+cy+'" stroke="var(--linie)" stroke-width="1"/>';
+      // Sonne/Mond mit Hof in der Fenstermitte
+      var mp=pos((f0+f1)/2);
+      sv+='<g class="ss-koerper"><circle cx="'+mp[0]+'" cy="'+mp[1]+'" r="20" fill="var(--karte)" stroke="var(--marker)" stroke-width="2"/>';
+      if(nacht) sv+='<path transform="translate('+(mp[0]-12)+' '+(mp[1]-12)+') scale(0.75)" d="M19 6.5a8 8 0 1 0 6.5 12.5A9 9 0 0 1 19 6.5z" fill="none" stroke="var(--marker)" stroke-width="2.4" stroke-linejoin="round"/>';
+      else { sv+='<circle cx="'+mp[0]+'" cy="'+mp[1]+'" r="4.5" fill="none" stroke="var(--marker)" stroke-width="2"/>';
+        for(var k=0;k<8;k++){ var w=k*Math.PI/4; sv+='<line x1="'+(mp[0]+8*Math.cos(w)).toFixed(1)+'" y1="'+(mp[1]+8*Math.sin(w)).toFixed(1)+'" x2="'+(mp[0]+11.5*Math.cos(w)).toFixed(1)+'" y2="'+(mp[1]+11.5*Math.sin(w)).toFixed(1)+'" stroke="var(--marker)" stroke-width="2" stroke-linecap="round"/>'; } }
+      sv+='</g>';
+      // Beschriftung: Füße + Scheitel
+      var lab=nacht?['18 Uhr','0 Uhr','5 Uhr']:['5 Uhr','12 Uhr','18 Uhr'];
+      sv+='<text class="ss-t" x="13" y="'+(cy+18)+'" text-anchor="start">'+lab[0]+'</text>';
+      sv+='<text class="ss-t" x="'+cx+'" y="'+(cy-R-10)+'" text-anchor="middle">'+lab[1]+'</text>';
+      sv+='<text class="ss-t" x="'+(W-13)+'" y="'+(cy+18)+'" text-anchor="end">'+lab[2]+'</text>';
+      // Fenster mittig
+      sv+='<text class="ss-f" x="'+cx+'" y="'+(cy-58)+'" text-anchor="middle">'+fs_+' – '+fe+' Uhr</text>';
+      sv+='<text class="ss-t" x="'+cx+'" y="'+(cy-40)+'" text-anchor="middle">'+(nacht?'Nacht':'Tag')+'</text>';
+      $('sonnenstand').innerHTML='<svg viewBox="0 -14 '+W+' '+(H+22)+'" aria-hidden="true">'+sv+'</svg>';
     })();
     // ── Kurve ──
     (function(){ var W=340,HZ=96,A=52, x=function(h){return 10+(W-20)*h/24;}, y=function(h){return HZ-A*Math.sin(Math.PI*(h-6)/12);};
@@ -1735,7 +1746,7 @@ body[data-breite=desktop-raster] .telefon::after{
   $('wieder').addEventListener('click',wiederhole);
   $('oben').addEventListener('click',function(){ rohr.scrollTo({top:0,behavior:'smooth'}); });
 
-  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-vglform')) document.body.setAttribute('data-vglform','verteilung'); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','karten'); baueTag(); rechne(); }
+  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-vglform')) document.body.setAttribute('data-vglform','treppe'); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','karten'); baueTag(); rechne(); }
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(los); else los();
   var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(baueWolke,250); });
 })();
