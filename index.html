@@ -577,6 +577,8 @@ body[data-breite^=desktop] .szene .lead,
 body[data-breite^=desktop] .szene .quelle,
 body[data-breite^=desktop] .szene .thema-satz{max-width:var(--w-text);margin-left:auto;margin-right:auto}
 body[data-breite^=desktop] .ende .knoepfe{justify-content:center}
+body[data-breite^=desktop] .ende > *,body[data-breite^=desktop] .parkett-kopf > *{max-width:none;margin-left:0;margin-right:0}
+body[data-breite^=desktop] .ende .knoepfe{justify-content:flex-start}
 
 /* Typo nach zeit.de: 20 px Fließtext, größere Überschriften */
 body[data-breite^=desktop] .h1{font-size:46px}
@@ -703,9 +705,9 @@ body[data-variante=ruhig] .karten{margin-top:20px}
 
 /* ═══ Desktop, geteilt: fester Grafikrahmen links, Textstufen rechts ═══ */
 body[data-breite=desktop-split] .daten{display:grid;grid-template-columns:440px minmax(0,1fr);column-gap:48px;align-items:start}
-body[data-breite=desktop-split] .daten .buehne{grid-column:1;grid-row:1/span 4;align-self:stretch;display:block;
+body[data-breite=desktop-split] .daten .sbuehne{grid-column:1;grid-row:1/span 4;align-self:stretch;display:block;
   position:static;background:transparent;border:0;box-shadow:none;padding:0;margin:0;min-height:0}
-body[data-breite=desktop-split] .daten .buehne .rahmen{position:sticky;top:calc((100cqh - 520px)/2);height:520px;
+body[data-breite=desktop-split] .daten .sbuehne .rahmen{position:sticky;top:calc((100cqh - 520px)/2);height:520px;
   background:var(--flaeche);border-radius:4px;overflow:hidden;transition:background-color .7s var(--e)}
 #buehneRahmen[data-aktiv=s-zeit]{background:#e5f7ff} #buehneRahmen[data-aktiv=s-band]{background:#fff6e8}
 #buehneRahmen[data-aktiv=s-tag]{background:#e9f7ed} #buehneRahmen[data-aktiv=s-thema]{background:#ede6f4}
@@ -722,29 +724,31 @@ body[data-breite=desktop-split] .daten .buehne .rahmen{position:sticky;top:calc(
 .b-dots{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:8px;z-index:2}
 .b-dots i{width:6px;height:6px;border-radius:99px;background:var(--bar);transition:width .45s var(--e),background-color .45s var(--e)}
 .b-dots i.an2{width:20px;background:var(--marker)}
-body[data-breite=desktop-split] .daten .buehne .lage{position:absolute;inset:36px 36px 44px;display:flex;flex-direction:column;justify-content:center;
+body[data-breite=desktop-split] .daten .sbuehne .lage{position:absolute;inset:36px 36px 44px;display:flex;flex-direction:column;justify-content:center;
   opacity:0;transform:scale(.96) translateY(14px);filter:blur(7px);
   transition:opacity .45s var(--e),transform .65s var(--e),filter .5s var(--e);pointer-events:none}
-body[data-breite=desktop-split] .daten .buehne .lage.aktiv{opacity:1;transform:none;filter:none;pointer-events:auto;transition-delay:.12s}
-body[data-breite=desktop-split] .daten .buehne .thema-still{display:block;margin:0 auto}
-body[data-breite=desktop-split] .daten .buehne .lage .zahl{justify-content:center}
-body[data-breite=desktop-split] .daten .buehne .an{opacity:1;transform:none;filter:none}
-body[data-breite=desktop-split] .daten .buehne .zahl .gross{font-size:84px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne){grid-column:2;background:transparent;border:0;box-shadow:none;
+body[data-breite=desktop-split] .daten .sbuehne .lage.aktiv{opacity:1;transform:none;filter:none;pointer-events:auto;transition-delay:.12s}
+body[data-breite=desktop-split] .daten .sbuehne .thema-still{display:block;margin:0 auto}
+body[data-breite=desktop-split] .daten .sbuehne{display:block!important}
+body[data-breite=desktop-split] #buehne{max-width:none!important;margin:0!important;width:auto}
+body[data-breite=desktop-split] .daten .sbuehne .lage .zahl{justify-content:center}
+body[data-breite=desktop-split] .daten .sbuehne .an{opacity:1;transform:none;filter:none}
+body[data-breite=desktop-split] .daten .sbuehne .zahl .gross{font-size:84px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne){grid-column:2;background:transparent;border:0;box-shadow:none;
   min-height:56cqh;padding:20px 0;margin:0;justify-content:center;align-items:flex-start;text-align:left;
   opacity:.32;transition:opacity .45s var(--e)}
-body[data-breite=desktop-split] .daten .szene.split-aktiv:not(.buehne){opacity:1}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .textspalte > *{max-width:44ch;margin-left:0;margin-right:0}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .ico{margin:0 0 12px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .lead{margin-left:0}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .karten{width:100%;max-width:480px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .augen{margin:0 0 8px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .ico{margin:0 0 10px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .lead{margin-top:6px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .mittel,
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .gross{font-size:34px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .empf-kopf{margin:18px 0 10px;padding-top:18px}
-body[data-breite=desktop-split] .daten .szene:not(.buehne) .quelle:empty{display:none}
+body[data-breite=desktop-split] .daten .szene.split-aktiv:not(.sbuehne){opacity:1}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .textspalte > *{max-width:44ch;margin-left:0;margin-right:0}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .ico{margin:0 0 12px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .lead{margin-left:0}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .karten{width:100%;max-width:480px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .augen{margin:0 0 8px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .ico{margin:0 0 10px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .lead{margin-top:6px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .mittel,
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .gross{font-size:34px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .empf-kopf{margin:18px 0 10px;padding-top:18px}
+body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .quelle:empty{display:none}
 body[data-variante=ruhig] .karte{border-radius:4px}
 body[data-variante=ruhig] .karte.leer{background:transparent}
 /* Kartenfarbe farbig: 1 warm, 2 blau, 3 grün, 4 warm; Empfehlung dann weiß */
@@ -827,7 +831,11 @@ body[data-breite^=desktop] .karussell{display:grid;grid-template-columns:repeat(
 body[data-breite^=desktop] .artikel{flex:none;aspect-ratio:3/4;width:auto}
 body[data-breite^=desktop] .artikel .t{font-size:17px}
 body[data-breite^=desktop] .artikel .k{font-size:13px}
-body[data-breite^=desktop] .punkte{display:none}
+body[data-breite^=desktop] .punkte{display:flex}
+body[data-breite^=desktop] .liste{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;overflow:visible;margin:0;padding:0}
+body[data-breite^=desktop] .liste .kachel-e{flex:none;width:auto}
+body[data-breite^=desktop] .parkett--offen{padding-top:32px;padding-bottom:32px}
+body[data-breite^=desktop] .artikel{aspect-ratio:2/3}
 body[data-breite^=desktop] .liste{grid-template-columns:repeat(3,1fr);gap:16px}
 body[data-breite^=desktop] .liste .eintrag{display:flex;flex-direction:column;gap:14px;background:var(--flaeche);border:1px solid var(--linie);border-radius:4px;padding:16px}
 body[data-breite^=desktop] .liste .eintrag .bild{width:100%;height:auto;aspect-ratio:16/9;border-radius:4px}
@@ -1045,7 +1053,7 @@ body[data-breite=desktop-raster] .telefon::after{
 
     <!-- Datenbereich -->
     <div class="daten">
-      <div class="buehne" id="buehne" hidden></div>
+      <div class="sbuehne" id="buehne" hidden></div>
       <section class="szene" id="s-zeit" data-nr="1 von 4">
         <p class="augen an v1">Ihre Lesezeit</p>
         <div class="zahl an v2"><span class="gross" id="zaehler">0</span><span class="e" id="einheit">Min</span></div>
