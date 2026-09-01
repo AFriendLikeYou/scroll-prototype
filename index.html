@@ -725,6 +725,20 @@ body[data-breite=desktop-split] .daten .sbuehne .an{opacity:1;transform:none;fil
 .nur-split{display:none}
 body[data-breite=desktop-split] .nur-split{display:inline}
 body[data-breite=desktop-split] .daten .szene:not(.sbuehne) .zahl{display:none}
+/* Bühnen-Modus „Stapel": Kaskade, die beim Scrollen blättert */
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .rahmen{background:transparent;border:0;box-shadow:none;overflow:visible}
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .lage{
+  inset:auto;left:50%;top:50%;width:332px;height:462px;margin:-231px 0 0 -166px;padding:26px 24px;
+  justify-content:center;opacity:1;filter:none;
+  background:var(--karte);border:1px solid var(--linie);border-radius:12px;
+  box-shadow:0 14px 30px -10px rgba(0,0,0,.25);
+  transition:transform .55s var(--e),opacity .45s var(--e)}
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .lage[data-rel="0"]{transform:translate(18px,0);z-index:24;pointer-events:auto}
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .lage[data-rel="1"]{transform:translate(-20px,4px) scale(.93);z-index:23}
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .lage[data-rel="2"]{transform:translate(-44px,8px) scale(.87);z-index:22}
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .lage[data-rel="3"]{transform:translate(-64px,10px) scale(.82);z-index:21}
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .lage[data-rel="-1"]{transform:translate(150px,16px) rotate(7deg);opacity:0;z-index:25}
+body[data-buehne=stapel][data-breite=desktop-split] .daten .sbuehne .b-zahl{font-size:44px}
 body[data-breite=desktop-split] .daten .szene:not(.sbuehne){grid-column:2;background:transparent;border:0;box-shadow:none;
   min-height:56cqh;padding:20px 0;margin:0;justify-content:center;align-items:flex-start;text-align:left;
   opacity:.32;transition:opacity .45s var(--e)}
@@ -877,6 +891,14 @@ body[data-breite=desktop-raster] .telefon::after{
       <button type="button" data-w="desktop" aria-pressed="false">Desktop 1000</button>
       <button type="button" data-w="desktop-raster" aria-pressed="false">+ Raster</button>
       <button type="button" data-w="desktop-split" aria-pressed="false">Desktop, geteilt</button>
+    </div>
+  </div>
+
+  <div class="feld">
+    <label>Bühne (Desktop, geteilt)</label>
+    <div class="chips" id="buehnemodus">
+      <button type="button" data-b2="ebenen" aria-pressed="true">Ebenen</button>
+      <button type="button" data-b2="stapel" aria-pressed="false">Stapel, blättert</button>
     </div>
   </div>
 
@@ -1698,7 +1720,9 @@ body[data-breite=desktop-raster] .telefon::after{
     if(!splitLagen) return;
     var rr=rohr.getBoundingClientRect(), mitte=rr.top+rohr.clientHeight*0.5, best=null, bd=1e9;
     splitLagen.forEach(function(o){ var r2=o.sz.getBoundingClientRect(); var d=Math.abs((r2.top+r2.bottom)/2-mitte); if(d<bd){bd=d;best=o.id;} });
+    var bi=0; splitLagen.forEach(function(o,i2){ if(o.id===best) bi=i2; });
     splitLagen.forEach(function(o,i2){ o.lage.classList.toggle('aktiv',o.id===best); o.sz.classList.toggle('split-aktiv',o.id===best);
+      o.lage.setAttribute('data-rel', String(Math.max(-1, Math.min(3, i2-bi))));
       var d2=document.querySelectorAll('#bDots i')[i2]; if(d2) d2.classList.toggle('an2',o.id===best); });
     var R=$('buehneRahmen'); if(R&&best) R.setAttribute('data-aktiv',best);
   }
@@ -1788,6 +1812,9 @@ body[data-breite=desktop-raster] .telefon::after{
     try{localStorage.setItem('pruefZu',zu?'1':'');}catch(e){}
   });
   try{ if(localStorage.getItem('pruefZu')==='1'){ document.body.classList.add('pruef-zu'); var pt=$('pruefToggle'); pt.textContent='Ausklappen'; pt.setAttribute('aria-expanded','false'); } }catch(e){}
+  $('buehnemodus').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); });
+    document.body.setAttribute('data-buehne', b.dataset.b2); aktiveLage(); });
   $('breite').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     [].forEach.call(this.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',String(x===b));});
     var desktop=b.dataset.w!=='handy';
@@ -1860,7 +1887,7 @@ body[data-breite=desktop-raster] .telefon::after{
   $('wieder').addEventListener('click',wiederhole);
   $('oben').addEventListener('click',function(){ rohr.scrollTo({top:0,behavior:'smooth'}); });
 
-  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-vglform')) document.body.setAttribute('data-vglform','treppe'); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','ruhig'); if(!document.body.getAttribute('data-thema')) document.body.setAttribute('data-thema','kreise'); baueTag(); rechne(); }
+  function los(){ setTimeout(stapel,60); if(!document.body.getAttribute('data-vglform')) document.body.setAttribute('data-vglform','treppe'); if(!document.body.getAttribute('data-variante')) document.body.setAttribute('data-variante','ruhig'); if(!document.body.getAttribute('data-thema')) document.body.setAttribute('data-thema','kreise'); if(!document.body.getAttribute('data-buehne')) document.body.setAttribute('data-buehne','ebenen'); baueTag(); rechne(); }
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(los); else los();
   var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(baueWolke,250); });
 })();
