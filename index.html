@@ -48,7 +48,12 @@ body{margin:0;background:#e9e6e0;color:var(--ink);font-family:var(--ff);-webkit-
 .panel{position:sticky;top:22px;background:#fff;border:1px solid #d8d4cd;border-radius:8px;padding:20px;
   box-shadow:0 1px 2px rgba(20,18,16,.05),0 14px 34px -18px rgba(20,18,16,.25);color:#1a1817}
 @media (max-width:900px){.panel{position:static}}
-.panel h2{font-size:13px;font-weight:700;margin:0 0 4px}
+.panel h2{font-size:13px;font-weight:700;margin:0 0 4px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pruef-toggle{border:1px solid #d8d4cd;background:#fff;border-radius:99px;font:11px/1 inherit;font-family:inherit;padding:5px 10px;cursor:pointer;color:#6b665f;flex:none}
+body.pruef-zu .stand{grid-template-columns:1fr!important}
+body.pruef-zu .panel{position:fixed;left:14px;top:14px;z-index:999;width:auto;padding:10px 14px;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+body.pruef-zu .panel h2{margin:0}
+body.pruef-zu .panel > *:not(h2){display:none}
 .panel > p{font-size:11.5px;line-height:1.5;color:#6b665f;margin:0 0 18px}
 .feld{margin:0 0 16px}
 .feld > label{display:block;font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:#6b665f;margin:0 0 7px}
@@ -695,6 +700,26 @@ body[data-variante=ruhig] .band{height:110px}
 .tag .a b{display:block;font-size:11px;font-weight:700;color:var(--marker);text-align:center;opacity:0;transform:translateY(4px);transition:opacity .5s var(--e) 1.1s,transform .5s var(--e) 1.1s;font-variant-numeric:tabular-nums}
 .szene.sichtbar .tag .a.aktiv b{opacity:1;transform:none}
 body[data-variante=ruhig] .karten{margin-top:20px}
+
+/* ═══ Desktop, geteilt: fester Grafikrahmen links, Textstufen rechts ═══ */
+body[data-breite=desktop-split] .daten{display:grid;grid-template-columns:440px minmax(0,1fr);column-gap:48px;align-items:start}
+body[data-breite=desktop-split] .daten .buehne{grid-column:1;grid-row:1/span 4;align-self:stretch;display:block;
+  position:static;background:transparent;border:0;box-shadow:none;padding:0;margin:0;min-height:0}
+body[data-breite=desktop-split] .daten .buehne .rahmen{position:sticky;top:calc((100cqh - 520px)/2);height:520px;
+  background:var(--flaeche);border-radius:4px;overflow:hidden}
+body[data-breite=desktop-split] .daten .buehne .lage{position:absolute;inset:36px;display:flex;flex-direction:column;justify-content:center;
+  opacity:0;transform:scale(.965) translateY(10px);transition:opacity .55s var(--e),transform .55s var(--e);pointer-events:none}
+body[data-breite=desktop-split] .daten .buehne .lage.aktiv{opacity:1;transform:none;pointer-events:auto}
+body[data-breite=desktop-split] .daten .buehne .an{opacity:1;transform:none;filter:none}
+body[data-breite=desktop-split] .daten .buehne .zahl .gross{font-size:84px}
+body[data-breite=desktop-split] .daten .szene:not(.buehne){grid-column:2;background:transparent;border:0;box-shadow:none;
+  min-height:76cqh;padding:48px 0;margin:0;justify-content:center;align-items:flex-start;text-align:left;
+  opacity:.32;transition:opacity .45s var(--e)}
+body[data-breite=desktop-split] .daten .szene.split-aktiv:not(.buehne){opacity:1}
+body[data-breite=desktop-split] .daten .szene:not(.buehne) .textspalte > *{max-width:44ch;margin-left:0;margin-right:0}
+body[data-breite=desktop-split] .daten .szene:not(.buehne) .ico{margin:0 0 12px}
+body[data-breite=desktop-split] .daten .szene:not(.buehne) .lead{margin-left:0}
+body[data-breite=desktop-split] .daten .szene:not(.buehne) .karten{width:100%;max-width:480px}
 body[data-variante=ruhig] .karte{border-radius:4px}
 body[data-variante=ruhig] .karte.leer{background:transparent}
 /* Kartenfarbe farbig: 1 warm, 2 blau, 3 grün, 4 warm; Empfehlung dann weiß */
@@ -816,7 +841,7 @@ body[data-breite=desktop-raster] .telefon::after{
 <div class="stand">
 
 <aside class="panel">
-  <h2>Prüfstand</h2>
+  <h2>Prüfstand <button type="button" id="pruefToggle" class="pruef-toggle" aria-expanded="true">Einklappen</button></h2>
   <p>Alle Werte aus <span style="color:#1a1817">export_abowrapped_28082026</span>, 1.756 Abonnentinnen und Abonnenten, die in diesem Zeitraum ein Abo abgeschlossen haben. Aufbau und Texte aus <span style="color:#1a1817">550:28224</span>.</p>
 
   <div class="feld">
@@ -825,6 +850,7 @@ body[data-breite=desktop-raster] .telefon::after{
       <button type="button" data-w="handy" aria-pressed="true">Handy 390</button>
       <button type="button" data-w="desktop" aria-pressed="false">Desktop 1000</button>
       <button type="button" data-w="desktop-raster" aria-pressed="false">+ Raster</button>
+      <button type="button" data-w="desktop-split" aria-pressed="false">Desktop, geteilt</button>
     </div>
   </div>
 
@@ -994,6 +1020,7 @@ body[data-breite=desktop-raster] .telefon::after{
 
     <!-- Datenbereich -->
     <div class="daten">
+      <div class="buehne" id="buehne" hidden></div>
       <section class="szene" id="s-zeit" data-nr="1 von 4">
         <p class="augen an v1">Ihre Lesezeit</p>
         <div class="zahl an v2"><span class="gross" id="zaehler">0</span><span class="e" id="einheit">Min</span></div>
@@ -1610,6 +1637,40 @@ body[data-breite=desktop-raster] .telefon::after{
     var ziel=sz.querySelector('.textspalte')||sz; ziel.insertAdjacentHTML('afterbegin', html);
   }
   setzeIcon('s-zeit',ICO.uhr); setzeIcon('s-band',ICO.podest); setzeIcon('s-thema',ICO.hash); setzeIcon('s-tag',ICO.himmel(Z.tageszeit));
+  var splitLagen=null;
+  function splitAn(){
+    if(splitLagen) return;
+    var b=$('buehne'); b.hidden=false; b.classList.add('szene','sichtbar');
+    b.innerHTML='<div class="rahmen" id="buehneRahmen"></div>';
+    var rahmen=$('buehneRahmen'); splitLagen=[];
+    ['s-zeit','s-band','s-tag','s-thema'].forEach(function(id){
+      var sz=$(id), t=sz.querySelector('.textspalte'), g=sz.querySelector('.grafikspalte');
+      [].slice.call(g.children).forEach(function(c){ if(c.classList.contains('karten')) t.appendChild(c); });
+      var lage=document.createElement('div'); lage.className='lage'; lage.dataset.fuer=id;
+      if(id==='s-zeit'){ var z=t.querySelector('.zahl'); if(z) lage.appendChild(z); }
+      lage.appendChild(g); rahmen.appendChild(lage);
+      splitLagen.push({id:id,sz:sz,lage:lage});
+    });
+    aktiveLage(); setTimeout(aktiveLage,120); setTimeout(aktiveLage,600);
+  }
+  function splitAus(){
+    if(!splitLagen) return;
+    splitLagen.forEach(function(o){
+      var t=o.sz.querySelector('.textspalte'), g=o.lage.querySelector('.grafikspalte');
+      var z=o.lage.querySelector('.zahl');
+      if(z){ var aug=t.querySelector('.augen'); t.insertBefore(z, aug?aug.nextSibling:t.firstChild); }
+      o.sz.appendChild(g);
+      [].slice.call(t.querySelectorAll(':scope > .karten')).forEach(function(k){ g.appendChild(k); });
+      o.sz.classList.remove('split-aktiv');
+    });
+    splitLagen=null; var b=$('buehne'); b.innerHTML=''; b.hidden=true; b.classList.remove('szene','sichtbar');
+  }
+  function aktiveLage(){
+    if(!splitLagen) return;
+    var rr=rohr.getBoundingClientRect(), mitte=rr.top+rohr.clientHeight*0.5, best=null, bd=1e9;
+    splitLagen.forEach(function(o){ var r2=o.sz.getBoundingClientRect(); var d=Math.abs((r2.top+r2.bottom)/2-mitte); if(d<bd){bd=d;best=o.id;} });
+    splitLagen.forEach(function(o){ o.lage.classList.toggle('aktiv',o.id===best); o.sz.classList.toggle('split-aktiv',o.id===best); });
+  }
   function stapel(){
     if(document.body.getAttribute('data-variante')!=='karten'){
       stapelKarten.forEach(function(k){ k.style.transform=''; k.style.setProperty('--schleier',0); });
@@ -1687,8 +1748,15 @@ body[data-breite=desktop-raster] .telefon::after{
   rohr.addEventListener('scroll',function(){
     var p=rohr.scrollTop/Math.max(1,rohr.scrollHeight-rohr.clientHeight);
     $('fortschritt').style.width=(p*100).toFixed(1)+'%';
+    aktiveLage();
   },{passive:true});
 
+  $('pruefToggle').addEventListener('click',function(){
+    var zu=document.body.classList.toggle('pruef-zu');
+    this.textContent=zu?'Ausklappen':'Einklappen'; this.setAttribute('aria-expanded',String(!zu));
+    try{localStorage.setItem('pruefZu',zu?'1':'');}catch(e){}
+  });
+  try{ if(localStorage.getItem('pruefZu')==='1'){ document.body.classList.add('pruef-zu'); var pt=$('pruefToggle'); pt.textContent='Ausklappen'; pt.setAttribute('aria-expanded','false'); } }catch(e){}
   $('breite').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return;
     [].forEach.call(this.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',String(x===b));});
     var desktop=b.dataset.w!=='handy';
@@ -1696,6 +1764,7 @@ body[data-breite=desktop-raster] .telefon::after{
     var akt=document.body.getAttribute('data-variante');
     var wahl=desktop?(akt==='karten'?'ruhig':akt):(mobilWahl||'ruhig');
     document.body.setAttribute('data-variante', wahl);
+    if(b.dataset.w==='desktop-split') splitAn(); else splitAus();
     $('variante').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x.dataset.v===wahl)); });
     setTimeout(function(){ baueWolke(); wiederhole(); },80);
     setTimeout(function(){ stapel(); rechne(); },40); });
